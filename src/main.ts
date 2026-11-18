@@ -56,7 +56,7 @@ function rinkVisual(){
   ? 'M '+shooterX+' '+shooterY+' C '+(shooterX+(homeAttack?42:-42))+' '+(shooterY+attackDir*12)+' '+(supportX+(homeAttack?-36:36))+' '+(supportY+attackDir*70)+' '+targetX+' '+targetY
   : 'M '+shooterX+' '+shooterY+' Q '+bendX+' '+bendY+' '+supportX+' '+supportY+' Q '+finishBendX+' '+finishBendY+' '+targetX+' '+targetY;
  const resultClass=res?.isGoal?'goal-scored':res?.isShot?'shot-saved':'attack-stopped';
- const banner=res?.isGoal?'ГОООЛ!':res?.isShot?'БРОСОК · СЕЙВ':'АТАКА ОСТАНОВЛЕНА';
+
  const description=ev?ev.message:'';
  const progress=(match.period-1)*5+match.shift;
 

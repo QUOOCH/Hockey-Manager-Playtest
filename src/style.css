@@ -456,3 +456,13 @@ label{display:block;font-size:11px;color:#a8c8e2;margin:12px 0}input{display:blo
 .hero-item-card>em{margin-top:auto;color:var(--item-accent);font-size:6px;font-style:normal;font-weight:1000;letter-spacing:.5px}
 @media(max-width:600px){.hero-item-grid{gap:5px}.hero-item-card{padding:6px}.hero-item-art{height:55px}.hero-item-info b{font-size:7px}.hero-picker-heading{font-size:7px}}
 @media(min-width:700px){.hero-item-grid{grid-template-columns:repeat(3,minmax(0,1fr));max-width:720px;margin:auto}.hero-item-art{height:85px}}
+
+/* Equipment colors flow onto the 2D player model */
+.hero-helmet{background:linear-gradient(145deg,color-mix(in srgb,var(--helmet-color) 38%,white),var(--helmet-color) 58%,#10283e)!important;border-color:color-mix(in srgb,var(--helmet-color) 72%,white)!important}
+.hero-shoulders{background:linear-gradient(135deg,color-mix(in srgb,var(--armor-color) 42%,white),var(--armor-color) 52%,#10283e)!important;border-color:color-mix(in srgb,var(--armor-color) 70%,white)!important}
+.hero-body{background:linear-gradient(110deg,color-mix(in srgb,var(--jersey-color) 65%,#10243b),var(--jersey-color) 48%,#10243b)!important;border-color:color-mix(in srgb,var(--jersey-color) 72%,white)!important;box-shadow:inset 0 0 0 3px #ffffff22, inset 0 0 18px color-mix(in srgb,var(--jersey-color) 30%,transparent)!important}
+.hero-arm{background:linear-gradient(90deg,#10243b,var(--armor-color))!important;border-color:color-mix(in srgb,var(--armor-color) 70%,white)!important}
+.hero-gloves{background:linear-gradient(135deg,color-mix(in srgb,var(--glove-color) 40%,white),var(--glove-color))!important;border-color:color-mix(in srgb,var(--glove-color) 70%,white)!important;box-shadow:55px 0 0 -2px var(--glove-color),55px 0 0 0 color-mix(in srgb,var(--glove-color) 70%,white)!important}
+.hero-pants{background:linear-gradient(90deg,#101c30,var(--pants-color),#101c30)!important;border-color:color-mix(in srgb,var(--pants-color) 70%,white)!important}
+.hero-skate{background:linear-gradient(180deg,color-mix(in srgb,var(--skate-color) 55%,white),var(--skate-color))!important}
+.hero-stick{background:linear-gradient(90deg,#c6d8e2,var(--stick-color))!important}

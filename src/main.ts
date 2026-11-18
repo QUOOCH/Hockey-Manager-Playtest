@@ -30,7 +30,7 @@ function rinkVisual(){
  const a=awayLine?[awayLine.center,awayLine.leftWing,awayLine.rightWing,awayLine.defense1,awayLine.defense2]:[];
  const initials=(p:PlayerCard)=>esc(p.name.split(/\s+/).map(x=>x[0]).slice(0,2).join('').toUpperCase());
  const homeColor=matchHome?.club.primaryColor||'#168de0',awayColor=opponent.club.primaryColor||'#e46b48';
- const player=(p:PlayerCard|undefined,x:number,y:number,teamSide:'home'|'away',n:number,role:string)=>{
+ const player=(p:PlayerCard|null|undefined,x:number,y:number,teamSide:'home'|'away',n:number,role:string)=>{
   const fill=teamSide==='home'?homeColor:awayColor;
   return '<g class="ice-player '+teamSide+' '+role+' p'+n+'"><circle cx="'+x+'" cy="'+y+'" r="19" fill="'+fill+'" stroke="#fff" stroke-width="3"/><circle cx="'+x+'" cy="'+y+'" r="15" fill="none" stroke="#ffffff77" stroke-width="1"/><text x="'+x+'" y="'+(y+4)+'" text-anchor="middle" font-size="11" font-weight="900" fill="#fff">'+(p?initials(p):String(n))+'</text></g>';
  };

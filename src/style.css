@@ -480,3 +480,8 @@ label{display:block;font-size:11px;color:#a8c8e2;margin:12px 0}input{display:blo
 .hero-item-art>svg{position:relative;z-index:2;display:block;width:86%;height:86%;max-width:100%;max-height:100%;overflow:visible;filter:drop-shadow(0 3px 5px #0009)}
 .hero-item-card:hover .hero-item-art>svg{transform:translateY(-2px);filter:drop-shadow(0 5px 7px #000b)}
 .hero-item-art{isolation:isolate}
+
+/* Layered equipment rendered directly over the hero mannequin. */
+.hero-man{isolation:isolate}
+.hero-man-gear{position:absolute;inset:0;z-index:9;width:100%;height:100%;overflow:visible;pointer-events:none;filter:drop-shadow(0 2px 3px #001522aa)}
+.hero-man-gear path{vector-effect:non-scaling-stroke}

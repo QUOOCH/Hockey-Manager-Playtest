@@ -45,13 +45,21 @@ function rinkVisual(){
  const goalie=(x:number,y:number,p:PlayerCard|null|undefined,teamSide:'home'|'away',defending=false)=>'<g class="ice-goalie '+teamSide+(defending?' defending-goalie':'')+'"><rect x="'+(x-23)+'" y="'+(y-22)+'" width="46" height="44" rx="12" fill="'+(teamSide==='home'?homeColor:awayColor)+'" stroke="#fff" stroke-width="3"/><text x="'+x+'" y="'+(y+5)+'" text-anchor="middle" font-size="13" font-weight="900" fill="#fff">ВР</text></g>';
  const shooterX= res?.attackerIndex===1?105:res?.attackerIndex===2?295:200;
  const shooterY=homeAttack?homeY[res?.attackerIndex??0]:awayY[res?.attackerIndex??0];
- const goalY=homeAttack?76:544;
- const puckTargetY=res?.isShot?(homeAttack?83:537):(homeAttack?Math.max(100,shooterY-42):Math.min(520,shooterY+42));
- const puckMidX=(shooterX+200)/2,puckMidY=(shooterY+puckTargetY)/2;
+ const attackDir=homeAttack?-1:1;
+ const supportIndex=carrierIndex===1?2:1;
+ const supportX=homeXs[supportIndex],supportY=homeAttack?homeY[supportIndex]-22:awayY[supportIndex]+22;
+ const targetX=res?.isGoal?(homeAttack?220:180):res?.isShot?(homeAttack?185:215):supportX+(homeAttack?18:-18);
+ const targetY=res?.isShot?(homeAttack?83:537):(homeAttack?Math.max(120,shooterY-34):Math.min(500,shooterY+34));
+ const bendX=(shooterX+supportX)/2+(homeAttack?34:-34),bendY=(shooterY+supportY)/2+attackDir*22;
+ const finishBendX=(supportX+targetX)/2+(homeAttack?-28:28),finishBendY=(supportY+targetY)/2+attackDir*34;
+ const puckPath=res?.isShot
+  ? 'M '+shooterX+' '+shooterY+' C '+(shooterX+(homeAttack?42:-42))+' '+(shooterY+attackDir*12)+' '+(supportX+(homeAttack?-36:36))+' '+(supportY+attackDir*70)+' '+targetX+' '+targetY
+  : 'M '+shooterX+' '+shooterY+' Q '+bendX+' '+bendY+' '+supportX+' '+supportY+' Q '+finishBendX+' '+finishBendY+' '+targetX+' '+targetY;
  const resultClass=res?.isGoal?'goal-scored':res?.isShot?'shot-saved':'attack-stopped';
  const banner=res?.isGoal?'ГОООЛ!':res?.isShot?'БРОСОК · СЕЙВ':'АТАКА ОСТАНОВЛЕНА';
- const description=ev?ev.message:'Матч готов к старту';
+ const description=ev?ev.message:'';
  const progress=(match.period-1)*5+match.shift;
+
  return '<div class="rink-scene '+(homeAttack?'attack-home':'attack-away')+' '+resultClass+'">'+
  '<div class="rink-topline"><span>🏒 LIVE · '+(homeAttack?esc(team.club.displayName):esc(opponent.name))+' АТАКУЕТ</span><span>СМЕНА '+progress+'/15</span></div>'+
  '<svg class="ice-svg" viewBox="0 0 400 620" role="img" aria-label="Хоккейная площадка с движущимися игроками">'+
@@ -64,11 +72,11 @@ function rinkVisual(){
  '<g fill="#e9a2ad" opacity=".55"><path d="M145 38 Q200 10 255 38 L255 78 Q200 112 145 78Z"/><path d="M145 582 Q200 610 255 582 L255 542 Q200 508 145 542Z"/></g>'+
  '<g fill="none" stroke="#e14f65" stroke-width="5"><path d="M150 42 H250 V83 H150Z"/><path d="M150 578 H250 V537 H150Z"/></g>'+
  goalie(200,62,awayGoalie,'away',homeAttack)+goalie(200,558,homeGoalie,'home',!homeAttack)+players+
- '<path class="puck-route" d="'+(homeAttack?'M '+shooterX+' '+shooterY+' Q '+puckMidX+' '+(puckMidY-18)+' 200 '+puckTargetY:'M '+shooterX+' '+shooterY+' Q '+puckMidX+' '+(puckMidY+18)+' 200 '+puckTargetY)+'" fill="none" stroke="#1b2734" stroke-width="2" stroke-dasharray="5 8" opacity=".3"/>'+
- '<circle class="live-puck" cx="'+shooterX+'" cy="'+shooterY+'" r="7"><animate attributeName="cx" values="'+shooterX+';'+puckMidX+';200" keyTimes="0;.48;1" begin=".22s" dur=".9s" calcMode="spline" keySplines=".35 0 .65 1;.2 .7 .3 1" fill="freeze"/><animate attributeName="cy" values="'+shooterY+';'+puckMidY+';'+puckTargetY+'" keyTimes="0;.48;1" begin=".22s" dur=".9s" calcMode="spline" keySplines=".35 0 .65 1;.2 .7 .3 1" fill="freeze"/></circle>'+
- '<circle class="puck-glow" cx="'+shooterX+'" cy="'+shooterY+'" r="16"/>'+
+ '<path class="puck-route" d="'+puckPath+'" fill="none" stroke="#1b2734" stroke-width="2.5" stroke-dasharray="4 9" opacity=".28"/>'+
+ '<circle class="live-puck" cx="'+shooterX+'" cy="'+shooterY+'" r="7"><animateMotion path="'+puckPath+'" begin=".12s" dur="1.25s" calcMode="spline" keyPoints="0;1" keyTimes="0;1" keySplines=".2 .65 .25 1" fill="freeze"/></circle>'+
+ '<circle class="puck-glow" cx="'+shooterX+'" cy="'+shooterY+'" r="16"><animateMotion path="'+puckPath+'" begin=".12s" dur="1.25s" calcMode="spline" keyPoints="0;1" keyTimes="0;1" keySplines=".2 .65 .25 1" fill="freeze"/></circle>'+
  '</svg>'+
- '<div class="rink-callout '+(res?.isGoal?'is-goal':res?.isShot?'is-save':'')+'"><b>'+(res?.isGoal?'🥅 '+banner:res?.isShot?'🧤 '+banner:'⚡ '+banner)+'</b><span>'+esc(description)+'</span></div>'+
+ (ev?'<div class="rink-callout '+(res?.isGoal?'is-goal':res?.isShot?'is-save':'')+'"><b>'+(res?.isGoal?'🥅 ГОООЛ!':res?.isShot?'🧤 СЕЙВ':'⚡ АТАКА ОСТАНОВЛЕНА')+'</b><span>'+esc(description)+'</span></div>':'')+
  '<div class="rink-legend"><span><i style="background:'+homeColor+'"></i>'+esc(team.club.displayName)+'</span><span><i style="background:'+awayColor+'"></i>'+esc(opponent.name)+'</span></div></div>';
 }
 function matchPage(){

@@ -26,7 +26,7 @@ export type Team = {
 export type MatchDifficulty = 'EASY' | 'MEDIUM' | 'HARD';
 export type ShotResult = {
   isGoal: boolean; attackerName: string; scorerName: string | null;
-  goalieName: string; attackerIndex: number; goalieSaved: boolean; isShot: boolean;
+  goalieName: string; attackerIndex: number; goalieSaved: boolean; isShot: boolean; shotX?: number; shotY?: number;
 };
 export type MatchEvent = { period: number; shift: number; side: 'home' | 'away'; result: ShotResult; score: string; message: string };
 export type MatchState = {

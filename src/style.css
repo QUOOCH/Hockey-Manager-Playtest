@@ -186,3 +186,32 @@ label{display:block;font-size:11px;color:#a8c8e2;margin:12px 0}input{display:blo
   mix-blend-mode:screen;
   clip-path:polygon(0 0,100% 0,98% 18%,100% 22%,97% 27%,100% 31%,98% 100%,2% 100%,0 88%,2% 81%);
 }
+
+
+/* Tone down the ice logo and give the slogan its own readable line. */
+.hero-brand strong{
+  background:linear-gradient(180deg,#d9effa 0%,#a8d3e8 24%,#6fa9ca 52%,#9bc8df 72%,#477d9e 100%);
+  -webkit-text-stroke:.7px #b9d9e9;
+  filter:drop-shadow(0 2px 0 #315c78) drop-shadow(0 5px 0 #173b56) drop-shadow(0 9px 12px #00101f99);
+  text-shadow:0 0 8px #75c9ed33;
+}
+.hero-brand strong:after{opacity:.38}
+.hero-tagline{
+  position:relative;
+  display:block;
+  width:max-content;
+  max-width:100%;
+  margin:19px 0 21px;
+  padding:8px 11px;
+  border-left:2px solid #55bfe9;
+  border-radius:0 7px 7px 0;
+  background:linear-gradient(90deg,#061b30dd,#061b3080 78%,transparent);
+  color:#c2dfef;
+  font-size:9px;
+  line-height:1.4;
+  letter-spacing:1.35px;
+  text-shadow:0 1px 5px #001426;
+}
+@media(max-width:600px){
+  .hero-tagline{font-size:8px;letter-spacing:1.1px;margin-top:17px;margin-bottom:19px}
+}

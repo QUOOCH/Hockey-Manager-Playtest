@@ -32,7 +32,11 @@ function rinkVisual(){
  const homeColor=matchHome?.club.primaryColor||'#168de0',awayColor=opponent.club.primaryColor||'#e46b48';
  const player=(p:PlayerCard|null|undefined,x:number,y:number,teamSide:'home'|'away',n:number,role:string,carrier=false)=>{
   const fill=teamSide==='home'?homeColor:awayColor;
-  return '<g class="ice-player '+teamSide+' '+role+' p'+n+(carrier?' puck-carrier':'')+'"><circle cx="'+x+'" cy="'+y+'" r="19" fill="'+fill+'" stroke="#fff" stroke-width="3"/><circle cx="'+x+'" cy="'+y+'" r="15" fill="none" stroke="#ffffff77" stroke-width="1"/><text x="'+x+'" y="'+(y+4)+'" text-anchor="middle" font-size="11" font-weight="900" fill="#fff">'+(p?initials(p):String(n))+'</text></g>';
+  const forward=role==='forward',attacking=teamSide===(homeAttack?'home':'away');
+  const drift=carrier?(homeAttack?-34:34):attacking?(forward?(n===2?-18:n===3?18:-8):(n===4?-12:12)):(forward?(n===2?12:n===3?-12:0):(n===4?8:-8));
+  const lateral=carrier?(n===2?-12:n===3?12:0):attacking?(n===2?-16:n===3?16:0):(n===4?-8:8);
+  const motion='<animateTransform attributeName="transform" type="translate" values="0 0;'+lateral+' '+drift+';'+(lateral*.55)+' '+(drift*.7)+';0 0" keyTimes="0;.42;.72;1" dur="'+(carrier?'1.8':'2.4')+'s" repeatCount="indefinite"/>';
+  return '<g class="ice-player '+teamSide+' '+role+' p'+n+(carrier?' puck-carrier':'')+'">'+motion+'<circle cx="'+x+'" cy="'+y+'" r="19" fill="'+fill+'" stroke="#fff" stroke-width="3"/><circle cx="'+x+'" cy="'+y+'" r="15" fill="none" stroke="#ffffff77" stroke-width="1"/><text x="'+x+'" y="'+(y+4)+'" text-anchor="middle" font-size="11" font-weight="900" fill="#fff">'+(p?initials(p):String(n))+'</text></g>';
  };
  const homeY=homeAttack? [360,320,320,410,410]:[430,390,390,470,470];
  const awayY=homeAttack? [205,245,245,155,155]:[265,305,305,215,215];
@@ -48,12 +52,14 @@ function rinkVisual(){
  const attackDir=homeAttack?-1:1;
  const supportIndex=carrierIndex===1?2:1;
  const supportX=homeXs[supportIndex],supportY=homeAttack?homeY[supportIndex]-22:awayY[supportIndex]+22;
- const targetX=res?.isGoal?(homeAttack?220:180):res?.isShot?(homeAttack?185:215):supportX+(homeAttack?18:-18);
- const targetY=res?.isShot?(homeAttack?83:537):(homeAttack?Math.max(120,shooterY-34):Math.min(500,shooterY+34));
+ const targetX=res?.isGoal?(homeAttack?238:162):res?.isShot?200:supportX+(homeAttack?18:-18);
+ const targetY=res?.isGoal?(homeAttack?42:578):res?.isShot?(homeAttack?88:532):(homeAttack?Math.max(120,shooterY-34):Math.min(500,shooterY+34));
  const bendX=(shooterX+supportX)/2+(homeAttack?34:-34),bendY=(shooterY+supportY)/2+attackDir*22;
  const finishBendX=(supportX+targetX)/2+(homeAttack?-28:28),finishBendY=(supportY+targetY)/2+attackDir*34;
  const puckPath=res?.isShot
-  ? 'M '+shooterX+' '+shooterY+' C '+(shooterX+(homeAttack?42:-42))+' '+(shooterY+attackDir*12)+' '+(supportX+(homeAttack?-36:36))+' '+(supportY+attackDir*70)+' '+targetX+' '+targetY
+  ? (res.isGoal
+    ? 'M '+shooterX+' '+shooterY+' C '+(shooterX+(homeAttack?55:-55))+' '+(shooterY+attackDir*22)+' '+(homeAttack?250:150)+' '+(homeAttack?150:470)+' '+targetX+' '+targetY
+    : 'M '+shooterX+' '+shooterY+' C '+(shooterX+(homeAttack?42:-42))+' '+(shooterY+attackDir*12)+' '+(homeAttack?176:224)+' '+(homeAttack?105:515)+' '+targetX+' '+targetY)
   : 'M '+shooterX+' '+shooterY+' Q '+bendX+' '+bendY+' '+supportX+' '+supportY+' Q '+finishBendX+' '+finishBendY+' '+targetX+' '+targetY;
  const resultClass=res?.isGoal?'goal-scored':res?.isShot?'shot-saved':'attack-stopped';
 
@@ -76,7 +82,7 @@ function rinkVisual(){
  '<circle class="live-puck" cx="'+shooterX+'" cy="'+shooterY+'" r="7"><animateMotion path="'+puckPath+'" begin=".12s" dur="1.25s" calcMode="spline" keyPoints="0;1" keyTimes="0;1" keySplines=".2 .65 .25 1" fill="freeze"/></circle>'+
  '<circle class="puck-glow" cx="'+shooterX+'" cy="'+shooterY+'" r="16"><animateMotion path="'+puckPath+'" begin=".12s" dur="1.25s" calcMode="spline" keyPoints="0;1" keyTimes="0;1" keySplines=".2 .65 .25 1" fill="freeze"/></circle>'+
  '</svg>'+
- (ev?'<div class="rink-callout '+(res?.isGoal?'is-goal':res?.isShot?'is-save':'')+'"><b>'+(res?.isGoal?'🥅 ГОООЛ!':res?.isShot?'🧤 СЕЙВ':'⚡ АТАКА ОСТАНОВЛЕНА')+'</b><span>'+esc(description)+'</span></div>':'')+
+ (ev&&res?.isGoal?'<div class="rink-callout is-goal"><b>🥅 ГОООЛ!</b><span>'+esc(description)+'</span></div>':'')+
  '<div class="rink-legend"><span><i style="background:'+homeColor+'"></i>'+esc(team.club.displayName)+'</span><span><i style="background:'+awayColor+'"></i>'+esc(opponent.name)+'</span></div></div>';
 }
 function matchPage(){

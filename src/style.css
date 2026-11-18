@@ -485,3 +485,11 @@ label{display:block;font-size:11px;color:#a8c8e2;margin:12px 0}input{display:blo
 .hero-man{isolation:isolate}
 .hero-man-gear{position:absolute;inset:0;z-index:9;width:100%;height:100%;overflow:visible;pointer-events:none;filter:drop-shadow(0 2px 3px #001522aa)}
 .hero-man-gear path{vector-effect:non-scaling-stroke}
+
+
+/* Hero model: clean layered silhouette under the swappable equipment */
+.hero-man{isolation:isolate;overflow:visible}
+.hero-man>.hero-stick,.hero-man>.hero-helmet,.hero-man>.hero-neck,.hero-man>.hero-shoulders,.hero-man>.hero-body,.hero-man>.hero-arm,.hero-man>.hero-gloves,.hero-man>.hero-pants,.hero-man>.hero-leg,.hero-man>.hero-skate,.hero-man>.hero-goalie-pad,.hero-man>.hero-catcher,.hero-man>.hero-blocker{display:none!important}
+.hero-man-base{position:absolute;inset:0;z-index:2;width:100%;height:100%;overflow:visible;filter:drop-shadow(0 3px 3px #00111f88);pointer-events:none}
+.hero-man-gear{z-index:5}
+.hero-man-base path{vector-effect:non-scaling-stroke}

@@ -237,3 +237,69 @@ label{display:block;font-size:11px;color:#a8c8e2;margin:12px 0}input{display:blo
   mix-blend-mode:normal;
   clip-path:polygon(0 0,100% 0,98% 18%,100% 22%,97% 27%,100% 31%,98% 100%,2% 100%,0 88%,2% 81%);
 }
+
+
+/* Final ice wordmark pass: solid carved ice, defined dark bevel,
+   restrained cold highlights and readable fracture veins. */
+.hero-brand strong{
+  position:relative;
+  display:inline-block;
+  isolation:isolate;
+  padding:0 .035em .08em 0;
+  color:#dff5ff;
+  background:linear-gradient(180deg,
+    #f8fdff 0%,#c9efff 13%,#78bce0 25%,#eafaff 34%,
+    #8bc9e9 48%,#d9f4ff 57%,#5598c1 73%,#c7eaff 86%,#5e9fc4 100%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+  -webkit-text-stroke:1.5px #214d6b;
+  filter:drop-shadow(0 2px 0 #173e5b)
+         drop-shadow(0 4px 0 #0d2d47)
+         drop-shadow(0 8px 9px #0009);
+  text-shadow:0 0 5px #bceaff35;
+}
+.hero-brand strong:after{
+  content:"";
+  position:absolute;
+  z-index:1;
+  inset:5% 2% 11%;
+  pointer-events:none;
+  opacity:.78;
+  background:
+    /* sharp branching cracks */
+    linear-gradient(118deg,transparent 0 21%,#17425e 21.2% 21.65%,transparent 21.9% 100%),
+    linear-gradient(35deg,transparent 0 39%,#17425e 39.2% 39.55%,transparent 39.8% 100%),
+    linear-gradient(153deg,transparent 0 58%,#17425e 58.2% 58.55%,transparent 58.8% 100%),
+    linear-gradient(72deg,transparent 0 73%,#17425e 73.2% 73.55%,transparent 73.8% 100%),
+    linear-gradient(118deg,transparent 0 21.4%,#eafaff 21.65% 21.9%,transparent 22.15% 100%),
+    linear-gradient(35deg,transparent 0 39.3%,#eafaff 39.55% 39.8%,transparent 40.05% 100%),
+    linear-gradient(153deg,transparent 0 58.3%,#eafaff 58.55% 58.8%,transparent 59.05% 100%);
+  -webkit-mask-image:linear-gradient(#000,#000);
+  mask-image:linear-gradient(#000,#000);
+  clip-path:polygon(0 0,100% 0,98% 18%,100% 23%,97% 29%,100% 34%,98% 100%,2% 100%,0 88%,2% 81%);
+  mix-blend-mode:screen;
+}
+.hero-tagline{
+  display:inline-flex;
+  align-items:center;
+  width:auto;
+  max-width:100%;
+  margin:17px 0 21px;
+  padding:9px 13px 9px 12px;
+  border:1px solid #79b9dc55;
+  border-left:3px solid #65c8f2;
+  border-radius:0 8px 8px 0;
+  background:linear-gradient(90deg,#04182beF 0%,#08233bd9 78%,#08233b66 100%);
+  color:#e1f3ff;
+  font-size:10px;
+  line-height:1.35;
+  font-weight:900;
+  letter-spacing:1.45px;
+  text-shadow:0 1px 4px #00101f;
+  box-shadow:0 5px 16px #0003,inset 0 1px #ffffff12;
+}
+@media(max-width:600px){
+ .hero-brand strong{-webkit-text-stroke:1.25px #214d6b}
+ .hero-tagline{font-size:9px;letter-spacing:1.15px;margin-top:16px;margin-bottom:19px;padding:8px 10px}
+}

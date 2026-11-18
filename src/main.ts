@@ -33,8 +33,6 @@ function rinkVisual(){
  const player=(p:PlayerCard|null|undefined,x:number,y:number,teamSide:'home'|'away',n:number,role:string,carrier=false)=>{
   const fill=teamSide==='home'?homeColor:awayColor;
   const forward=role==='forward',attacking=teamSide===(homeAttack?'home':'away');
-  const drift=carrier?(homeAttack?-34:34):attacking?(forward?(n===2?-18:n===3?18:-8):(n===4?-12:12)):(forward?(n===2?12:n===3?-12:0):(n===4?8:-8));
-  const lateral=carrier?(n===2?-12:n===3?12:0):attacking?(n===2?-16:n===3?16:0):(n===4?-8:8);
   const movementClass=carrier?' puck-carrier':forward?' support-skater':' defense-skater';
   return '<g class="ice-player '+teamSide+' '+role+' p'+n+movementClass+'"><circle cx="'+x+'" cy="'+y+'" r="19" fill="'+fill+'" stroke="#fff" stroke-width="3"/><circle cx="'+x+'" cy="'+y+'" r="15" fill="none" stroke="#ffffff77" stroke-width="1"/><text x="'+x+'" y="'+(y+4)+'" text-anchor="middle" font-size="11" font-weight="900" fill="#fff">'+(p?initials(p):String(n))+'</text></g>';
  };

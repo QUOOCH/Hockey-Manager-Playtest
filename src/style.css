@@ -433,3 +433,26 @@ label{display:block;font-size:11px;color:#a8c8e2;margin:12px 0}input{display:blo
 
 
 .hero-skill-points{display:flex;align-items:center;justify-content:space-between;margin:-3px 0 14px;padding:10px 12px;border:1px solid #e8bd5c55;border-radius:11px;background:linear-gradient(100deg,#4a3920,#252536);color:#f2d38e;font-size:8px;font-weight:900;letter-spacing:.8px}.hero-skill-points b{display:grid;place-items:center;width:29px;height:29px;border:1px solid #f3d58c;border-radius:9px;background:#f1c86a22;color:#ffe5a6;font-size:16px}.hero-stat-actions{display:flex;align-items:center;justify-content:space-between;margin-top:6px}.hero-stat-actions small{color:#688da8;font-size:6px;letter-spacing:.5px}.hero-stat-actions button{display:grid;place-items:center;width:28px;height:25px;border:1px solid #5ccfff88;border-radius:8px;background:linear-gradient(145deg,#17628b,#0c3554);color:#e4f8ff;font-size:17px;font-weight:900;cursor:pointer}.hero-stat-actions button:disabled{opacity:.28;cursor:not-allowed}.hero-skill-note{margin:12px 0 0;color:#789bb5;font-size:7px;line-height:1.5}
+
+/* Hero equipment browser */
+.hero-gear-slot{width:100%;text-align:left;color:inherit;cursor:pointer;transition:transform .16s,border-color .16s,background .16s}
+.hero-gear-slot.active{border-color:#76dfffaa;background:linear-gradient(135deg,#1d5c7c,#102b45);box-shadow:0 0 15px #36c9ed22}
+.hero-gear-slot>i{font-size:15px;color:#79dfff}
+.hero-gear-picker{margin:0 10px 15px;padding:13px;border:1px solid #83dfff2b;border-radius:14px;background:linear-gradient(145deg,#102b43,#091a2c)}
+.hero-picker-heading{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px;color:#ccefff;font-size:8px;font-weight:900;letter-spacing:.8px}
+.hero-picker-heading small{color:#6f9fbd;font-size:6px}
+.hero-item-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.hero-item-card{display:flex;min-width:0;flex-direction:column;align-items:stretch;gap:7px;padding:8px;border:1px solid color-mix(in srgb,var(--item-accent) 32%,transparent);border-radius:11px;background:linear-gradient(150deg,#19334a,#0a1a2b);color:#eaf8ff;text-align:left;cursor:pointer;transition:transform .16s,border-color .16s,box-shadow .16s}
+.hero-item-card:active{transform:scale(.97)}
+.hero-item-card.equipped{border-color:var(--item-accent);box-shadow:0 0 15px color-mix(in srgb,var(--item-accent) 24%,transparent),inset 0 0 0 1px color-mix(in srgb,var(--item-accent) 22%,transparent)}
+.hero-item-art{position:relative;display:grid;place-items:center;height:67px;overflow:hidden;border-radius:8px;background:radial-gradient(circle at 50% 40%,color-mix(in srgb,var(--item-accent) 32%,transparent),transparent 70%),linear-gradient(145deg,#203e55,#0b1a2b)}
+.hero-item-art:before{content:"";position:absolute;width:48px;height:48px;border:1px solid color-mix(in srgb,var(--item-accent) 65%,white);border-radius:14px;transform:rotate(35deg);box-shadow:inset 0 0 15px color-mix(in srgb,var(--item-accent) 25%,transparent),0 0 14px color-mix(in srgb,var(--item-accent) 20%,transparent)}
+.hero-item-art i{position:absolute;width:30px;height:38px;border:2px solid color-mix(in srgb,var(--item-accent) 75%,white);border-radius:10px 10px 13px 13px;background:linear-gradient(145deg,color-mix(in srgb,var(--item-accent) 70%,white),var(--item-accent) 48%,#101d31);box-shadow:inset 0 2px 5px #fff8,0 4px 9px #0008}
+.hero-item-art b{position:relative;z-index:1;color:white;font-size:13px;text-shadow:0 2px 5px #001}
+.hero-item-info{display:flex;flex-direction:column;gap:4px;min-width:0}
+.hero-item-info small{color:var(--item-accent);font-size:6px;font-weight:1000;letter-spacing:.7px}
+.hero-item-info b{overflow:hidden;color:#f0f8ff;font-size:8px;line-height:1.2;text-overflow:ellipsis}
+.hero-item-info i{color:#85a8bf;font-size:6px;font-style:normal;line-height:1.3}
+.hero-item-card>em{margin-top:auto;color:var(--item-accent);font-size:6px;font-style:normal;font-weight:1000;letter-spacing:.5px}
+@media(max-width:600px){.hero-item-grid{gap:5px}.hero-item-card{padding:6px}.hero-item-art{height:55px}.hero-item-info b{font-size:7px}.hero-picker-heading{font-size:7px}}
+@media(min-width:700px){.hero-item-grid{grid-template-columns:repeat(3,minmax(0,1fr));max-width:720px;margin:auto}.hero-item-art{height:85px}}

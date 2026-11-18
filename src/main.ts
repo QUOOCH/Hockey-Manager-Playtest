@@ -170,8 +170,7 @@ const extra=variant===0
 :'<path d="M20 30H27M51 30H58M30 50L34 45M48 50L44 45" stroke="#fff" stroke-width="2.4"/>';
 return '<svg viewBox="0 0 78 62" aria-hidden="true" focusable="false"><g fill="var(--item-accent)" stroke="#dff7ff" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round">'+(art[index]||art[0])+'</g><g fill="none" stroke-linecap="round" stroke-linejoin="round">'+details+extra+'</g><path d="M8 57H70" stroke="var(--item-accent)" stroke-width="2" opacity=".5"/></svg>';
 }
-function heroMannequinBase(role:HeroRole){
-if(role==='C')return `<svg class="hero-man-base hero-center-base" viewBox="0 0 105 250" aria-hidden="true">
+function heroMannequinBase(role:HeroRole){if(role==='C')return `<svg class="hero-man-base hero-center-base" viewBox="0 0 105 250" aria-hidden="true">
 <defs>
 <linearGradient id="centerJersey" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#397da0"/><stop offset=".45" stop-color="#153d5b"/><stop offset="1" stop-color="#071a2c"/></linearGradient>
 <linearGradient id="centerPants" x1="0" x2="1"><stop stop-color="#071827"/><stop offset=".5" stop-color="#294c65"/><stop offset="1" stop-color="#081a2b"/></linearGradient>
@@ -203,7 +202,7 @@ if(role==='C')return `<svg class="hero-man-base hero-center-base" viewBox="0 0 1
 <path d="M32 55L39 62M72 55L66 62M31 92L24 108M73 91L81 105"/>
 <path d="M37 133L43 140M67 133L62 140M33 177L39 184M68 176L74 184"/>
 </g>
-</svg>`;
+</svg>`;return heroMannequinBaseLegacy(role);}
 function heroMannequinBaseLegacy(role:HeroRole){
 const goalie=role==='G';
 return `<svg class="hero-man-base" viewBox="0 0 105 250" aria-hidden="true">
@@ -286,8 +285,9 @@ return `<svg class="hero-man-gear hero-center-gear" viewBox="0 0 105 250" aria-h
 <path d="M17 216L42 216M65 216L89 216" fill="none" stroke="#132c40" stroke-width="1.4"/>
 </g>
 </svg>`;
+return heroMannequinGearLegacy(role,gear);
 }
-function heroMannequinGear(role:HeroRole,gear:string[]){
+function heroMannequinGearLegacy(role:HeroRole,gear:string[]){
 const g=(slot:number)=>heroGearCatalog(role,slot).findIndex(x=>x.name===gear[slot]);
 const color=(slot:number)=>heroGearColor(role,slot,gear[slot]);
 const v=(slot:number)=>Math.max(0,g(slot));

@@ -46,19 +46,19 @@ label{display:block;font-size:11px;color:#a8c8e2;margin:12px 0}input{display:blo
 @keyframes home-glide{from{translate:0 0}to{translate:0 -13px}}
 @keyframes away-glide{from{translate:0 0}to{translate:0 13px}}
 @keyframes defend-glide{from{scale:1}to{scale:1.07}}
-.live-puck{fill:#111820;stroke:#fff;stroke-width:2;filter:drop-shadow(0 0 5px #17212b);animation:puck-pop .65s ease-in-out infinite alternate}
+.live-puck{fill:#111820;stroke:#fff;stroke-width:2;stroke-linecap:round;filter:drop-shadow(0 0 5px #17212b);animation:puck-pop .5s ease-in-out infinite alternate}
 .puck-glow{fill:#31bfff;opacity:.32;animation:puck-glow 1s ease-out infinite}
-.puck-route{stroke-dasharray:6 8;animation:route-dash 1s linear infinite}
+.puck-route{stroke-dasharray:4 9;stroke-linecap:round;animation:route-dash .8s linear infinite}
 @keyframes puck-pop{from{r:5}to{r:8}}
 @keyframes puck-glow{from{opacity:.1;r:11}to{opacity:.45;r:21}}
 @keyframes route-dash{to{stroke-dashoffset:-28}}
-.rink-callout{position:absolute;left:50%;top:49%;transform:translate(-50%,-50%);z-index:4;display:flex;flex-direction:column;align-items:center;gap:5px;max-width:90%;padding:11px 17px;border-radius:14px;background:#092a49eF;border:1px solid #ffffff38;color:#f2f9ff;text-align:center;box-shadow:0 8px 25px #00172b66;animation:callout-in .35s ease-out}
-.rink-callout b{font-size:15px;letter-spacing:1.4px}.rink-callout span{font-size:9px;color:#c1ddf3;line-height:1.4}
-.rink-callout.is-goal{background:linear-gradient(120deg,#8b1e3c,#d94e65);border-color:#ffb0bd;box-shadow:0 0 30px #ff4c704d}
-.rink-callout.is-save{background:linear-gradient(120deg,#07518c,#168dca);border-color:#83d9ff;box-shadow:0 0 28px #24baff44}
+.rink-callout{position:absolute;left:50%;top:12%;transform:translateX(-50%);z-index:4;display:flex;flex-direction:column;align-items:center;gap:4px;width:max-content;max-width:88%;padding:8px 13px;border-radius:12px;background:#092a49ed;border:1px solid #ffffff38;color:#f2f9ff;text-align:center;box-shadow:0 7px 20px #00172b55;pointer-events:none;animation:callout-life 2.15s ease-out forwards}
+.rink-callout b{font-size:12px;letter-spacing:1.1px}.rink-callout span{font-size:8px;color:#c1ddf3;line-height:1.35}
+.rink-callout.is-goal{background:linear-gradient(120deg,#8b1e3c,#d94e65);border-color:#ffb0bd;box-shadow:0 0 24px #ff4c7040}
+.rink-callout.is-save{background:linear-gradient(120deg,#07518c,#168dca);border-color:#83d9ff;box-shadow:0 0 22px #24baff38}
 .goal-scored .ice-svg{animation:goal-flash .8s ease-out}
 @keyframes goal-flash{0%{filter:drop-shadow(0 0 0 #ff657c)}40%{filter:drop-shadow(0 0 20px #ff657c)}100%{filter:drop-shadow(0 10px 15px #0003)}}
-@keyframes callout-in{from{opacity:0;scale:.85}to{opacity:1;scale:1}}
+@keyframes callout-life{0%{opacity:0;translate:0 -7px;scale:.96}12%{opacity:1;translate:0 0;scale:1}72%{opacity:1}100%{opacity:0;translate:0 -8px;scale:.98}}
 .rink-legend{display:flex;justify-content:center;gap:18px;padding:8px 0 1px;color:#a6c7e2;font-size:8px;font-weight:800}
 .rink-legend span{display:flex;align-items:center;gap:6px}.rink-legend i{width:8px;height:8px;border-radius:50%;display:inline-block;box-shadow:0 0 8px currentColor}
 .ice-status{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:10px}

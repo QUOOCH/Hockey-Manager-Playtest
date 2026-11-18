@@ -37,7 +37,7 @@ function rinkVisual(){
  const homeColor=matchHome?.club.primaryColor||'#168de0',awayColor=opponent.club.primaryColor||'#e46b48';
  const player=(p:PlayerCard|null|undefined,x:number,y:number,teamSide:'home'|'away',n:number,role:string,carrier=false)=>{
   const fill=teamSide==='home'?homeColor:awayColor;
-  return '<g class="ice-player '+teamSide+' '+role+' p'+n+(carrier?' puck-carrier':'')+(res?.blocked&&ev?.side!==(teamSide)?' shot-blocker':'')+'" data-skater="'+teamSide+'-'+(n-1)+'" transform="translate('+x+' '+y+')"><circle cx="0" cy="0" r="19" fill="'+fill+'" stroke="#fff" stroke-width="3"/><circle cx="0" cy="0" r="15" fill="none" stroke="#ffffff77" stroke-width="1"/><text x="0" y="4" text-anchor="middle" font-size="11" font-weight="900" fill="#fff">'+(p?initials(p):String(n))+'</text></g>';
+  return '<g class="ice-player '+teamSide+' '+role+' p'+n+(carrier?' puck-carrier':'')+(res?.blocked&&res.blockerIndex===n-1&&ev?.side!==(teamSide)?' shot-blocker':'')+'" data-skater="'+teamSide+'-'+(n-1)+'" transform="translate('+x+' '+y+')"><circle cx="0" cy="0" r="19" fill="'+fill+'" stroke="#fff" stroke-width="3"/><circle cx="0" cy="0" r="15" fill="none" stroke="#ffffff77" stroke-width="1"/><text x="0" y="4" text-anchor="middle" font-size="11" font-weight="900" fill="#fff">'+(p?initials(p):String(n))+'</text></g>';
  };
  const homeY=faceoff?[294,235,385,255,365]:homeAttack?[360,320,320,410,410]:[430,390,390,470,470];
  const awayY=faceoff?[326,385,235,365,255]:homeAttack?[205,245,245,155,155]:[265,305,305,215,215];

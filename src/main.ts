@@ -202,7 +202,11 @@ const v=(slot:number)=>Math.max(0,g(slot));
 const helmet=color(0),armor=color(1),glove=color(2),stick=color(3),skate=color(4),jersey=color(5),pants=color(6);
 const goalie=role==='G';
 const helmetShape=v(0)%3===0?'<path d="M35 28Q34 5 52 4Q72 4 73 28L69 37H39Z"/>':v(0)%3===1?'<path d="M34 26Q37 2 54 3Q74 4 75 25L68 36H39Z"/><path d="M37 15L69 15" stroke="#fff" stroke-width="2"/>':'<path d="M35 25Q37 5 54 5Q72 5 74 25L70 34H38Z"/><path d="M40 8L54 3L68 9" fill="none" stroke="#fff" stroke-width="2"/>';
-const torso=v(1)%3===0?'<path d="M27 49L39 42H69L82 50L76 93L69 108H38L31 92Z"/>':v(1)%3===1?'<path d="M24 52L39 43H68L85 53L78 99L69 110H38L29 96Z"/><path d="M30 58L76 58M31 88L75 88" stroke="#fff" stroke-width="2"/>':'<path d="M29 48L40 40H68L80 49L74 102H35Z"/><path d="M35 49L54 64L73 49M54 64V101" fill="none" stroke="#fff" stroke-width="3"/>';
+const torso=v(1)%3===0
+?'<path d="M25 49L40 41H65L80 49L73 73H32Z"/><path d="M31 53L40 47H65L74 53" fill="none" stroke="#fff" stroke-width="2"/>'
+:v(1)%3===1
+?'<path d="M23 51L40 42H65L82 51L74 78H31Z"/><path d="M29 59L76 59M31 72L74 72" stroke="#fff" stroke-width="2"/>'
+:'<path d="M27 48L41 40H64L78 48L72 76H33Z"/><path d="M34 49L52 62L71 49M52 62V75" fill="none" stroke="#fff" stroke-width="3"/>';
 const gloveShape=v(2)%3===0?'<path d="M10 111Q8 99 19 96L31 101L33 120L25 132L12 127Z"/><path d="M76 105L88 101L97 108L95 127L83 133L75 122Z"/>':v(2)%3===1?'<path d="M8 108L18 96L31 101L35 119L25 134L11 128Z"/><path d="M75 103L87 96L99 107L96 128L82 135L74 120Z"/>':'<path d="M11 105Q13 94 25 98L35 109L30 130L16 133L8 120Z"/><path d="M74 109L84 97L96 101L100 120L91 133L77 129Z"/>';
 const stickShape='<path d="M91 73L97 75L47 236L41 234Z"/><path d="M36 231L48 235L36 244L21 239L23 235Z"/>';
 const skateShape='<path d="M24 222L47 222L49 235L38 241L13 239L11 234Z"/><path d="M61 222L83 222L94 234L90 240L64 240L58 235Z"/><path d="M13 242H47M62 242H94" stroke="#eafaff" stroke-width="2.5"/>';
@@ -211,7 +215,7 @@ const pantsShape='<path d="M34 126L72 126L76 160L67 169H38L29 160Z"/>';
 return `<svg class="hero-man-gear" viewBox="0 0 105 250" aria-hidden="true">
 <g stroke="#e5f8ff" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round">
 <path d="M37 34H70L75 43L68 53H39L32 43Z" fill="${helmet}"/><g fill="${helmet}">${helmetShape}</g><path d="M39 30H69L67 37H41Z" fill="#102b42"/>
-<g fill="${armor}">${torso}</g><path d="M34 65L72 65L69 123L37 123Z" fill="${jersey}" opacity=".9"/><path d="M38 74L68 74M39 84L67 84" stroke="#fff" opacity=".8"/>
+<g fill="${armor}">${torso}</g><path d="M35 82L69 82M34 94L70 94M37 106L67 106" fill="none" stroke="${jersey}" stroke-width="3" opacity=".95"/><path d="M39 88L66 88" stroke="#fff" stroke-width="1.4" opacity=".8"/><path d="M52 91L56 91L56 111L52 111Z" fill="${jersey}" opacity=".9"/>
 <g fill="${pants}" stroke="#dff7ff">${pantsShape}</g><g fill="${glove}">${gloveShape}</g>
 <g fill="${stick}" stroke="#dff7ff">${stickShape}</g><g fill="${skate}">${skateShape}</g>${pads}
 </g></svg>`;

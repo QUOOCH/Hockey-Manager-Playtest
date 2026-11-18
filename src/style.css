@@ -156,3 +156,33 @@ label{display:block;font-size:11px;color:#a8c8e2;margin:12px 0}input{display:blo
 .home-footer span{width:100%;text-align:center;color:#557b9c;font-size:7px;letter-spacing:1.5px}.home-footer span i{color:#3dc4f4;font-style:normal}
 @media(max-width:600px){.home-hero{min-height:420px;border-radius:21px}.hero-copy{padding:22px 16px 18px}.hero-brand{font-size:43px}.hero-ice{right:-36px;top:24px;width:57%;opacity:.64}.hero-player-silhouette{font-size:115px}.hero-bottom-line{left:16px;right:16px}.home-stat{padding:10px 9px;gap:7px}.home-stat small{font-size:6px}.home-stat b{font-size:13px}.home-menu-card{min-height:105px;padding:11px}.home-section-head>i{font-size:6px}}
 @media(min-width:700px){.home-hero{min-height:470px}.hero-copy{padding:34px 34px}.hero-ice{width:55%}.home-menu-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.home-menu-card{min-height:125px}}
+
+
+/* Brutal carved-ice wordmark for PUCK IT! */
+.hero-brand strong{
+  display:inline-block;
+  position:relative;
+  font-family:Impact,"Arial Black",system-ui,sans-serif;
+  font-weight:950;
+  letter-spacing:-2.4px;
+  line-height:.98;
+  -webkit-text-stroke:1px #e7faff;
+  background:linear-gradient(180deg,#ffffff 0%,#e5f8ff 17%,#8bdcff 34%,#f5fdff 43%,#65b9e8 57%,#d9f4ff 70%,#4e9bc9 86%,#e9faff 100%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+  filter:drop-shadow(0 2px 0 #397ca5) drop-shadow(0 5px 0 #164d72) drop-shadow(0 9px 0 #082b48) drop-shadow(0 14px 16px #00101f);
+  text-shadow:0 0 18px #8bdfff88,0 0 34px #4abfff44;
+}
+.hero-brand strong:after{
+  content:"";
+  position:absolute;
+  inset:3% 1% 8%;
+  pointer-events:none;
+  opacity:.72;
+  background:
+    linear-gradient(118deg,transparent 0 18%,#ffffffb8 18.4% 19%,transparent 19.5% 47%,#ffffff88 47.4% 48%,transparent 48.5%),
+    linear-gradient(72deg,transparent 0 63%,#dff8ff99 63.4% 64%,transparent 64.5%);
+  mix-blend-mode:screen;
+  clip-path:polygon(0 0,100% 0,98% 18%,100% 22%,97% 27%,100% 31%,98% 100%,2% 100%,0 88%,2% 81%);
+}

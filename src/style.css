@@ -501,3 +501,10 @@ label{display:block;font-size:11px;color:#a8c8e2;margin:12px 0}input{display:blo
 .hero-man-gear{z-index:5}
 @media(min-width:700px){.hero-man{width:132px;height:300px;transform:none!important}}
 @media(max-width:600px){.hero-man{width:116px;height:276px;transform:none!important}}
+
+/* Center forward prototype: stronger athletic silhouette and readable equipment layers */
+.hero-center-base{filter:drop-shadow(0 4px 4px #00111f99)}
+.hero-center-gear{z-index:6;filter:drop-shadow(0 2px 3px #001522bb)}
+.hero-player-stage:has(.hero-center-base){background:radial-gradient(ellipse at 50% 43%,#7bdcff35,transparent 58%),linear-gradient(180deg,#102f4b,#06182b)}
+.hero-player-stage:has(.hero-center-base) .hero-stage-glow{width:118px;height:220px;background:#55cafa2b;filter:blur(22px)}
+.hero-player-stage:has(.hero-center-base) .hero-stage-caption{color:#9bdfff;letter-spacing:1.4px}

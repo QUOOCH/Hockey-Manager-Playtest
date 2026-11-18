@@ -81,7 +81,7 @@ function rinkVisual(){
  '<g fill="none" stroke="#e14f65" stroke-width="5"><path d="M150 42 H250 V83 H150Z"/><path d="M150 578 H250 V537 H150Z"/></g>'+
  goalie(200,62,awayGoalie,'away',homeAttack)+goalie(200,558,homeGoalie,'home',!homeAttack)+players+
  '<defs><clipPath id="rinkInterior"><rect x="22" y="22" width="356" height="576" rx="94"/></clipPath></defs>'+
- '<g clip-path="url(#rinkInterior)">'+(faceoff?'':'<path class="puck-route" d="'+puckPath+'" fill="none" stroke="#1b2734" stroke-width="2.5" stroke-dasharray="4 9" opacity=".28"/>')+
+ '<g clip-path="url(#rinkInterior)">'+
  '<circle class="live-puck" data-live-puck cx="'+puckX+'" cy="'+puckY+'" r="7"/>'+
  '<circle class="puck-glow" data-puck-glow cx="'+puckX+'" cy="'+puckY+'" r="16"/></g>'+
  '</svg>'+

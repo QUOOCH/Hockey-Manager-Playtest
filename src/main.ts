@@ -35,8 +35,8 @@ function rinkVisual(){
   const forward=role==='forward',attacking=teamSide===(homeAttack?'home':'away');
   const drift=carrier?(homeAttack?-34:34):attacking?(forward?(n===2?-18:n===3?18:-8):(n===4?-12:12)):(forward?(n===2?12:n===3?-12:0):(n===4?8:-8));
   const lateral=carrier?(n===2?-12:n===3?12:0):attacking?(n===2?-16:n===3?16:0):(n===4?-8:8);
-  const motion='<animateTransform attributeName="transform" type="translate" values="0 0;'+lateral+' '+drift+';'+(lateral*.55)+' '+(drift*.7)+';0 0" keyTimes="0;.42;.72;1" dur="'+(carrier?'1.8':'2.4')+'s" repeatCount="indefinite"/>';
-  return '<g class="ice-player '+teamSide+' '+role+' p'+n+(carrier?' puck-carrier':'')+'">'+motion+'<circle cx="'+x+'" cy="'+y+'" r="19" fill="'+fill+'" stroke="#fff" stroke-width="3"/><circle cx="'+x+'" cy="'+y+'" r="15" fill="none" stroke="#ffffff77" stroke-width="1"/><text x="'+x+'" y="'+(y+4)+'" text-anchor="middle" font-size="11" font-weight="900" fill="#fff">'+(p?initials(p):String(n))+'</text></g>';
+  const movementClass=carrier?' puck-carrier':forward?' support-skater':' defense-skater';
+  return '<g class="ice-player '+teamSide+' '+role+' p'+n+movementClass+'"><circle cx="'+x+'" cy="'+y+'" r="19" fill="'+fill+'" stroke="#fff" stroke-width="3"/><circle cx="'+x+'" cy="'+y+'" r="15" fill="none" stroke="#ffffff77" stroke-width="1"/><text x="'+x+'" y="'+(y+4)+'" text-anchor="middle" font-size="11" font-weight="900" fill="#fff">'+(p?initials(p):String(n))+'</text></g>';
  };
  const homeY=homeAttack? [360,320,320,410,410]:[430,390,390,470,470];
  const awayY=homeAttack? [205,245,245,155,155]:[265,305,305,215,215];
@@ -78,9 +78,10 @@ function rinkVisual(){
  '<g fill="#e9a2ad" opacity=".55"><path d="M145 38 Q200 10 255 38 L255 78 Q200 112 145 78Z"/><path d="M145 582 Q200 610 255 582 L255 542 Q200 508 145 542Z"/></g>'+
  '<g fill="none" stroke="#e14f65" stroke-width="5"><path d="M150 42 H250 V83 H150Z"/><path d="M150 578 H250 V537 H150Z"/></g>'+
  goalie(200,62,awayGoalie,'away',homeAttack)+goalie(200,558,homeGoalie,'home',!homeAttack)+players+
- '<path class="puck-route" d="'+puckPath+'" fill="none" stroke="#1b2734" stroke-width="2.5" stroke-dasharray="4 9" opacity=".28"/>'+
+ '<defs><clipPath id="rinkInterior"><rect x="22" y="22" width="356" height="576" rx="94"/></clipPath></defs>'+
+ '<g clip-path="url(#rinkInterior)"><path class="puck-route" d="'+puckPath+'" fill="none" stroke="#1b2734" stroke-width="2.5" stroke-dasharray="4 9" opacity=".28"/>'+
  '<circle class="live-puck" cx="'+shooterX+'" cy="'+shooterY+'" r="7"><animateMotion path="'+puckPath+'" begin=".12s" dur="1.25s" calcMode="spline" keyPoints="0;1" keyTimes="0;1" keySplines=".2 .65 .25 1" fill="freeze"/></circle>'+
- '<circle class="puck-glow" cx="'+shooterX+'" cy="'+shooterY+'" r="16"><animateMotion path="'+puckPath+'" begin=".12s" dur="1.25s" calcMode="spline" keyPoints="0;1" keyTimes="0;1" keySplines=".2 .65 .25 1" fill="freeze"/></circle>'+
+ '<circle class="puck-glow" cx="'+shooterX+'" cy="'+shooterY+'" r="16"><animateMotion path="'+puckPath+'" begin=".12s" dur="1.25s" calcMode="spline" keyPoints="0;1" keyTimes="0;1" keySplines=".2 .65 .25 1" fill="freeze"/></circle></g>'+
  '</svg>'+
  (ev&&res?.isGoal?'<div class="rink-callout is-goal"><b>🥅 ГОООЛ!</b><span>'+esc(description)+'</span></div>':'')+
  '<div class="rink-legend"><span><i style="background:'+homeColor+'"></i>'+esc(team.club.displayName)+'</span><span><i style="background:'+awayColor+'"></i>'+esc(opponent.name)+'</span></div></div>';

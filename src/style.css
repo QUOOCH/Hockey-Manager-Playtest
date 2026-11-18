@@ -466,3 +466,11 @@ label{display:block;font-size:11px;color:#a8c8e2;margin:12px 0}input{display:blo
 .hero-pants{background:linear-gradient(90deg,#101c30,var(--pants-color),#101c30)!important;border-color:color-mix(in srgb,var(--pants-color) 70%,white)!important}
 .hero-skate{background:linear-gradient(180deg,color-mix(in srgb,var(--skate-color) 55%,white),var(--skate-color))!important}
 .hero-stick{background:linear-gradient(90deg,#c6d8e2,var(--stick-color))!important}
+
+/* Detailed SVG gear renders */
+.hero-item-art{isolation:isolate;background:radial-gradient(ellipse at 50% 55%,color-mix(in srgb,var(--item-accent) 30%,transparent),transparent 68%),linear-gradient(145deg,#29465d,#0a1a2b)}
+.hero-item-art:before{width:52px;height:42px;border-radius:12px;transform:rotate(28deg);opacity:.42}
+.hero-item-art>svg{position:relative;z-index:1;width:88%;height:88%;overflow:visible;filter:drop-shadow(0 4px 4px #0009) drop-shadow(0 0 5px color-mix(in srgb,var(--item-accent) 38%,transparent));transition:transform .2s,filter .2s}
+.hero-item-card:active .hero-item-art>svg{transform:scale(1.08) rotate(-3deg)}
+.hero-item-card.equipped .hero-item-art>svg{filter:drop-shadow(0 4px 5px #000a) drop-shadow(0 0 9px var(--item-accent))}
+.hero-item-art>svg g{paint-order:stroke fill}

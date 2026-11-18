@@ -30,21 +30,24 @@ function rinkVisual(){
  const a=awayLine?[awayLine.center,awayLine.leftWing,awayLine.rightWing,awayLine.defense1,awayLine.defense2]:[];
  const initials=(p:PlayerCard)=>esc(p.name.split(/\s+/).map(x=>x[0]).slice(0,2).join('').toUpperCase());
  const homeColor=matchHome?.club.primaryColor||'#168de0',awayColor=opponent.club.primaryColor||'#e46b48';
- const player=(p:PlayerCard|null|undefined,x:number,y:number,teamSide:'home'|'away',n:number,role:string)=>{
+ const player=(p:PlayerCard|null|undefined,x:number,y:number,teamSide:'home'|'away',n:number,role:string,carrier=false)=>{
   const fill=teamSide==='home'?homeColor:awayColor;
-  return '<g class="ice-player '+teamSide+' '+role+' p'+n+'"><circle cx="'+x+'" cy="'+y+'" r="19" fill="'+fill+'" stroke="#fff" stroke-width="3"/><circle cx="'+x+'" cy="'+y+'" r="15" fill="none" stroke="#ffffff77" stroke-width="1"/><text x="'+x+'" y="'+(y+4)+'" text-anchor="middle" font-size="11" font-weight="900" fill="#fff">'+(p?initials(p):String(n))+'</text></g>';
+  return '<g class="ice-player '+teamSide+' '+role+' p'+n+(carrier?' puck-carrier':'')+'"><circle cx="'+x+'" cy="'+y+'" r="19" fill="'+fill+'" stroke="#fff" stroke-width="3"/><circle cx="'+x+'" cy="'+y+'" r="15" fill="none" stroke="#ffffff77" stroke-width="1"/><text x="'+x+'" y="'+(y+4)+'" text-anchor="middle" font-size="11" font-weight="900" fill="#fff">'+(p?initials(p):String(n))+'</text></g>';
  };
  const homeY=homeAttack? [360,320,320,410,410]:[430,390,390,470,470];
  const awayY=homeAttack? [205,245,245,155,155]:[265,305,305,215,215];
  const homeXs=[200,105,295,135,265],awayXs=[200,105,295,135,265];
- const players=h.map((p,i)=>player(p,homeXs[i],homeY[i],'home',i+1,i<3?'forward':'defender')).join('')+
- a.map((p,i)=>player(p,awayXs[i],awayY[i],'away',i+1,i<3?'forward':'defender')).join('');
+ const carrierIndex=res?.attackerIndex??0;
+ const players=h.map((p,i)=>player(p,homeXs[i],homeY[i],'home',i+1,i<3?'forward':'defender',homeAttack&&i===carrierIndex)).join('')+
+ a.map((p,i)=>player(p,awayXs[i],awayY[i],'away',i+1,i<3?'forward':'defender',!homeAttack&&i===carrierIndex)).join('');
  const homeGoalie=match.homeUseGoalie2?matchHome?.goalie2:matchHome?.goalie1;
  const awayGoalie=match.awayUseGoalie2?opponent.goalie2:opponent.goalie1;
- const goalie=(x:number,y:number,p:PlayerCard|null|undefined,teamSide:'home'|'away')=>'<g class="ice-goalie '+teamSide+'"><rect x="'+(x-23)+'" y="'+(y-22)+'" width="46" height="44" rx="12" fill="'+(teamSide==='home'?homeColor:awayColor)+'" stroke="#fff" stroke-width="3"/><text x="'+x+'" y="'+(y+5)+'" text-anchor="middle" font-size="13" font-weight="900" fill="#fff">ВР</text></g>';
+ const goalie=(x:number,y:number,p:PlayerCard|null|undefined,teamSide:'home'|'away',defending=false)=>'<g class="ice-goalie '+teamSide+(defending?' defending-goalie':'')+'"><rect x="'+(x-23)+'" y="'+(y-22)+'" width="46" height="44" rx="12" fill="'+(teamSide==='home'?homeColor:awayColor)+'" stroke="#fff" stroke-width="3"/><text x="'+x+'" y="'+(y+5)+'" text-anchor="middle" font-size="13" font-weight="900" fill="#fff">ВР</text></g>';
  const shooterX= res?.attackerIndex===1?105:res?.attackerIndex===2?295:200;
  const shooterY=homeAttack?homeY[res?.attackerIndex??0]:awayY[res?.attackerIndex??0];
  const goalY=homeAttack?76:544;
+ const puckTargetY=res?.isShot?(homeAttack?83:537):(homeAttack?Math.max(100,shooterY-42):Math.min(520,shooterY+42));
+ const puckMidX=(shooterX+200)/2,puckMidY=(shooterY+puckTargetY)/2;
  const resultClass=res?.isGoal?'goal-scored':res?.isShot?'shot-saved':'attack-stopped';
  const banner=res?.isGoal?'ГОООЛ!':res?.isShot?'БРОСОК · СЕЙВ':'АТАКА ОСТАНОВЛЕНА';
  const description=ev?ev.message:'Матч готов к старту';
@@ -60,10 +63,8 @@ function rinkVisual(){
  '<g fill="none" stroke="#277bc0" stroke-width="2"><path d="M15 90 Q200 90 385 90"/><path d="M15 530 Q200 530 385 530"/><path d="M125 15 V90 Q200 140 275 90 V15"/><path d="M125 605 V530 Q200 480 275 530 V605"/></g>'+
  '<g fill="#e9a2ad" opacity=".55"><path d="M145 38 Q200 10 255 38 L255 78 Q200 112 145 78Z"/><path d="M145 582 Q200 610 255 582 L255 542 Q200 508 145 542Z"/></g>'+
  '<g fill="none" stroke="#e14f65" stroke-width="5"><path d="M150 42 H250 V83 H150Z"/><path d="M150 578 H250 V537 H150Z"/></g>'+
- goalie(200,62,awayGoalie,'away')+goalie(200,558,homeGoalie,'home')+players+
- '<path class="puck-route" d="'+(homeAttack?'M '+shooterX+' '+shooterY+' Q 185 155 200 78':'M '+shooterX+' '+shooterY+' Q 215 465 200 542')+'" fill="none" stroke="#1b2734" stroke-width="2" stroke-dasharray="5 8" opacity=".3"/>'+
- '<circle class="live-puck" cx="'+shooterX+'" cy="'+shooterY+'" r="7"><animate attributeName="cx" from="'+shooterX+'" to="200" dur=".75s" fill="freeze"/><animate attributeName="cy" from="'+shooterY+'" to="'+(homeAttack?83:537)+'" dur=".75s" fill="freeze"/></circle>'+
- '<circle class="puck-glow" cx="'+shooterX+'" cy="'+shooterY+'" r="16"/>'+
+ goalie(200,62,awayGoalie,'away',homeAttack)+goalie(200,558,homeGoalie,'home',!homeAttack)+players+
+ '<path class="puck-route" d="'+(homeAttack?'M '+shooterX+' '+shooterY+' Q '+puckMidX+' '+(puckMidY-18)+' 200 '+puckTargetY:'M '+shooterX+' '+shooterY+' Q '+puckMidX+' '+(puckMidY+18)+' 200 '+puckTargetY)+'" fill="none" stroke="#1b2734" stroke-width="2" stroke-dasharray="5 8" opacity=".3"/>'+\n '<circle class="live-puck" cx="'+shooterX+'" cy="'+shooterY+'" r="7"><animate attributeName="cx" values="'+shooterX+';'+puckMidX+';200" keyTimes="0;.48;1" begin=".22s" dur=".9s" calcMode="spline" keySplines=".35 0 .65 1;.2 .7 .3 1" fill="freeze"/><animate attributeName="cy" values="'+shooterY+';'+puckMidY+';'+puckTargetY+'" keyTimes="0;.48;1" begin=".22s" dur=".9s" calcMode="spline" keySplines=".35 0 .65 1;.2 .7 .3 1" fill="freeze"/></circle>'+\n '<circle class="puck-glow" cx="'+shooterX+'" cy="'+shooterY+'" r="16"/>'+
  '</svg>'+
  '<div class="rink-callout '+(res?.isGoal?'is-goal':res?.isShot?'is-save':'')+'"><b>'+(res?.isGoal?'🥅 '+banner:res?.isShot?'🧤 '+banner:'⚡ '+banner)+'</b><span>'+esc(description)+'</span></div>'+
  '<div class="rink-legend"><span><i style="background:'+homeColor+'"></i>'+esc(team.club.displayName)+'</span><span><i style="background:'+awayColor+'"></i>'+esc(opponent.name)+'</span></div></div>';

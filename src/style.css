@@ -103,3 +103,9 @@ label{display:block;font-size:11px;color:#a8c8e2;margin:12px 0}input{display:blo
 /* Real-time rink positions are driven by the live match loop, not decorative keyframes. */
 .live-simulation .ice-player{animation:none!important;transition:filter .18s ease}
 .live-simulation .ice-player.puck-carrier{filter:drop-shadow(0 0 8px #fff) drop-shadow(0 4px 4px #15344a88)}
+
+
+/* Second-layer AI: visible body contact on a blocked shot. */
+.shot-blocked .shot-blocker{filter:drop-shadow(0 0 10px #ffbf47) drop-shadow(0 0 5px #fff);animation:block-impact .48s cubic-bezier(.2,.8,.2,1) both!important}
+.shot-blocked .live-puck{fill:#f6b73c;stroke:#fff;stroke-width:3}
+@keyframes block-impact{0%{scale:1;translate:0 0}35%{scale:1.28;translate:0 -5px}100%{scale:1.08;translate:0 0}}

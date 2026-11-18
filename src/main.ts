@@ -211,7 +211,7 @@ const gloveShape=v(2)%3===0?'<path d="M10 111Q8 99 19 96L31 101L33 120L25 132L12
 const stickShape='<path d="M91 73L97 75L47 236L41 234Z"/><path d="M36 231L48 235L36 244L21 239L23 235Z"/>';
 const skateShape='<path d="M24 222L47 222L49 235L38 241L13 239L11 234Z"/><path d="M61 222L83 222L94 234L90 240L64 240L58 235Z"/><path d="M13 242H47M62 242H94" stroke="#eafaff" stroke-width="2.5"/>';
 const pads=goalie?'<path d="M22 153L47 153L50 225L43 237L18 233L16 220Z" fill="'+armor+'" stroke="#fff" stroke-width="2"/><path d="M61 153L86 153L91 220L88 233L63 237L58 225Z" fill="'+armor+'" stroke="#fff" stroke-width="2"/><path d="M19 171H48M19 190H49M62 171H88M61 190H89" stroke="#fff" stroke-width="3"/><path d="M4 104Q2 87 17 84Q35 85 38 103L29 126L12 127Z" fill="'+glove+'" stroke="#fff" stroke-width="2"/><path d="M78 108L96 103L103 125L94 137L78 131Z" fill="'+glove+'" stroke="#fff" stroke-width="2"/>':'';
-const pantsShape='<path d="M34 126L72 126L76 160L67 169H38L29 160Z"/>';
+const pantsShape='<path d="M31 133L48 136L46 162L37 166L29 158Z"/><path d="M58 136L75 133L77 158L69 166L60 162Z"/>';
 return `<svg class="hero-man-gear" viewBox="0 0 105 250" aria-hidden="true">
 <g stroke="#e5f8ff" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round">
 <path d="M37 34H70L75 43L68 53H39L32 43Z" fill="${helmet}"/><g fill="${helmet}">${helmetShape}</g><path d="M39 30H69L67 37H41Z" fill="#102b42"/>

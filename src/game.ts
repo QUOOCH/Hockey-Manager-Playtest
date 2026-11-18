@@ -110,7 +110,7 @@ export function goaliePower(g:PlayerCard,s=1){return (g.reaction*1.5+g.agility+g
 export function resolveShift(attacker:Line,defender:Line,goalie:PlayerCard,attackerStamina=1,defenderStamina=1,goalieStamina=1):ShotResult{
   const attack=lineAttack(attacker,attackerStamina), defense=lineDefense(defender,defenderStamina), gp=goaliePower(goalie,goalieStamina);
   const shotChance=Math.max(.15,Math.min(.85,attack/(attack+defense*.7)));
-  const goalChance=Math.max(.05,Math.min(.45,attack/(attack+gp*1.4)));
+  const goalChance=Math.max(.02,Math.min(.28,attack/(attack+gp*2.2)));
   const rnd=.85+Math.random()*.3;
   const isShot=Math.random()<shotChance;
   const isGoal=isShot&&Math.random()<(goalChance*rnd);

@@ -423,3 +423,10 @@ label{display:block;font-size:11px;color:#a8c8e2;margin:12px 0}input{display:blo
  .hero-gear-column{gap:12px}.hero-gear-slot{min-height:60px;padding:9px}
  .hero-gear-slot small{font-size:7px}.hero-gear-slot b{font-size:9px}
 }
+
+
+.hero-header-avatar{position:relative;overflow:hidden;flex:none;padding:0;border:1px solid #a6e5ff99;cursor:pointer;color:#fff;background:radial-gradient(circle at 30% 15%,#b9efff,#328ec0 42%,#103d68 100%);box-shadow:0 7px 22px #1687ff55,inset 0 1px 4px #fff9}
+.hero-header-avatar>span{font-size:23px;line-height:1;filter:drop-shadow(0 2px 2px #003)}
+.hero-header-avatar>small{position:absolute;right:2px;bottom:2px;min-width:15px;padding:2px 3px;border:1px solid #d5f4ff;border-radius:5px;background:#092744;color:#bfeeff;font-size:6px;font-weight:900;line-height:1}
+.hero-header-avatar:active{transform:scale(.94);filter:brightness(1.2)}
+@media(max-width:600px){.hero-header-avatar{width:42px;height:42px;border-radius:14px}}

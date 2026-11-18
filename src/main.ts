@@ -63,7 +63,7 @@ function rinkVisual(){
     ? 'M '+shooterX+' '+shooterY+' C '+(shooterX+(homeAttack?55:-55))+' '+(shooterY+attackDir*22)+' '+(homeAttack?250:150)+' '+(homeAttack?150:470)+' '+targetX+' '+targetY
     : 'M '+shooterX+' '+shooterY+' C '+(shooterX+(homeAttack?42:-42))+' '+(shooterY+attackDir*12)+' '+(homeAttack?176:224)+' '+(homeAttack?105:515)+' '+targetX+' '+targetY)
   : 'M '+shooterX+' '+shooterY+' Q '+bendX+' '+bendY+' '+supportX+' '+supportY+' Q '+finishBendX+' '+finishBendY+' '+targetX+' '+targetY;
- const resultClass=res?.isGoal?'goal-scored':res?.isShot?'shot-saved':'attack-stopped';
+ const resultClass=res?.isGoal?'goal-scored':res?.goalieSaved?'shot-saved':res?.isShot?'shot-missed':'attack-stopped';
 
  const description=ev?ev.message:'';
  const progress=faceoff?0:(match.period-1)*5+match.shift;

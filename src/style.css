@@ -23,3 +23,49 @@ label{display:block;font-size:11px;color:#a8c8e2;margin:12px 0}input{display:blo
 @media(max-width:600px){.club-banner{padding:13px;gap:9px}.club-crest{width:48px;height:48px;font-size:26px}.club-heading h2{font-size:15px}.club-rating b{font-size:20px}.match-banner{padding:15px}.menu-tile{min-height:94px;padding:11px}.roster-slots{gap:5px}.roster-slot{padding:7px 4px}.cards-grid{gap:7px}.player-card{padding:9px}.player-card>strong{font-size:10px}.wallet b{font-size:14px}}
 
 .bracket-match{margin-top:8px;padding:13px}.bracket-head{display:flex;justify-content:space-between;color:#8eb5d6;font-size:9px;letter-spacing:.6px;margin-bottom:9px}.bracket-match>div:not(.bracket-head){display:flex;align-items:center;justify-content:space-between;gap:8px;padding:5px 0}.bracket-match b{font-size:11px}.bracket-match strong{font-size:13px;color:#74d6ff;white-space:nowrap}.bracket-match small{color:#9dbbd5}.table-scroll{overflow-x:auto;margin-top:12px}.standings-table{border-collapse:collapse;min-width:560px;width:100%;font-size:9px;color:#e7f3ff}.standings-table th{background:#164b76;color:#c9eaff;padding:9px 7px;text-align:center;white-space:nowrap}.standings-table td{padding:9px 7px;text-align:center;border-bottom:1px solid #ffffff12;white-space:nowrap}.standings-table td:nth-child(2){text-align:left;font-weight:700;min-width:120px}.standings-table tr:nth-child(even){background:#ffffff08}.standings-table td:last-child{color:#74d6ff;font-weight:900}
+
+
+/* Live match broadcast presentation */
+.match-score-card{padding:12px;border:1px solid #ffffff20;border-radius:22px;background:linear-gradient(145deg,#12395f,#0a2441);box-shadow:0 16px 38px #0003}
+.match-competition{display:flex;justify-content:space-between;align-items:center;padding:1px 5px 9px;color:#8fbce0;font-size:8px;font-weight:900;letter-spacing:1.4px}
+.live-dot{color:#ff6e7b;font-size:9px;font-weight:900;letter-spacing:.7px;white-space:nowrap}.match-score-card .scoreboard{border:0;border-radius:13px;background:linear-gradient(100deg,#ffffff0c,#ffffff03);box-shadow:none;padding:14px 10px}
+.match-clock{display:flex;align-items:center;justify-content:center;gap:13px;margin:9px 0 1px;color:#8eb8d9;font-size:8px;font-weight:900;letter-spacing:1px}
+.period-dots{display:flex;gap:5px}.period-dots i{width:18px;height:4px;border-radius:4px;background:#ffffff22}.period-dots i.active{background:#48c9ff;box-shadow:0 0 8px #48c9ff66}
+.rink-wrap{padding:13px 13px 12px;margin-top:13px;border-radius:22px;background:linear-gradient(145deg,#0d3154,#071d35);border:1px solid #ffffff20;box-shadow:0 15px 40px #0003}
+.rink-head{font-size:8px;letter-spacing:1.1px;color:#8fbce0;font-weight:900}
+.rink-scene{position:relative;overflow:hidden;border-radius:18px;padding:7px 7px 9px;background:radial-gradient(ellipse at 50% 40%,#17476c,#09243f 72%);border:1px solid #ffffff16}
+.rink-topline{display:flex;justify-content:space-between;padding:4px 6px 8px;color:#a6c9e6;font-size:8px;font-weight:900;letter-spacing:.8px}
+.ice-svg{display:block;width:min(100%,440px);height:auto;max-height:690px;margin:0 auto;filter:drop-shadow(0 10px 15px #0003)}
+.ice-player,.ice-goalie{transform-box:fill-box;transform-origin:center;filter:drop-shadow(0 3px 3px #15344a66)}
+.ice-player text,.ice-goalie text{font-family:Arial,sans-serif;pointer-events:none}
+.ice-player.home.forward{animation:home-glide 2.2s ease-in-out infinite alternate}
+.ice-player.away.forward{animation:away-glide 2.4s ease-in-out infinite alternate}
+.ice-player.defender{animation:defend-glide 2.8s ease-in-out infinite alternate}
+.attack-home .ice-player.home.forward{animation-duration:1.35s}
+.attack-away .ice-player.away.forward{animation-duration:1.35s}
+@keyframes home-glide{from{translate:0 0}to{translate:0 -13px}}
+@keyframes away-glide{from{translate:0 0}to{translate:0 13px}}
+@keyframes defend-glide{from{scale:1}to{scale:1.07}}
+.live-puck{fill:#111820;stroke:#fff;stroke-width:2;filter:drop-shadow(0 0 5px #17212b);animation:puck-pop .65s ease-in-out infinite alternate}
+.puck-glow{fill:#31bfff;opacity:.32;animation:puck-glow 1s ease-out infinite}
+.puck-route{stroke-dasharray:6 8;animation:route-dash 1s linear infinite}
+@keyframes puck-pop{from{r:5}to{r:8}}
+@keyframes puck-glow{from{opacity:.1;r:11}to{opacity:.45;r:21}}
+@keyframes route-dash{to{stroke-dashoffset:-28}}
+.rink-callout{position:absolute;left:50%;top:49%;transform:translate(-50%,-50%);z-index:4;display:flex;flex-direction:column;align-items:center;gap:5px;max-width:90%;padding:11px 17px;border-radius:14px;background:#092a49eF;border:1px solid #ffffff38;color:#f2f9ff;text-align:center;box-shadow:0 8px 25px #00172b66;animation:callout-in .35s ease-out}
+.rink-callout b{font-size:15px;letter-spacing:1.4px}.rink-callout span{font-size:9px;color:#c1ddf3;line-height:1.4}
+.rink-callout.is-goal{background:linear-gradient(120deg,#8b1e3c,#d94e65);border-color:#ffb0bd;box-shadow:0 0 30px #ff4c704d}
+.rink-callout.is-save{background:linear-gradient(120deg,#07518c,#168dca);border-color:#83d9ff;box-shadow:0 0 28px #24baff44}
+.goal-scored .ice-svg{animation:goal-flash .8s ease-out}
+@keyframes goal-flash{0%{filter:drop-shadow(0 0 0 #ff657c)}40%{filter:drop-shadow(0 0 20px #ff657c)}100%{filter:drop-shadow(0 10px 15px #0003)}}
+@keyframes callout-in{from{opacity:0;scale:.85}to{opacity:1;scale:1}}
+.rink-legend{display:flex;justify-content:center;gap:18px;padding:8px 0 1px;color:#a6c7e2;font-size:8px;font-weight:800}
+.rink-legend span{display:flex;align-items:center;gap:6px}.rink-legend i{width:8px;height:8px;border-radius:50%;display:inline-block;box-shadow:0 0 8px currentColor}
+.ice-status{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:10px}
+.ice-status-player{display:flex;align-items:center;gap:8px;min-width:0;padding:10px;border:1px solid #ffffff19;border-radius:14px;background:linear-gradient(145deg,#123657,#0b2540)}
+.status-crest{width:29px;height:29px;flex:none;border-radius:9px;display:grid;place-items:center;font-size:15px;box-shadow:inset 0 0 0 1px #ffffff55}
+.ice-status-player>div{flex:1;min-width:0}.ice-status-player small{display:block;color:#8eb8d9;font-size:7px;letter-spacing:.5px;font-weight:900}.ice-status-player b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#f1f7ff;font-size:9px;margin:3px 0 5px}
+.ice-status-player>strong{font-size:10px;color:#8fe1ff;font-variant-numeric:tabular-nums}
+.stamina-track{height:4px;border-radius:5px;background:#ffffff20;overflow:hidden}.stamina-track i{display:block;height:100%;border-radius:5px;background:linear-gradient(90deg,#36d6a0,#c7ed70)}
+@media(max-width:600px){.match-score-card{padding:9px}.match-score-card .scoreboard{grid-template-columns:1fr 62px 1fr;padding:10px 5px}.match-score-card .team{gap:4px}.match-score-card .team b{font-size:29px}.match-score-card .team-name{font-size:7px;max-width:76px;overflow:hidden;text-overflow:ellipsis}.match-score-card .team-mark{font-size:17px}.match-clock{gap:8px;font-size:7px}.period-dots i{width:13px}.rink-wrap{padding:9px}.rink-scene{padding:5px}.rink-topline{font-size:7px}.rink-callout{padding:9px 12px;min-width:58%}.rink-callout b{font-size:12px}.rink-callout span{font-size:8px}.ice-status{gap:6px}.ice-status-player{padding:8px 6px;gap:6px}.ice-status-player small{font-size:6px}.ice-status-player b{font-size:8px}.ice-status-player>strong{font-size:9px}.status-crest{width:25px;height:25px}}
+@media(prefers-reduced-motion:reduce){.ice-player,.live-puck,.puck-glow,.puck-route,.rink-callout,.goal-scored .ice-svg{animation:none!important}}

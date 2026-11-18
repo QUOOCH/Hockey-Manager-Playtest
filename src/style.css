@@ -215,3 +215,25 @@ label{display:block;font-size:11px;color:#a8c8e2;margin:12px 0}input{display:blo
 @media(max-width:600px){
   .hero-tagline{font-size:8px;letter-spacing:1.1px;margin-top:17px;margin-bottom:19px}
 }
+
+
+/* Restore the original bright ice look, with a darker carved edge,
+   restrained glow and visible fracture lines. */
+.hero-brand strong{
+  background:linear-gradient(180deg,#fff 0%,#e5f8ff 17%,#8bdcff 34%,#f5fdff 43%,#65b9e8 57%,#d9f4ff 70%,#4e9bc9 86%,#e9faff 100%);
+  -webkit-text-stroke:1.35px #285777;
+  filter:drop-shadow(0 2px 0 #285777) drop-shadow(0 5px 0 #123b59) drop-shadow(0 9px 12px #00101fbb);
+  text-shadow:0 0 7px #8bdfff38,0 0 15px #4abfff20;
+}
+.hero-brand strong:after{
+  inset:2% 1% 7%;
+  opacity:.58;
+  background:
+    linear-gradient(118deg,transparent 0 18%,#ffffffb8 18.4% 19%,transparent 19.5% 47%,#ffffff88 47.4% 48%,transparent 48.5%),
+    linear-gradient(72deg,transparent 0 63%,#dff8ff99 63.4% 64%,transparent 64.5%),
+    linear-gradient(133deg,transparent 0 30%,#174665 30.25% 30.65%,transparent 30.9% 100%),
+    linear-gradient(48deg,transparent 0 56%,#174665 56.2% 56.55%,transparent 56.8% 100%),
+    linear-gradient(157deg,transparent 0 72%,#174665 72.2% 72.5%,transparent 72.8% 100%);
+  mix-blend-mode:normal;
+  clip-path:polygon(0 0,100% 0,98% 18%,100% 22%,97% 27%,100% 31%,98% 100%,2% 100%,0 88%,2% 81%);
+}

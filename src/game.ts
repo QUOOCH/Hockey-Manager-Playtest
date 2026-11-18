@@ -133,7 +133,7 @@ export function playMatchShift(home:Team,away:Team,state:MatchState):MatchState{
     const second=side==='home'?home.goalie2:away.goalie2;
     return use&&second?second:(side==='home'?home.goalie1!:away.goalie1!);
   };
-  const homeLine=pick(hLines),awayLine=pick(aLines);
+  const homeLine=hLines[(state.shift-1)%hLines.length],awayLine=aLines[(state.shift-1)%aLines.length];
   // Android MatchScreen invokes the no-fatigue playShift overload: probabilities use full strength.
   const homeResult=resolveShift(homeLine,awayLine,active('away'));
   const awayResult=resolveShift(awayLine,homeLine,active('home'));
@@ -145,7 +145,7 @@ export function playMatchShift(home:Team,away:Team,state:MatchState):MatchState{
       `П${s.period} С${s.shift}: ${scoring} — атака остановлена`;
     s.log.push(msg);s.events.push({period:s.period,shift:s.shift,side,result,score:`${s.homeScore}:${s.awayScore}`,message:msg});
   };
-  add('home',homeResult);add('away',awayResult);
+  if(Math.random()<.5){add('home',homeResult);add('away',awayResult);}else{add('away',awayResult);add('home',homeResult);}
   const drain=(value:number,max:number)=>Math.max(0,value-.1*max);
   s.homeGoalie1Stamina= s.homeUseGoalie2?s.homeGoalie1Stamina:s.homeGoalie1Stamina;
   if(s.homeUseGoalie2)s.homeGoalie2Stamina=drain(s.homeGoalie2Stamina,s.homeGoalie2Max);else s.homeGoalie1Stamina=drain(s.homeGoalie1Stamina,s.homeGoalie1Max);

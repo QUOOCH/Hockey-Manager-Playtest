@@ -94,3 +94,8 @@ label{display:block;font-size:11px;color:#a8c8e2;margin:12px 0}input{display:blo
 @keyframes goalie-beaten{0%{scale:1}45%{translate:-5px 0;scale:.96}100%{scale:.92;opacity:.72}}
 .ice-svg{overflow:hidden}
 @media(prefers-reduced-motion:reduce){.ice-player,.ice-goalie{animation:none!important}}
+
+/* Faceoff setup: keep both centers and the puck fixed until the first shift. */
+.faceoff .ice-player{animation:none!important;filter:drop-shadow(0 3px 3px #15344a66)}
+.faceoff .live-puck{animation:puck-pop .5s ease-in-out infinite alternate}
+.faceoff .puck-glow{animation:puck-glow 1s ease-out infinite}

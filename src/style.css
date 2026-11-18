@@ -38,24 +38,24 @@ label{display:block;font-size:11px;color:#a8c8e2;margin:12px 0}input{display:blo
 .ice-svg{display:block;width:min(100%,440px);height:auto;max-height:690px;margin:0 auto;filter:drop-shadow(0 10px 15px #0003)}
 .ice-player,.ice-goalie{transform-box:fill-box;transform-origin:center;will-change:transform;filter:drop-shadow(0 3px 3px #15344a66)}
 .ice-player text,.ice-goalie text{font-family:Arial,sans-serif;pointer-events:none}
-.ice-player{animation-duration:2.1s;animation-timing-function:ease-in-out;animation-iteration-count:infinite;animation-direction:alternate}
+.ice-player{animation-duration:1.35s;animation-timing-function:cubic-bezier(.35,.05,.25,1);animation-iteration-count:infinite;animation-direction:alternate}
 .ice-player.home.forward{animation-name:skate-home-forward}
 .ice-player.away.forward{animation-name:skate-away-forward}
 .ice-player.defender{animation-name:skate-defender}
 .ice-player.p2{animation-delay:-.45s}.ice-player.p3{animation-delay:-.9s}
 .ice-player.p4{animation-delay:-.3s}.ice-player.p5{animation-delay:-.75s}
-@keyframes skate-home-forward{0%{translate:0 0}35%{translate:-17px -24px}70%{translate:14px -43px}100%{translate:4px -30px}}
-@keyframes skate-away-forward{0%{translate:0 0}35%{translate:17px 24px}70%{translate:-14px 43px}100%{translate:-4px 30px}}
-@keyframes skate-defender{0%{translate:0 0;scale:1}35%{translate:12px -15px;scale:1.08}70%{translate:-13px 18px;scale:.98}100%{translate:4px 25px;scale:1.04}}
-.ice-player.puck-carrier{animation-duration:1.25s;animation-iteration-count:1;animation-fill-mode:both}
+@keyframes skate-home-forward{0%{translate:0 0;rotate:0deg}30%{translate:-28px -34px;rotate:-7deg}65%{translate:24px -58px;rotate:8deg}100%{translate:8px -22px;rotate:0deg}}
+@keyframes skate-away-forward{0%{translate:0 0;rotate:0deg}30%{translate:28px 34px;rotate:7deg}65%{translate:-24px 58px;rotate:-8deg}100%{translate:-8px 22px;rotate:0deg}}
+@keyframes skate-defender{0%{translate:0 0;scale:1}30%{translate:22px -26px;scale:1.08}65%{translate:-25px 31px;scale:.96}100%{translate:7px 16px;scale:1.04}}
+.ice-player.puck-carrier{animation-duration:1.15s;animation-iteration-count:infinite;animation-fill-mode:both}
 .attack-home .ice-player.home.puck-carrier{animation-name:carrier-drive-home}
 .attack-away .ice-player.away.puck-carrier{animation-name:carrier-drive-away}
 .attack-home .ice-player.home.forward:not(.puck-carrier){animation-name:support-home}
 .attack-away .ice-player.away.forward:not(.puck-carrier){animation-name:support-away}
 .attack-home .ice-player.away.defender,.attack-home .ice-player.away.forward{animation-name:backcheck-home}
 .attack-away .ice-player.home.defender,.attack-away .ice-player.home.forward{animation-name:backcheck-away}
-@keyframes carrier-drive-home{0%{translate:0 0;scale:1}45%{translate:24px -39px;scale:1.12}100%{translate:-8px -52px;scale:1.08}}
-@keyframes carrier-drive-away{0%{translate:0 0;scale:1}45%{translate:-24px 39px;scale:1.12}100%{translate:8px 52px;scale:1.08}}
+@keyframes carrier-drive-home{0%{translate:0 0;scale:1}35%{translate:34px -48px;scale:1.14}70%{translate:-20px -68px;scale:1.08}100%{translate:8px -30px;scale:1.1}}
+@keyframes carrier-drive-away{0%{translate:0 0;scale:1}35%{translate:-34px 48px;scale:1.14}70%{translate:20px 68px;scale:1.08}100%{translate:-8px 30px;scale:1.1}}
 @keyframes support-home{0%{translate:0 0}55%{translate:-24px -28px}100%{translate:18px -42px}}
 @keyframes support-away{0%{translate:0 0}55%{translate:24px 28px}100%{translate:-18px 42px}}
 @keyframes backcheck-home{0%{translate:0 0}50%{translate:14px -24px}100%{translate:-12px -36px}}

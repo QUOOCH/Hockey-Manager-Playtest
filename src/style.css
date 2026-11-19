@@ -604,3 +604,18 @@ label{display:block;font-size:11px;color:#a8c8e2;margin:12px 0}input{display:blo
  .locker-room-caption{padding-top:63%}
  .locker-room-floor-label{margin-top:50px}
 }
+
+
+/* Clear readable illustrated locker-room scene */
+.locker-room-focus{min-height:640px!important;background:#081725!important}
+.locker-room-focus .hero-room-environment{z-index:0!important;background:#0a1c2b!important}
+.locker-room-focus .hero-room-environment:before,.locker-room-focus .hero-room-environment:after{display:none!important}
+.locker-room-illustration{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:1}
+.locker-room-focus .room-ceiling-light,.locker-room-focus .room-ceiling-beam,.locker-room-focus .room-wall-sign,.locker-room-focus .locker-bank,.locker-room-focus .room-hooks,.locker-room-focus .locker-bench,.locker-room-focus .room-floor-line,.locker-room-focus .room-floor-reflection{display:none!important}
+.locker-room-focus .hero-room-topline{position:relative;z-index:2;background:linear-gradient(90deg,#071522d9,#07152280,#071522d9)!important}
+.locker-room-caption{position:relative;z-index:2;margin-top:0;padding-top:440px!important;text-align:center;text-shadow:0 2px 8px #001}
+.locker-room-caption h3{display:inline-block;padding:8px 14px;border:1px solid #a7dff044;border-radius:8px;background:#061725d9}
+.locker-room-caption p{padding:7px 12px;border-radius:6px;background:#061725d9}
+.locker-room-floor-label{position:relative;z-index:2;margin-top:16px!important;padding:9px 12px;border-radius:5px;background:#061725c9}
+.locker-room-focus .hero-room-bottom{position:relative;z-index:2;background:#061522e8!important}
+@media(max-width:600px){.locker-room-focus{min-height:600px!important}.locker-room-caption{padding-top:405px!important}.locker-room-illustration{object-position:center top}}

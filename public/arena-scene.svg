@@ -62,18 +62,9 @@
  </g>
  <g fill="#ef5a72"><circle cx="117" cy="318" r="2.2"/><circle cx="300" cy="291" r="2"/><circle cx="467" cy="315" r="2.1"/><circle cx="733" cy="298" r="2.2"/><circle cx="914" cy="318" r="2"/><circle cx="1081" cy="292" r="2.1"/></g>
 </g>
-<!-- upper fascia and central scoreboard -->
+<!-- central scoreboard removed: replaced by the live match-entry button in the UI -->
 <path d="M0 382Q600 472 1200 382V465Q600 566 0 465Z" fill="#061725" stroke="#789db2" stroke-opacity=".5" stroke-width="5"/>
 <path d="M0 396Q600 486 1200 396" fill="none" stroke="#c2eafa" stroke-opacity=".28" stroke-width="4"/>
-<g transform="translate(460 205)">
- <path d="M-18 0H298L280 116H0Z" fill="#020d18" opacity=".55" filter="url(#shadow)"/>
- <path d="M0 0H280L267 104H13Z" fill="#081827" stroke="#9adcf4" stroke-opacity=".8" stroke-width="3"/>
- <path d="M12 12H268L258 90H22Z" fill="#102d43" stroke="#4f8ca9" stroke-width="2"/>
- <path d="M22 22H258" stroke="#6ac9ef" stroke-opacity=".5" stroke-width="2"/>
- <text x="140" y="47" text-anchor="middle" font-family="Arial,sans-serif" font-size="13" font-weight="700" letter-spacing="5" fill="#a8e6ff">HOME ARENA</text>
- <text x="140" y="78" text-anchor="middle" font-family="Arial,sans-serif" font-size="27" font-weight="900" letter-spacing="4" fill="#f4fbff">PUCK IT!</text>
- <path d="M130 104v28M150 104v28" stroke="#789db2" stroke-width="5"/>
-</g>
 <!-- glass panels -->
 <path d="M0 426Q600 522 1200 426V574Q600 664 0 574Z" fill="url(#glass)" stroke="#c4f2ff" stroke-opacity=".35" stroke-width="5"/>
 <g stroke="#d8f7ff" stroke-opacity=".36" stroke-width="4" fill="none">

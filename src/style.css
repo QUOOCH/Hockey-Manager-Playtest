@@ -1412,3 +1412,18 @@ label{display:block;font-size:11px;color:#a8c8e2;margin:12px 0}input{display:blo
 @media(min-width:700px) {
   .home-menu-card { min-height:94px; }
 }
+
+
+/* Player identity + career XP in the home header */
+.shell:has(.home-hero)>.top .brand{min-width:0;flex:1;gap:11px;}
+.shell:has(.home-hero)>.top .hero-header-avatar{width:54px;height:54px;flex:none;position:relative;overflow:visible;padding:0;border-radius:17px;background:linear-gradient(145deg,#2c8b83,#123d4b);border:1px solid #8af0d5aa;box-shadow:0 7px 22px #36d9b055,inset 0 1px #ffffff70;cursor:pointer;}
+.shell:has(.home-hero)>.top .hero-header-avatar svg{display:block;width:100%;height:100%;border-radius:16px;}
+.shell:has(.home-hero)>.top .hero-header-avatar>small{right:-5px;bottom:-5px;min-width:30px;padding:4px 5px;border:1px solid #b5f8e7;border-radius:7px;background:#0c2b35;color:#a8f5df;font-size:7px;font-weight:900;letter-spacing:.3px;}
+.shell:has(.home-hero)>.top .hero-header-copy{min-width:0;flex:1;}
+.shell:has(.home-hero)>.top .hero-header-copy h1{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:clamp(17px,4vw,22px);letter-spacing:.1px;}
+.hero-header-progress{width:min(250px,100%);margin-top:6px;}
+.hero-header-xp{display:flex;justify-content:space-between;gap:8px;color:#8ebdaf;font-size:7px;font-weight:900;letter-spacing:.8px;}
+.hero-header-xp b{color:#b8e9d8;font-size:8px;font-variant-numeric:tabular-nums;white-space:nowrap;}
+.hero-header-track{height:5px;margin-top:5px;overflow:hidden;border-radius:9px;background:#d8fff01c;border:1px solid #9cebd12b;}
+.hero-header-track i{display:block;height:100%;border-radius:9px;background:linear-gradient(90deg,#3bbf9c,#b4f2d7);box-shadow:0 0 10px #68e7bd88;transition:width .35s ease;}
+@media(max-width:600px){.shell:has(.home-hero)>.top .hero-header-avatar{width:47px;height:47px;border-radius:15px}.shell:has(.home-hero)>.top .hero-header-avatar svg{border-radius:14px}.hero-header-progress{margin-top:5px}.hero-header-xp{font-size:6px}.hero-header-xp b{font-size:7px}.shell:has(.home-hero)>.top .hero-header-copy h1{font-size:17px}.shell:has(.home-hero)>.top .live{font-size:7px;padding:6px 7px;}}

@@ -516,3 +516,37 @@ label{display:block;font-size:11px;color:#a8c8e2;margin:12px 0}input{display:blo
 .hero-player-stage:has(.hero-center-gear){min-height:420px}
 @media(max-width:600px){.hero-player-stage:has(.hero-center-gear) .hero-man{width:150px;height:350px}}
 @media(min-width:700px){.hero-player-stage:has(.hero-center-gear) .hero-man{width:170px;height:397px}}
+
+
+/* Premium locker-room environment — hero room only */
+.hero-room{position:relative;isolation:isolate;overflow:hidden;border:1px solid #6bcdf044!important;border-radius:22px!important;background:linear-gradient(180deg,#102c43 0%,#0a1d30 48%,#071522 100%)!important;box-shadow:0 22px 55px #0007,inset 0 1px 0 #dff7ff1c!important}
+.hero-room-environment{position:absolute;inset:0;z-index:-1;overflow:hidden;pointer-events:none;background:radial-gradient(ellipse at 50% 34%,#3d9ac533,transparent 38%),linear-gradient(180deg,#183a53 0%,#10283c 48%,#081725 100%)}
+.hero-room-environment:before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0 8.5%,#b9e9ff0b 8.6% 8.8%,#020b1470 8.9% 9.2%,transparent 9.3% 17.2%),linear-gradient(180deg,transparent 0 62%,#020a12aa 100%);opacity:.9}
+.hero-room-environment:after{content:"";position:absolute;left:-8%;right:-8%;bottom:0;height:26%;background:repeating-linear-gradient(90deg,#a9d9ed08 0 1px,transparent 1px 54px),repeating-linear-gradient(0deg,#a9d9ed08 0 1px,transparent 1px 38px),linear-gradient(180deg,#102638,#07121e);transform:perspective(240px) rotateX(8deg);transform-origin:bottom}
+.locker-bank{position:absolute;top:11%;bottom:27%;width:18%;display:flex;gap:5px;padding:7px;background:linear-gradient(90deg,#071522,#29475a 12%,#122b3e 48%,#071522);border:1px solid #b5e7ff25;border-radius:7px;box-shadow:inset 0 0 18px #0009,0 8px 20px #0005}
+.locker-bank-left{left:2%}.locker-bank-right{right:2%}
+.locker-bank i{position:relative;flex:1;border:1px solid #9bc9df30;border-radius:3px;background:linear-gradient(90deg,#071421,#29475a 20%,#183449 72%,#071522);box-shadow:inset 0 0 10px #0009}
+.locker-bank i:before{content:"";position:absolute;left:12%;right:12%;top:13%;height:38%;border-top:2px solid #8dc8e455;border-bottom:1px solid #8dc8e422}
+.locker-bank i:after{content:"";position:absolute;right:12%;top:54%;width:3px;height:13px;border-radius:3px;background:#b9d8e4a8;box-shadow:0 0 5px #76d8ff55}
+.locker-bench{position:absolute;left:18%;right:18%;bottom:15%;height:9%;border-radius:5px;background:linear-gradient(180deg,#8aa9b8,#314b5b 22%,#152b3b 65%,#07131e);border:1px solid #c7e7f044;box-shadow:0 13px 18px #0009}
+.locker-bench:before,.locker-bench:after{content:"";position:absolute;top:100%;width:7px;height:34px;background:linear-gradient(90deg,#101d28,#6c8797,#101d28)}
+.locker-bench:before{left:12%}.locker-bench:after{right:12%}
+.room-ceiling-light{position:absolute;left:28%;right:28%;top:0;height:5px;background:#bcefff;box-shadow:0 0 12px 4px #54caff77,0 0 48px 18px #1688c533}
+.hero-room-topline,.hero-equipment-layout,.hero-gear-picker,.hero-room-bottom{position:relative;z-index:1}
+.hero-room-topline{padding:12px 14px!important;background:linear-gradient(90deg,#071522c9,#16354bc9,#071522c9);border-bottom:1px solid #b6e8ff22}
+.hero-equipment-layout{position:relative;padding-top:17px!important;padding-bottom:22px!important}
+.hero-player-stage{position:relative;isolation:isolate;overflow:hidden;border:1px solid #8bdfff38!important;border-radius:18px!important;background:radial-gradient(ellipse at 50% 34%,#73d9ff35,transparent 42%),linear-gradient(180deg,#183c55eF,#0a1d2eeF 72%,#071522f5)!important;box-shadow:inset 0 0 35px #4dbfff12,0 18px 35px #0008!important}
+.hero-player-stage:before{content:"";position:absolute;left:50%;top:4%;width:72%;height:70%;transform:translateX(-50%);background:radial-gradient(ellipse,#9de9ff25 0%,#4ca9d411 48%,transparent 72%);filter:blur(8px);pointer-events:none}
+.hero-player-stage:after{content:"";position:absolute;left:17%;right:17%;bottom:7%;height:18px;border-radius:50%;background:radial-gradient(ellipse,#7bdfff55 0%,#2a91c533 42%,transparent 74%);box-shadow:0 9px 16px #0008;pointer-events:none}
+.hero-player-stage .hero-stage-glow{z-index:0}
+.hero-player-stage .hero-man{position:relative;z-index:2;filter:drop-shadow(0 14px 13px #0009)}
+.hero-player-stage .hero-stage-caption{position:absolute;z-index:3;bottom:9px;left:0;right:0;text-align:center;color:#a9dff5;text-shadow:0 2px 8px #001;font-size:7px;letter-spacing:1.5px;font-weight:900}
+.hero-gear-slot{background:linear-gradient(145deg,#18384eeb,#091b2bed)!important;border:1px solid #9bdfff25!important;box-shadow:0 7px 15px #0004,inset 0 1px 0 #ffffff0c}
+.hero-gear-slot.active{background:linear-gradient(145deg,#1c6482,#0b2c45)!important;border-color:#81e1ff!important;box-shadow:0 0 18px #40c9ff35,inset 0 1px 0 #ffffff2b}
+.hero-gear-picker{margin:0 10px 15px!important;border-color:#82dfff35!important;background:linear-gradient(145deg,#102b40ed,#071522f2)!important;box-shadow:0 12px 28px #0005}
+.hero-item-card{background:linear-gradient(150deg,#203e54,#091a2a)!important;box-shadow:0 8px 16px #0005,inset 0 1px 0 #ffffff0b}
+.hero-room-bottom{padding:11px 14px!important;background:#061522b8;border-top:1px solid #9adfff22}
+.hero-room-heading{position:relative;padding:17px 18px;border:1px solid #7acfff2b;border-radius:18px;background:linear-gradient(110deg,#153a55,#0a2034 70%,#102b40);box-shadow:0 12px 28px #0005;overflow:hidden}
+.hero-room-heading:after{content:"";position:absolute;right:18%;top:-70px;width:140px;height:140px;border-radius:50%;background:#55caff12;filter:blur(10px)}
+@media(max-width:600px){.locker-bank{width:15%;top:12%;bottom:28%;gap:2px;padding:3px}.locker-bank-left{left:1%}.locker-bank-right{right:1%}.locker-bench{left:13%;right:13%;bottom:15%;height:7%}.hero-room{border-radius:17px!important}.hero-equipment-layout{padding-top:12px!important;padding-bottom:16px!important}.hero-player-stage{border-radius:13px!important}}
+@media(prefers-reduced-motion:no-preference){.room-ceiling-light{animation:locker-room-breathe 5s ease-in-out infinite alternate}@keyframes locker-room-breathe{from{opacity:.62;box-shadow:0 0 9px 3px #54caff55,0 0 32px 12px #1688c322}to{opacity:1;box-shadow:0 0 15px 5px #54caff88,0 0 54px 22px #1688c344}}}

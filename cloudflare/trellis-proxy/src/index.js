@@ -91,6 +91,25 @@ export default {
       return json({ ok: false, error: "HF_TOKEN is not configured." }, 503, origin);
     }
 
+    // Proxy Gradio-generated files, such as the final GLB download.
+    if (url.pathname.startsWith("/gradio_api/file=") && request.method === "GET") {
+      let requestedPath;
+      try {
+        requestedPath = decodeURIComponent(url.pathname.slice("/gradio_api/file=".length));
+      } catch {
+        return json({ ok: false, error: "Invalid file path encoding." }, 400, origin);
+      }
+      if (!requestedPath.startsWith("/tmp/gradio/") && !requestedPath.startsWith("tmp/gradio/")) {
+        return json({ ok: false, error: "File path is outside the Gradio temporary directory." }, 403, origin);
+      }
+      const fileUrl = HF_BASE + "/gradio_api/file=" + encodeURIComponent(requestedPath);
+      const response = await fetch(fileUrl, {
+        headers: { "Authorization": `Bearer ${env.HF_TOKEN}` },
+        redirect: "follow"
+      });
+      return upstreamResponse(response, origin);
+    }
+
     // Upload an image to Gradio. The browser sends multipart/form-data.
     if (url.pathname === "/gradio_api/upload" && request.method === "POST") {
       const contentType = request.headers.get("Content-Type") || "";
@@ -125,8 +144,8 @@ export default {
           return json({ ok: false, error: "Expected application/json." }, 415, origin);
         }
         const body = await request.text();
-        if (body.length > 2_000_000) {
-          return json({ ok: false, error: "Request payload is too large." }, 413, origin);
+        if (body.length > 40_000_000) {
+          return json({ ok: false, error: "Request payload is too large (40 MB limit)." }, 413, origin);
         }
         const response = await fetch(HF_BASE + `/gradio_api/call/${apiName}`, {
           method: "POST",

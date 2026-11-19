@@ -102,7 +102,8 @@ export default {
       if (!requestedPath.startsWith("/tmp/gradio/") && !requestedPath.startsWith("tmp/gradio/")) {
         return json({ ok: false, error: "File path is outside the Gradio temporary directory." }, 403, origin);
       }
-      const fileUrl = HF_BASE + "/gradio_api/file=" + encodeURIComponent(requestedPath);
+      const safePath = requestedPath.split("/").map(segment => encodeURIComponent(segment)).join("/");
+      const fileUrl = HF_BASE + "/gradio_api/file=" + safePath;
       const response = await fetch(fileUrl, {
         headers: { "Authorization": `Bearer ${env.HF_TOKEN}` },
         redirect: "follow"

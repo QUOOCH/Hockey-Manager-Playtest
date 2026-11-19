@@ -1603,3 +1603,19 @@ label{display:block;font-size:11px;color:#a8c8e2;margin:12px 0}input{display:blo
 .start-gate-button:active{transform:translateY(4px);filter:brightness(1.15);box-shadow:0 3px 0 #620713,0 8px 18px #0008}
 .start-gate-button span{font-size:13px}
 .start-gate>small{position:relative;margin-top:8px;color:#7897aa;font:800 8px/1 system-ui,sans-serif;letter-spacing:.25em}
+
+
+/* Locker room detail pass — personalized center-forward station */
+.locker-room-illustration{filter:saturate(1.08) contrast(1.035);transform:translateZ(0)}
+.locker-room-focus{background:#071522!important}
+.locker-room-focus .locker-room-illustration{object-position:center center}
+@media(min-width:700px){
+ .locker-room-focus{min-height:660px!important}
+ .locker-room-caption{padding-top:455px!important}
+ .locker-room-floor-label{margin-top:22px!important}
+}
+@media(max-width:600px){
+ .locker-room-focus{min-height:610px!important}
+ .locker-room-caption{padding-top:405px!important}
+ .locker-room-floor-label{margin-top:18px!important}
+}

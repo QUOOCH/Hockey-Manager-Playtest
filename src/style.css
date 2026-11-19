@@ -1349,3 +1349,66 @@ label{display:block;font-size:11px;color:#a8c8e2;margin:12px 0}input{display:blo
   .home-menu-card>b { font-size: 10px; }
   .home-menu-card>small { font-size: 7px; }
 }
+
+
+/* PUCK IT! compact emerald dashboard pass */
+.shell:has(.home-hero) { --menu-emerald:#64d7b0; }
+.home-economy { gap:10px; margin:12px 0 20px; }
+.home-stat {
+  min-height:62px; padding:10px 13px; border-radius:14px;
+  background:linear-gradient(135deg,#142f36 0%,#102630 100%);
+  border:1px solid #70d8b52b; box-shadow:0 8px 20px #0003,inset 0 1px #ffffff0b;
+}
+.home-stat .stat-icon { background:#63d6ae1c; color:#83e7c4; }
+.home-stat small { color:#8bbdaf; }
+.home-section-head { margin:0 2px 12px; padding-bottom:10px; border-bottom:1px solid #75d9b52b; }
+.home-section-head small { color:#75d9b5; }
+.home-menu-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+.home-menu-card {
+  min-height:88px; padding:12px 13px; border-radius:15px;
+  display:grid; grid-template-columns:38px minmax(0,1fr); grid-template-rows:1fr 1fr;
+  align-items:center; column-gap:10px;
+  background:linear-gradient(145deg,#1b3438 0%,#12262e 72%,#101f2a 100%);
+  border:1px solid #91cdb52b; border-bottom:2px solid #65c9a044;
+  box-shadow:0 8px 18px #0003,inset 0 1px #ffffff0c;
+}
+.home-menu-card:before {
+  width:74px;height:74px;right:-25px;top:-29px;opacity:.13;
+  border-color:var(--accent,#75d9b5);
+}
+.home-menu-card:after {
+  content:"";position:absolute;left:0;top:13px;bottom:13px;width:3px;
+  border-radius:0 4px 4px 0;background:var(--accent,#75d9b5);opacity:.8;
+}
+.home-menu-card .home-menu-number { position:absolute;right:11px;bottom:8px;font-size:7px;color:#8ba9a4;letter-spacing:1px; }
+.home-menu-icon {
+  grid-column:1;grid-row:1 / span 2;width:36px;height:36px;margin:0;
+  display:grid;place-items:center;border-radius:11px;
+  color:var(--accent,#75d9b5);background:color-mix(in srgb,var(--accent,#75d9b5) 13%,transparent);
+  border:1px solid color-mix(in srgb,var(--accent,#75d9b5) 27%,transparent);
+}
+.home-menu-icon svg { width:23px;height:23px; }
+.home-menu-card>b { grid-column:2;grid-row:1;align-self:end;font-size:10px;letter-spacing:.7px;line-height:1.2; }
+.home-menu-card>small { grid-column:2;grid-row:2;align-self:start;margin-top:4px;font-size:7px;color:#a6c2b9; }
+.home-menu-card>i { right:10px;top:9px;font-size:12px;color:var(--accent,#75d9b5); }
+.home-menu-card.roster {--accent:#79d9c0}.home-menu-card.collection {--accent:#b8a2ed}
+.home-menu-card.wardrobe {--accent:#e4c27c}.home-menu-card.tournament {--accent:#ed8e9d}
+.home-menu-card.club {--accent:#79d9a9}.home-menu-card.arena {--accent:#8ebce7}
+.home-menu-card:active { transform:translateY(1px) scale(.985); }
+.home-footer { margin-top:15px;padding-top:12px;border-top:1px solid #75d9b526; }
+@media(max-width:600px) {
+  .home-hero { min-height:390px !important;border-radius:18px; }
+  .home-hero .hero-copy { padding:22px 14px 52px !important; }
+  .home-hero .hero-brand { font-size:clamp(40px,11vw,51px) !important; }
+  .home-hero .hero-ice.hero-arena-scene { opacity:.68; }
+  .home-economy { margin:10px 0 18px; }
+  .home-stat { min-height:57px;padding:8px 9px; }
+  .home-menu-grid { gap:8px; }
+  .home-menu-card { min-height:82px;padding:10px 9px;border-radius:13px; }
+  .home-menu-icon { width:32px;height:32px; }
+  .home-menu-card>b { font-size:9px; }
+  .home-menu-card>small { font-size:6.5px; }
+}
+@media(min-width:700px) {
+  .home-menu-card { min-height:94px; }
+}

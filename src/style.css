@@ -1124,3 +1124,54 @@ label{display:block;font-size:11px;color:#a8c8e2;margin:12px 0}input{display:blo
   .shell:has(.home-hero)>.top .live{font-size:7px;padding:6px 7px}
   .home-hero .hero-bottom-line{font-size:5px}
 }
+
+
+/* Main menu: replace decorative rings with a readable arena illustration */
+.home-hero{
+  position:relative;isolation:isolate;overflow:hidden;
+  min-height:520px;
+  background:
+    linear-gradient(105deg,#06111f 0%,#091b2d 42%,#0b263c 100%);
+  border:1px solid #6ec9ee55;
+  box-shadow:0 28px 70px #0009,inset 0 1px 0 #ffffff18;
+}
+.home-hero:before{
+  content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background:linear-gradient(90deg,#061321 0%,#071827f2 35%,#071827a8 56%,#07182720 100%);
+}
+.home-hero .hero-copy{position:relative;z-index:3;max-width:54%;padding:38px 34px 48px}
+.home-hero .hero-brand{font-size:clamp(48px,7vw,82px);line-height:.88;letter-spacing:-3px;text-shadow:0 5px 0 #06101b,0 12px 28px #000b}
+.home-hero .hero-brand strong{color:#f0f9ff;text-shadow:0 2px 0 #5a91ad,0 7px 0 #163c59,0 13px 28px #000c}
+.home-hero .hero-tagline{display:inline-block;margin:18px 0 23px;padding:9px 12px;border-left:3px solid #df3552;background:linear-gradient(90deg,#15334a,#10263a00);font-size:10px;letter-spacing:2px}
+.home-hero .hero-ice.hero-arena-scene{
+  position:absolute;z-index:1;right:-2%;top:0;width:67%;height:100%;
+  opacity:1;overflow:hidden;pointer-events:none;
+  -webkit-mask-image:linear-gradient(90deg,transparent 0%,#000 17%,#000 100%);
+  mask-image:linear-gradient(90deg,transparent 0%,#000 17%,#000 100%);
+}
+.home-hero .arena-art{display:block;width:100%;height:100%;object-fit:cover;filter:saturate(.92) contrast(1.05)}
+.home-hero .hero-side-label{position:absolute;right:18px;bottom:17px;color:#e7f8ff;font-size:8px;letter-spacing:2px;text-shadow:0 2px 8px #001}
+.home-hero .hero-bottom-line{position:absolute;z-index:4;left:28px;right:28px;bottom:15px}
+.home-hero .hero-club{max-width:390px;backdrop-filter:blur(10px);background:linear-gradient(110deg,#15334cdd,#0a1a2bd9);border:1px solid #8edbff44;box-shadow:0 12px 25px #0005}
+.home-hero .hero-play{max-width:390px;box-shadow:0 14px 30px #007fc255, inset 0 1px 0 #ffffff50}
+.home-hero .hero-kicker{letter-spacing:2px}
+.home-hero .hero-kicker i{background:#ed3d5b;box-shadow:0 0 0 4px #ed3d5b25,0 0 16px #ed3d5b}
+@media(max-width:600px){
+ .home-hero{min-height:570px}
+ .home-hero .hero-copy{max-width:100%;padding:28px 17px 58px}
+ .home-hero .hero-brand{font-size:clamp(47px,13vw,64px);margin-top:20px}
+ .home-hero .hero-tagline{margin:13px 0 16px;font-size:8px}
+ .home-hero .hero-ice.hero-arena-scene{
+   right:-17%;top:185px;width:112%;height:380px;opacity:.9;
+   -webkit-mask-image:linear-gradient(180deg,transparent 0%,#000 18%,#000 100%);
+   mask-image:linear-gradient(180deg,transparent 0%,#000 18%,#000 100%);
+ }
+ .home-hero:before{background:linear-gradient(180deg,#061321 0%,#061321 35%,#061321a8 62%,#06132120 100%)}
+ .home-hero .hero-club,.home-hero .hero-play{position:relative;z-index:4;max-width:100%}
+ .home-hero .hero-bottom-line{left:14px;right:14px;bottom:10px}
+ .home-hero .hero-side-label{right:10px;bottom:10px;font-size:6px}
+}
+@media(min-width:900px){
+ .home-hero{min-height:550px}
+ .home-hero .hero-copy{padding-left:42px;padding-top:48px}
+}

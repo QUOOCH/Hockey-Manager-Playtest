@@ -71,31 +71,45 @@ export function mountHero3DStage(host:HTMLElement,options:Hero3DOptions={}):Hero
   const observer=new ResizeObserver(resize);observer.observe(host);resize();
   let activePointerId:number|null=null;
   const canvas=renderer.domElement;
+  const beginDrag=(x:number)=>{dragging=true;lastPointerX=x;};
+  const dragTo=(x:number)=>{if(!dragging)return;rotation+=(x-lastPointerX)*.012;lastPointerX=x;modelRoot.rotation.y=rotation;};
+  const endDrag=()=>{dragging=false;activePointerId=null;};
+  // Mouse/pen uses Pointer Events. iOS Safari gets an explicit Touch Events path.
   const down=(e:PointerEvent)=>{
-    if(e.pointerType==='mouse'&&e.button!==0)return;
-    e.preventDefault();e.stopPropagation();
-    dragging=true;activePointerId=e.pointerId;lastPointerX=e.clientX;
-    try{canvas.setPointerCapture(e.pointerId);}catch{/* Safari may reject capture if the canvas was detached. */}
+    if(e.pointerType==='touch'||(e.pointerType==='mouse'&&e.button!==0))return;
+    e.preventDefault();beginDrag(e.clientX);activePointerId=e.pointerId;
+    try{canvas.setPointerCapture(e.pointerId);}catch{/* capture is optional */}
   };
   const move=(e:PointerEvent)=>{
-    if(!dragging||activePointerId!==e.pointerId)return;
-    e.preventDefault();
-    const delta=e.clientX-lastPointerX;
-    rotation+=delta*.012;lastPointerX=e.clientX;modelRoot.rotation.y=rotation;
+    if(e.pointerType==='touch'||!dragging||activePointerId!==e.pointerId)return;
+    e.preventDefault();dragTo(e.clientX);
   };
   const up=(e:PointerEvent)=>{
-    if(activePointerId!==e.pointerId)return;
-    dragging=false;activePointerId=null;
+    if(e.pointerType==='touch'||activePointerId!==e.pointerId)return;
+    endDrag();
     try{if(canvas.hasPointerCapture(e.pointerId))canvas.releasePointerCapture(e.pointerId);}catch{/* no-op */}
   };
+  const touchStart=(e:TouchEvent)=>{
+    if(e.touches.length!==1)return;
+    e.preventDefault();beginDrag(e.touches[0].clientX);
+  };
+  const touchMove=(e:TouchEvent)=>{
+    if(!dragging||e.touches.length!==1)return;
+    e.preventDefault();dragTo(e.touches[0].clientX);
+  };
+  const touchEnd=(e:TouchEvent)=>{if(e.touches.length===0)endDrag();};
   canvas.addEventListener('pointerdown',down);
   canvas.addEventListener('pointermove',move);
   canvas.addEventListener('pointerup',up);
   canvas.addEventListener('pointercancel',up);
   canvas.addEventListener('lostpointercapture',up);
-  const load=(url:string)=>new Promise<THREE.Object3D>((resolve,reject)=>loader.load(url,g=>resolve(g.scene),undefined,reject));
+  canvas.addEventListener('touchstart',touchStart,{passive:false});
+  canvas.addEventListener('touchmove',touchMove,{passive:false});
+  canvas.addEventListener('touchend',touchEnd,{passive:false});
+  canvas.addEventListener('touchcancel',touchEnd,{passive:false});
+    const load=(url:string)=>new Promise<THREE.Object3D>((resolve,reject)=>loader.load(url,g=>resolve(g.scene),undefined,reject));
   const loadBaseModel=async(file='base.glb')=>{try{const next=await load(root+file);if(disposed)return;const bounds=new THREE.Box3().setFromObject(next),size=bounds.getSize(new THREE.Vector3()),center=bounds.getCenter(new THREE.Vector3()),scale=3.25/Math.max(size.y,.01);next.scale.setScalar(scale);next.position.set(-center.x*scale,-bounds.min.y*scale,-center.z*scale);next.traverse(o=>{if(o instanceof THREE.Mesh){o.castShadow=true;o.receiveShadow=true;}});modelRoot.remove(procedural);if(baseModel)modelRoot.remove(baseModel);baseModel=next;modelRoot.add(next);options.onLoad?.();}catch{options.onLoad?.();}};
   const setEquipment=async(slot:HeroGearSlot,file:string|null)=>{const anchor=modelRoot.getObjectByName(ANCHORS[slot]);if(!anchor){if(file)options.onError?.('Для этой экипировки GLB-модель ещё не подключена.');return;}const previous=equipment.get(slot);if(previous){anchor.remove(previous);equipment.delete(slot);}if(!file)return;try{const part=await load(root+'equipment/'+file);if(disposed)return;anchor.add(part);equipment.set(slot,part);}catch(e){options.onError?.(e instanceof Error?e.message:'Не удалось загрузить предмет.');}};
-  const animate=()=>{if(disposed)return;frame=requestAnimationFrame(animate);if(!dragging&&!baseModel)modelRoot.rotation.y+=.0018;renderer.render(scene,camera);};animate();
-  return{loadBaseModel,setEquipment,setRotation:r=>{rotation=r;modelRoot.rotation.y=r;},dispose:()=>{if(disposed)return;disposed=true;cancelAnimationFrame(frame);observer.disconnect();canvas.removeEventListener('pointerdown',down);canvas.removeEventListener('pointermove',move);canvas.removeEventListener('pointerup',up);canvas.removeEventListener('pointercancel',up);canvas.removeEventListener('lostpointercapture',up);scene.traverse(o=>{if(o instanceof THREE.Mesh){o.geometry.dispose();const ms=Array.isArray(o.material)?o.material:[o.material];ms.forEach(m=>m.dispose());}});renderer.dispose();renderer.domElement.remove();}};
+  const animate=()=>{if(disposed)return;frame=requestAnimationFrame(animate);/* Deliberately stationary: rotation is controlled only by the user's drag. */renderer.render(scene,camera);};animate();
+  return{loadBaseModel,setEquipment,setRotation:r=>{rotation=r;modelRoot.rotation.y=r;},dispose:()=>{if(disposed)return;disposed=true;cancelAnimationFrame(frame);observer.disconnect();canvas.removeEventListener('pointerdown',down);canvas.removeEventListener('pointermove',move);canvas.removeEventListener('pointerup',up);canvas.removeEventListener('pointercancel',up);canvas.removeEventListener('lostpointercapture',up);canvas.removeEventListener('touchstart',touchStart);canvas.removeEventListener('touchmove',touchMove);canvas.removeEventListener('touchend',touchEnd);canvas.removeEventListener('touchcancel',touchEnd);scene.traverse(o=>{if(o instanceof THREE.Mesh){o.geometry.dispose();const ms=Array.isArray(o.material)?o.material:[o.material];ms.forEach(m=>m.dispose());}});renderer.dispose();renderer.domElement.remove();}};
 }

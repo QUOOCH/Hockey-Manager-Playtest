@@ -1590,38 +1590,3 @@ label{display:block;font-size:11px;color:#a8c8e2;margin:12px 0}input{display:blo
  .home-hero .arena-match-button b{font-size:clamp(6px,2vw,9px);letter-spacing:.2px;}
  .home-hero .arena-match-button i{font-size:10px;}
 }
-
-
-/* Wide fiery PUCK IT! wordmark fills the open arena display space. */
-.home-hero .arena-wordmark{
-  position:absolute;left:50%;top:29%;transform:translate(-50%,-50%) skewX(-5deg);
-  z-index:4;width:91%;text-align:center;pointer-events:none;
-}
-.home-hero .arena-wordmark span{
-  display:block;white-space:nowrap;font-weight:1000;line-height:.92;
-  font-size:clamp(30px,5.1vw,66px);letter-spacing:.025em;
-  color:#fff4c9;
-  background:linear-gradient(180deg,#fffde8 0%,#fff1a0 22%,#ffb33c 48%,#ff5b24 72%,#b91e27 100%);
-  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
-  -webkit-text-stroke:1px #fff3c2;
-  filter:drop-shadow(0 2px 0 #7d1a20) drop-shadow(0 5px 0 #40131b) drop-shadow(0 0 10px #ff6b27) drop-shadow(0 0 24px #ff3b16aa);
-  animation:arena-wordmark-fire 2.2s ease-in-out infinite alternate;
-}
-.home-hero .arena-wordmark:before{
-  content:"";position:absolute;z-index:-1;left:8%;right:8%;top:12%;height:105%;
-  background:radial-gradient(ellipse at 22% 80%,#ff4b18a8 0,transparent 35%),
-             radial-gradient(ellipse at 52% 90%,#ff9b24a0 0,transparent 43%),
-             radial-gradient(ellipse at 80% 78%,#ff3b18a0 0,transparent 36%);
-  filter:blur(13px);opacity:.9;animation:arena-flame-glow 1.4s ease-in-out infinite alternate;
-}
-@keyframes arena-wordmark-fire{
-  from{filter:drop-shadow(0 2px 0 #7d1a20) drop-shadow(0 5px 0 #40131b) drop-shadow(0 0 9px #ff6b27) drop-shadow(0 0 19px #ff3b16aa);}
-  to{filter:drop-shadow(0 2px 0 #7d1a20) drop-shadow(0 5px 0 #40131b) drop-shadow(0 0 15px #ffb12b) drop-shadow(0 0 30px #ff3b16);}
-}
-@keyframes arena-flame-glow{from{opacity:.65;transform:scaleX(.94) scaleY(.92)}to{opacity:1;transform:scaleX(1.06) scaleY(1.08)}}
-.home-hero .arena-match-button{top:49%;}
-@media(max-width:600px){
- .home-hero .arena-wordmark{top:29%;width:88%;}
- .home-hero .arena-wordmark span{font-size:clamp(25px,7.2vw,39px);letter-spacing:0;}
- .home-hero .arena-match-button{top:49%;}
-}

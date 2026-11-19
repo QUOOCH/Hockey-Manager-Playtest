@@ -29,6 +29,17 @@
  <ellipse cx="1120" cy="190" rx="105" ry="100" fill="url(#lamp)" opacity=".9"/>
  <g fill="#f0fcff"><rect x="51" y="177" width="58" height="9" rx="4"/><rect x="275" y="211" width="50" height="7" rx="3"/><rect x="875" y="211" width="50" height="7" rx="3"/><rect x="1091" y="177" width="58" height="9" rx="4"/></g>
 </g>
+<!-- broad volumetric spotlights cutting through the arena haze -->
+<g opacity=".15">
+ <path d="M80 188L260 430L390 430L112 188Z" fill="#bcefff"/>
+ <path d="M300 220L420 430L510 430L330 220Z" fill="#d9f7ff"/>
+ <path d="M900 220L690 430L790 430L930 220Z" fill="#d9f7ff"/>
+ <path d="M1120 188L820 430L960 430L1148 188Z" fill="#bcefff"/>
+</g>
+<g opacity=".2" filter="url(#blur20)">
+ <path d="M80 190L300 450L390 450L110 190Z" fill="#70d5ff"/>
+ <path d="M1120 190L800 450L900 450L1150 190Z" fill="#70d5ff"/>
+</g>
 <!-- arena seating bowl -->
 <path d="M0 130Q600 15 1200 130V445Q600 545 0 445Z" fill="url(#upper)"/>
 <g clip-path="url(#bowl)">
@@ -41,6 +52,15 @@
  <g fill="#d5f3ff" opacity=".32">
   <circle cx="90" cy="278" r="3"/><circle cx="122" cy="288" r="2"/><circle cx="162" cy="270" r="3"/><circle cx="205" cy="303" r="2"/><circle cx="255" cy="281" r="3"/><circle cx="318" cy="294" r="2"/><circle cx="370" cy="272" r="3"/><circle cx="425" cy="306" r="2"/><circle cx="482" cy="283" r="3"/><circle cx="535" cy="299" r="2"/><circle cx="598" cy="276" r="3"/><circle cx="660" cy="302" r="2"/><circle cx="720" cy="280" r="3"/><circle cx="775" cy="300" r="2"/><circle cx="835" cy="276" r="3"/><circle cx="890" cy="304" r="2"/><circle cx="950" cy="282" r="3"/><circle cx="1010" cy="300" r="2"/><circle cx="1070" cy="276" r="3"/><circle cx="1120" cy="293" r="2"/>
  </g>
+</g>
+<!-- crowd glints and arena ribbon lights -->
+<g opacity=".72">
+ <path d="M-10 235Q600 135 1210 235" fill="none" stroke="#6ac8f0" stroke-opacity=".22" stroke-width="5"/>
+ <path d="M-10 337Q600 247 1210 337" fill="none" stroke="#d9f6ff" stroke-opacity=".2" stroke-width="3"/>
+ <g fill="#d8f5ff">
+  <circle cx="54" cy="250" r="2.4"/><circle cx="75" cy="259" r="1.8"/><circle cx="143" cy="242" r="2.1"/><circle cx="182" cy="267" r="2.4"/><circle cx="231" cy="246" r="1.8"/><circle cx="277" cy="259" r="2.2"/><circle cx="344" cy="238" r="2.1"/><circle cx="392" cy="268" r="2.3"/><circle cx="447" cy="247" r="1.8"/><circle cx="501" cy="263" r="2.2"/><circle cx="560" cy="241" r="2.4"/><circle cx="632" cy="262" r="1.8"/><circle cx="681" cy="244" r="2.2"/><circle cx="742" cy="267" r="2.4"/><circle cx="802" cy="245" r="1.8"/><circle cx="858" cy="262" r="2.2"/><circle cx="918" cy="241" r="2.4"/><circle cx="972" cy="263" r="1.8"/><circle cx="1035" cy="244" r="2.2"/><circle cx="1092" cy="260" r="2.3"/><circle cx="1150" cy="246" r="1.9"/>
+ </g>
+ <g fill="#ef5a72"><circle cx="117" cy="318" r="2.2"/><circle cx="300" cy="291" r="2"/><circle cx="467" cy="315" r="2.1"/><circle cx="733" cy="298" r="2.2"/><circle cx="914" cy="318" r="2"/><circle cx="1081" cy="292" r="2.1"/></g>
 </g>
 <!-- upper fascia and central scoreboard -->
 <path d="M0 382Q600 472 1200 382V465Q600 566 0 465Z" fill="#061725" stroke="#789db2" stroke-opacity=".5" stroke-width="5"/>
@@ -63,6 +83,17 @@
 <path d="M0 553Q600 650 1200 553V760H0Z" fill="url(#boards)" stroke="#e9fbff" stroke-width="7"/>
 <path d="M0 580Q600 678 1200 580" fill="none" stroke="url(#redline)" stroke-width="14"/>
 <path d="M0 602Q600 699 1200 602" fill="none" stroke="#f6fdff" stroke-opacity=".9" stroke-width="4"/>
+<!-- illuminated dasher-board advertising ribbon -->
+<g>
+ <path d="M0 556Q600 652 1200 556" fill="none" stroke="#d9f8ff" stroke-width="3" opacity=".85"/>
+ <path d="M35 568Q600 655 1165 568" fill="none" stroke="#63d7ff" stroke-width="2" opacity=".8"/>
+ <g font-family="Arial,sans-serif" font-weight="900" letter-spacing="4" text-anchor="middle">
+  <text x="175" y="589" font-size="16" fill="#0b2b43" opacity=".82">PUCK IT!</text>
+  <text x="600" y="620" font-size="13" fill="#163d57" opacity=".78">YOUR ICE · YOUR RULES</text>
+  <text x="1015" y="589" font-size="16" fill="#0b2b43" opacity=".82">PLAY HARD</text>
+ </g>
+ <path d="M70 578l205 31M925 609l205-31" stroke="#fff" stroke-opacity=".6" stroke-width="3"/>
+</g>
 <!-- rink surface -->
 <path d="M0 614Q600 708 1200 614V760H0Z" fill="url(#ice)"/>
 <ellipse cx="650" cy="698" rx="520" ry="155" fill="url(#iceGlow)" opacity=".78"/>
@@ -70,6 +101,12 @@
 <path d="M0 703Q600 790 1200 703" stroke="#c93450" stroke-width="7" fill="none" opacity=".72"/>
 <ellipse cx="730" cy="720" rx="145" ry="66" fill="none" stroke="#f7fdff" stroke-opacity=".75" stroke-width="5"/>
 <ellipse cx="730" cy="720" rx="13" ry="13" fill="#d13b55" opacity=".8"/>
+<!-- fine skate-cut marks and glossy ice reflections -->
+<g fill="none" stroke="#f8fdff" stroke-linecap="round">
+ <path d="M110 672q90 22 178 26M155 691q72 17 145 20M380 724q80 14 154 16M785 682q95-6 170-28M820 704q78-8 138-25M960 724q66-12 112-30" stroke-width="2.2" opacity=".36"/>
+ <path d="M210 650l90 17M340 681l110 19M710 668l95-15M900 650l82-20" stroke-width="1.4" opacity=".28"/>
+</g>
+<ellipse cx="615" cy="692" rx="390" ry="42" fill="#fff" opacity=".08" filter="url(#blur20)"/>
 <!-- goal at far end -->
 <g transform="translate(910 590)" opacity=".86">
  <path d="M-62 25V-22Q0-75 62-22V25" fill="none" stroke="#eafaff" stroke-width="12" stroke-linecap="round"/>

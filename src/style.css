@@ -1470,10 +1470,9 @@ label{display:block;font-size:11px;color:#a8c8e2;margin:12px 0}input{display:blo
 }
 .intro-logo-words{
   opacity:0;transform:translateY(24px) scale(.94);
-  color:#f3f9fc;
-  background:linear-gradient(180deg,#fff 0%,#d9e8ef 38%,#7898a9 49%,#f5fbff 55%,#9db8c7 100%);
-  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
-  text-shadow:0 2px 0 #567386,0 4px 0 #18374a;
+  color:#fff;background:none;
+  -webkit-background-clip:border-box;background-clip:border-box;-webkit-text-fill-color:#fff;
+  text-shadow:0 2px 0 #7f0b15,0 4px 0 #4d050b;
   animation:logoReveal .75s cubic-bezier(.18,.8,.22,1) .22s forwards;
 }
 .intro-bang{position:relative;display:inline-block;width:.19em;height:.91em;margin-left:.045em;flex:none;}

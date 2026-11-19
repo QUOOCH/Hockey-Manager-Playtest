@@ -1427,3 +1427,120 @@ label{display:block;font-size:11px;color:#a8c8e2;margin:12px 0}input{display:blo
 .hero-header-track{height:5px;margin-top:5px;overflow:hidden;border-radius:9px;background:#d8fff01c;border:1px solid #9cebd12b;}
 .hero-header-track i{display:block;height:100%;border-radius:9px;background:linear-gradient(90deg,#3bbf9c,#b4f2d7);box-shadow:0 0 10px #68e7bd88;transition:width .35s ease;}
 @media(max-width:600px){.shell:has(.home-hero)>.top .hero-header-avatar{width:47px;height:47px;border-radius:15px}.shell:has(.home-hero)>.top .hero-header-avatar svg{border-radius:14px}.hero-header-progress{margin-top:5px}.hero-header-xp{font-size:6px}.hero-header-xp b{font-size:7px}.shell:has(.home-hero)>.top .hero-header-copy h1{font-size:17px}.shell:has(.home-hero)>.top .live{font-size:7px;padding:6px 7px;}}
+
+
+/* First-launch PUCK IT! cinematic ice-impact intro */
+.intro-splash{
+  position:fixed;inset:0;z-index:99999;display:grid;place-items:center;overflow:hidden;
+  isolation:isolate;background:
+    radial-gradient(ellipse at 50% 42%,#173d50 0%,#0a1c2b 37%,#030912 78%,#01050a 100%);
+  color:#f5fbff;animation:introFadeOut .7s ease 4.9s forwards;
+}
+.intro-splash:before{
+  content:"";position:absolute;inset:0;z-index:-1;opacity:.55;
+  background:repeating-linear-gradient(90deg,transparent 0 9%,#b9eaff08 9.1% 9.25%,transparent 9.35% 18%);
+  mask-image:linear-gradient(180deg,#000,transparent 80%);
+}
+.intro-splash:after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse at center,transparent 24%,#000b 100%);
+}
+.intro-ice-glow{
+  position:absolute;left:-20%;right:-20%;bottom:7%;height:35%;opacity:0;
+  background:radial-gradient(ellipse at 50% 35%,#a9eaff3b 0%,#6ac7e51b 28%,transparent 70%);
+  transform:perspective(420px) rotateX(58deg) scale(1.25);
+  border-top:1px solid #a9eaff35;animation:iceGlowIn 1.2s ease .25s forwards;
+}
+.intro-rink-lines{
+  position:absolute;left:0;right:0;top:50%;height:1px;opacity:0;
+  background:linear-gradient(90deg,transparent,#b8eaff30 20%,#e7faff88 50%,#b8eaff30 80%,transparent);
+  box-shadow:0 0 30px #72d7ff55;animation:rinkLineIn .8s ease .3s forwards;
+}
+.intro-wordmark{
+  position:relative;z-index:2;display:flex;align-items:center;justify-content:center;
+  padding:0 .12em 0 0;font-family:Impact,"Arial Black",system-ui,sans-serif;
+  font-size:clamp(58px,12.5vw,142px);font-weight:1000;line-height:.9;
+  letter-spacing:-.075em;white-space:nowrap;filter:drop-shadow(0 10px 0 #07131e) drop-shadow(0 20px 28px #000b);
+}
+.intro-logo-words{
+  opacity:0;transform:translateY(24px) scale(.94);
+  color:#f3f9fc;
+  background:linear-gradient(180deg,#fff 0%,#d9e8ef 38%,#7898a9 49%,#f5fbff 55%,#9db8c7 100%);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  text-shadow:0 2px 0 #567386,0 4px 0 #18374a;
+  animation:logoReveal .75s cubic-bezier(.18,.8,.22,1) .22s forwards;
+}
+.intro-bang{position:relative;display:inline-block;width:.19em;height:.91em;margin-left:.045em;flex:none;}
+.intro-bang-stem{
+  position:absolute;left:50%;top:0;width:.15em;height:.66em;border-radius:.07em;
+  transform:translateX(-50%) scaleY(0);transform-origin:bottom;
+  background:linear-gradient(90deg,#8ba9b9,#fff 35%,#d8e9f1 70%,#7896a7);
+  box-shadow:0 2px 0 #28495d,0 0 16px #b4eaff55;
+  animation:bangStemIn .3s ease 1s forwards;
+}
+.intro-puck{
+  position:absolute;left:50%;bottom:-.12em;width:.24em;height:.115em;border-radius:50%;
+  opacity:0;transform:translate(145px,-310px) rotate(-420deg) scale(.72);
+  background:linear-gradient(180deg,#56616b 0%,#111820 40%,#020407 100%);
+  border:1px solid #a9c2d1;box-shadow:0 3px 0 #000,0 0 0 2px #d9f5ff22,0 0 24px #9deaff77;
+  animation:puckBulletDrop .72s cubic-bezier(.12,.72,.18,1) 1.35s forwards;
+}
+.intro-impact-cracks{
+  position:absolute;z-index:1;left:calc(50% + clamp(140px,25vw,260px));top:calc(50% + 58px);
+  width:clamp(150px,25vw,240px);height:auto;transform:translate(-50%,-50%) scale(.12);
+  opacity:0;filter:drop-shadow(0 0 8px #a8eaff);
+  animation:iceCrackBurst .9s cubic-bezier(.12,.75,.18,1) 2.03s forwards;
+}
+.intro-impact-cracks svg{display:block;width:100%;overflow:visible}
+.intro-impact-cracks path{
+  fill:none;stroke:#d8f7ff;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:360;stroke-dashoffset:360;animation:crackDraw .65s ease 2.12s forwards;
+}
+.intro-impact-flash{
+  position:absolute;z-index:1;left:calc(50% + clamp(140px,25vw,260px));top:calc(50% + 58px);
+  width:20px;height:20px;border-radius:50%;opacity:0;
+  background:#fff;box-shadow:0 0 18px 10px #b8f1ff,0 0 65px 35px #5fcaff88;
+  animation:impactFlash .48s ease 2.02s forwards;
+}
+.intro-caption{
+  position:absolute;top:calc(50% + 145px);left:0;right:0;text-align:center;
+  color:#9bb9ca;font:800 9px/1 system-ui,sans-serif;letter-spacing:.42em;
+  opacity:0;animation:captionReveal .5s ease 2.55s forwards;
+}
+@keyframes logoReveal{to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes bangStemIn{to{transform:translateX(-50%) scaleY(1)}}
+@keyframes puckBulletDrop{
+  0%{opacity:0;transform:translate(145px,-310px) rotate(-420deg) scale(.72)}
+  12%{opacity:1}
+  76%{transform:translate(8px,-8px) rotate(260deg) scale(1.12)}
+  88%{transform:translate(-50%,-.12em) rotate(365deg) scale(.88)}
+  100%{opacity:1;transform:translate(-50%,-.12em) rotate(360deg) scale(1)}
+}
+@keyframes iceCrackBurst{0%{opacity:0;transform:translate(-50%,-50%) scale(.12)}18%{opacity:1}100%{opacity:.9;transform:translate(-50%,-50%) scale(1)}}
+@keyframes crackDraw{to{stroke-dashoffset:0}}
+@keyframes impactFlash{0%{opacity:0;transform:scale(.1)}18%{opacity:1;transform:scale(1.7)}100%{opacity:0;transform:scale(4)}}
+@keyframes iceGlowIn{to{opacity:1}}
+@keyframes rinkLineIn{to{opacity:1}}
+@keyframes captionReveal{to{opacity:.85;letter-spacing:.5em}}
+@keyframes introFadeOut{to{opacity:0;visibility:hidden}}
+@media(max-width:600px){
+  .intro-wordmark{font-size:clamp(53px,13vw,76px);letter-spacing:-.08em}
+  .intro-puck{transform:translate(90px,-230px) rotate(-420deg) scale(.72)}
+  @keyframes puckBulletDrop{
+    0%{opacity:0;transform:translate(90px,-230px) rotate(-420deg) scale(.72)}
+    12%{opacity:1}
+    76%{transform:translate(5px,-6px) rotate(260deg) scale(1.12)}
+    88%{transform:translate(-50%,-.12em) rotate(365deg) scale(.88)}
+    100%{opacity:1;transform:translate(-50%,-.12em) rotate(360deg) scale(1)}
+  }
+  .intro-impact-cracks,.intro-impact-flash{top:calc(50% + 34px)}
+  .intro-caption{top:calc(50% + 102px);font-size:7px;letter-spacing:.3em}
+}
+@media(prefers-reduced-motion:reduce){
+  .intro-splash,.intro-logo-words,.intro-bang-stem,.intro-puck,.intro-impact-cracks,.intro-impact-flash,.intro-ice-glow,.intro-rink-lines,.intro-caption,
+  .intro-impact-cracks path{animation:none!important;transition:none!important}
+  .intro-splash{opacity:1}
+  .intro-logo-words,.intro-bang-stem,.intro-puck,.intro-impact-cracks,.intro-ice-glow,.intro-rink-lines,.intro-caption{opacity:1;transform:none}
+  .intro-bang-stem{transform:translateX(-50%)}
+  .intro-puck{left:50%;bottom:-.12em}
+}

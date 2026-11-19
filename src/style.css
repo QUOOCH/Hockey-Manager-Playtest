@@ -1498,3 +1498,16 @@ label{display:block;font-size:11px;color:#a8c8e2;margin:12px 0}input{display:blo
  .home-hero .hero-play .play-icon{width:24px;height:24px;}
  .home-hero .hero-play b{font-size:9px;}
 }
+
+
+/* Correct home layout: the ice action occupies the sixth, bottom menu tile. */
+.home-hero .hero-copy{display:block;min-height:0;padding-bottom:18px !important;}
+.home-hero .hero-play{position:static;width:100%;max-width:315px;margin-top:12px;padding:12px 14px;}
+.home-menu-card.ice-entry{min-height:88px;padding:10px 12px;display:grid;grid-template-columns:32px minmax(0,1fr);grid-template-rows:auto auto;align-items:center;column-gap:9px;row-gap:2px;}
+.home-menu-card.ice-entry .home-menu-icon{grid-column:1;grid-row:1 / span 2;width:31px;height:31px;margin:0;border-radius:10px;font-size:16px;}
+.home-menu-card.ice-entry .home-menu-icon svg{width:19px;height:19px;}
+.home-menu-card.ice-entry>b{grid-column:2;grid-row:1;font-size:9px;letter-spacing:.45px;}
+.home-menu-card.ice-entry>small{grid-column:2;grid-row:2;margin:0;font-size:7px;}
+.home-menu-card.ice-entry>.home-menu-number{right:8px;bottom:6px;font-size:7px;}
+.home-menu-card.ice-entry>i{right:9px;top:8px;font-size:12px;}
+@media(max-width:600px){.home-menu-card.ice-entry{min-height:82px;padding:9px 8px;column-gap:7px}.home-menu-card.ice-entry .home-menu-icon{width:28px;height:28px}.home-menu-card.ice-entry>b{font-size:8px}.home-menu-card.ice-entry>small{font-size:6px}}

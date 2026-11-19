@@ -1521,6 +1521,16 @@ label{display:block;font-size:11px;color:#a8c8e2;margin:12px 0}input{display:blo
   color:#9bb9ca;font:800 9px/1 system-ui,sans-serif;letter-spacing:.42em;
   opacity:0;animation:captionReveal .5s ease 2.55s forwards;
 }
+.intro-sound-hint{
+  position:absolute;left:0;right:0;bottom:24px;text-align:center;
+  color:#7897aa;font:800 8px/1 system-ui,sans-serif;letter-spacing:.22em;
+  opacity:0;animation:soundHintPulse 1.8s ease-in-out 2.8s infinite alternate;
+}
+.sound-setting{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;margin:4px 0 12px;border-top:1px solid #ffffff16;border-bottom:1px solid #ffffff16}
+.sound-setting b,.sound-setting small{display:block}
+.sound-setting b{font-size:12px;color:#eff8ff}
+.sound-setting small{font-size:9px;color:#8eacc7;margin-top:4px}
+
 @keyframes logoReveal{to{opacity:1;transform:translateY(0) scale(1)}}
 @keyframes crestReveal{0%{opacity:0;transform:scale(.72)}75%{opacity:1;transform:scale(1.045)}100%{opacity:1;transform:scale(1)}}
 @keyframes letterReveal{to{opacity:1;transform:translateY(0) scale(1)}}
@@ -1538,6 +1548,7 @@ label{display:block;font-size:11px;color:#a8c8e2;margin:12px 0}input{display:blo
 @keyframes iceGlowIn{to{opacity:1}}
 @keyframes rinkLineIn{to{opacity:1}}
 @keyframes captionReveal{to{opacity:.85;letter-spacing:.5em}}
+@keyframes soundHintPulse{0%{opacity:.35}100%{opacity:.9}}
 @keyframes introFadeOut{to{opacity:0;visibility:hidden}}
 @media(max-width:600px){
   .intro-wordmark{font-size:clamp(53px,13vw,76px);letter-spacing:-.08em}

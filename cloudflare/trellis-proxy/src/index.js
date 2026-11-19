@@ -155,8 +155,12 @@ export default {
       return json({
         ok: true,
         authMode: result.authMode,
-        endpoints: dependencies.filter((item) => item.api_name).map((item) => ({
+        protocol: result.data?.protocol ?? null,
+        apiPrefix: result.data?.api_prefix ?? null,
+        endpoints: dependencies.filter((item) => item.api_name).map((item, index) => ({
+          id: item.id ?? index,
           api_name: item.api_name,
+          queue: item.queue ?? null,
           inputs: describe(item.inputs),
           outputs: describe(item.outputs)
         }))

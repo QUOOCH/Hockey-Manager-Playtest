@@ -1571,3 +1571,35 @@ label{display:block;font-size:11px;color:#a8c8e2;margin:12px 0}input{display:blo
   .intro-bang-stem{transform:translateX(-50%)}
   .intro-puck{left:50%;bottom:-.12em}
 }
+
+
+/* Tap-to-enter screen: user gesture unlocks cinematic audio on mobile Safari */
+.start-gate{
+  position:fixed;inset:0;z-index:100000;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:18px;overflow:hidden;
+  color:#f5fbff;text-align:center;
+  background:radial-gradient(ellipse at 50% 42%,#173d50 0%,#0a1c2b 42%,#030912 82%,#01050a 100%);
+}
+.start-gate:before{
+  content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;
+  background:repeating-linear-gradient(90deg,transparent 0 9%,#b9eaff08 9.1% 9.25%,transparent 9.35% 18%);
+}
+.start-gate-mark{
+  position:relative;padding:13px 25px 15px;border:5px solid #171d24;border-radius:999px;
+  color:#fff;background:linear-gradient(180deg,#ff6666 0%,#e51d2a 22%,#b90819 72%,#790512 100%);
+  box-shadow:inset 0 4px 0 #ffb0a866,inset 0 -7px 0 #4e000b88,0 0 0 3px #d8e0e5,0 0 0 7px #303943,0 14px 34px #000b;
+  font:1000 clamp(42px,11vw,76px)/.9 Impact,"Arial Black",system-ui,sans-serif;letter-spacing:-.07em;
+}
+.start-gate-mark b{color:#fff}
+.start-gate p{position:relative;margin:7px 0 22px;color:#a9c5d5;font:800 9px/1 system-ui,sans-serif;letter-spacing:.34em}
+.start-gate-button{
+  position:relative;display:flex;align-items:center;justify-content:center;gap:13px;
+  min-width:220px;padding:17px 30px;border:1px solid #ff9a9a;border-radius:10px;
+  color:#fff;background:linear-gradient(180deg,#f0444d,#b90e20);
+  box-shadow:0 7px 0 #620713,0 14px 30px #0008;
+  font:1000 17px/1 system-ui,sans-serif;letter-spacing:.16em;
+  cursor:pointer;touch-action:manipulation;transition:transform .12s,filter .12s;
+}
+.start-gate-button:active{transform:translateY(4px);filter:brightness(1.15);box-shadow:0 3px 0 #620713,0 8px 18px #0008}
+.start-gate-button span{font-size:13px}
+.start-gate>small{position:relative;margin-top:8px;color:#7897aa;font:800 8px/1 system-ui,sans-serif;letter-spacing:.25em}

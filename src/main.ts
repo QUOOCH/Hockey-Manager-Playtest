@@ -15,8 +15,27 @@ let introAudioScheduled=false;
 
 function getAudioContext(){if(!soundEnabled)return null;const AudioCtor=window.AudioContext||(window as any).webkitAudioContext;if(!AudioCtor)return null;if(!audioContext)audioContext=new AudioCtor();if(audioContext.state==='suspended')void audioContext.resume();return audioContext;}
 function soundTone(ctx:AudioContext,frequency:number,delay:number,duration:number,wave:OscillatorType='sine',volume=.08){const start=ctx.currentTime+Math.max(0,delay),osc=ctx.createOscillator(),gain=ctx.createGain();osc.type=wave;osc.frequency.setValueAtTime(frequency,start);osc.frequency.exponentialRampToValueAtTime(Math.max(28,frequency*.58),start+duration);gain.gain.setValueAtTime(.0001,start);gain.gain.exponentialRampToValueAtTime(volume,start+.012);gain.gain.exponentialRampToValueAtTime(.0001,start+duration);osc.connect(gain);gain.connect(ctx.destination);osc.start(start);osc.stop(start+duration+.02);}
-function soundCrack(ctx:AudioContext,delay:number){const start=ctx.currentTime+Math.max(0,delay),length=Math.floor(ctx.sampleRate*.24),buffer=ctx.createBuffer(1,length,ctx.sampleRate),data=buffer.getChannelData(0);for(let i=0;i<length;i++)data[i]=(Math.random()*2-1)*(1-i/length);const source=ctx.createBufferSource(),filter=ctx.createBiquadFilter(),gain=ctx.createGain();source.buffer=buffer;filter.type='lowpass';filter.frequency.setValueAtTime(2200,start);gain.gain.setValueAtTime(.0001,start);gain.gain.exponentialRampToValueAtTime(.16,start+.008);gain.gain.exponentialRampToValueAtTime(.0001,start+.23);source.connect(filter);filter.connect(gain);gain.connect(ctx.destination);source.start(start);source.stop(start+.25);}
-function playIntroAudio(){if(!soundEnabled||introAudioScheduled)return;const ctx=getAudioContext();if(!ctx)return;const start=()=>{if(ctx.state!=='running'||introAudioScheduled)return;introAudioScheduled=true;soundTone(ctx,92,.03,.3,'triangle',.16);const letters=[.48,.61,.74,.87,1.12,1.25];letters.forEach((t,i)=>soundTone(ctx,620+i*38,t,.075,'sine',.04));soundTone(ctx,68,1.68,.48,'sine',.24);soundTone(ctx,145,1.7,.24,'triangle',.1);soundCrack(ctx,1.68);};if(ctx.state==='running'){start();return;}void ctx.resume().then(start).catch(()=>{});}
+function cinematicNoise(ctx:AudioContext,delay:number,duration:number,low:number,high:number,volume:number,fadeIn=.02){const start=ctx.currentTime+Math.max(0,delay),length=Math.max(1,Math.floor(ctx.sampleRate*duration)),buffer=ctx.createBuffer(1,length,ctx.sampleRate),data=buffer.getChannelData(0);for(let i=0;i<length;i++){const t=i/length;data[i]=(Math.random()*2-1)*(1-t)*(.7+.3*Math.sin(t*Math.PI));}const source=ctx.createBufferSource(),filter=ctx.createBiquadFilter(),gain=ctx.createGain();source.buffer=buffer;filter.type='bandpass';filter.Q.setValueAtTime(.65,start);filter.frequency.setValueAtTime(low,start);filter.frequency.exponentialRampToValueAtTime(Math.max(low+1,high),start+duration*.82);gain.gain.setValueAtTime(.0001,start);gain.gain.exponentialRampToValueAtTime(volume,start+fadeIn);gain.gain.exponentialRampToValueAtTime(.0001,start+duration);source.connect(filter);filter.connect(gain);gain.connect(ctx.destination);source.start(start);source.stop(start+duration+.02);}
+function playIntroAudio(){if(!soundEnabled||introAudioScheduled)return;const ctx=getAudioContext();if(!ctx)return;const start=()=>{if(ctx.state!=='running'||introAudioScheduled)return;introAudioScheduled=true;
+  // A slow, cold-air swell builds beneath the crest reveal.
+  cinematicNoise(ctx,.12,1.95,150,1250,.075,.55);
+  soundTone(ctx,48,.08,1.85,'sine',.075);
+  soundTone(ctx,92,.42,1.35,'triangle',.035);
+  // Tiny, restrained metallic accents follow the individual letters.
+  [.72,.84,.96,1.08,1.32,1.44].forEach((t,i)=>{soundTone(ctx,210+i*13,t,.11,'triangle',.018);cinematicNoise(ctx,t,.09,1400,3200,.012,.003);});
+  // The puck hits like a heavy object striking thick ice: sub impact, body and sharp fracture.
+  soundTone(ctx,86,2.015,.72,'sine',.42);
+  soundTone(ctx,154,2.025,.34,'triangle',.19);
+  soundTone(ctx,430,2.035,.16,'square',.045);
+  cinematicNoise(ctx,1.91,.34,500,1800,.13,.025);
+  cinematicNoise(ctx,2.015,.62,900,6200,.22,.004);
+  cinematicNoise(ctx,2.08,.9,180,850,.13,.06);
+  // A few ice splinters scatter outward and fade into a long, dark tail.
+  cinematicNoise(ctx,2.22,.42,2400,7600,.055,.01);
+  cinematicNoise(ctx,2.34,.58,1700,5200,.035,.025);
+  soundTone(ctx,54,2.12,1.55,'sine',.16);
+  soundTone(ctx,112,2.16,.85,'triangle',.055);
+};if(ctx.state==='running'){start();return;}void ctx.resume().then(start).catch(()=>{});}
 function unlockGameAudio(){const ctx=getAudioContext();if(!ctx)return;void ctx.resume();}
 function playUiClick(){const ctx=audioContext;if(!soundEnabled||!ctx||ctx.state!=='running')return;soundTone(ctx,560,0,.045,'sine',.022);}
 const loadHero=():HeroProfile|null=>{try{const raw=localStorage.getItem(HERO_KEY);return raw?JSON.parse(raw) as HeroProfile:null;}catch{return null;}};

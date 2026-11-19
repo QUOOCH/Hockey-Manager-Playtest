@@ -220,95 +220,122 @@ return `<svg class="hero-man-gear" viewBox="0 0 105 250" aria-hidden="true">
 <g fill="${stick}" stroke="#dff7ff">${stickShape}</g><g fill="${skate}">${skateShape}</g>${pads}
 </g></svg>`;
 }
-function heroMannequinBaseCenter(){return `<svg class="hero-man-base hero-center-base" viewBox="0 0 105 250" aria-hidden="true">
-<defs>
-<linearGradient id="centerJersey" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#397da0"/><stop offset=".45" stop-color="#153d5b"/><stop offset="1" stop-color="#071a2c"/></linearGradient>
-<linearGradient id="centerPants" x1="0" x2="1"><stop stop-color="#071827"/><stop offset=".5" stop-color="#294c65"/><stop offset="1" stop-color="#081a2b"/></linearGradient>
-<linearGradient id="centerSkin" x1="0" x2="1"><stop stop-color="#754735"/><stop offset=".48" stop-color="#d19a73"/><stop offset="1" stop-color="#8c5945"/></linearGradient>
-<linearGradient id="centerSock" x1="0" x2="1"><stop stop-color="#e8f7ff"/><stop offset=".5" stop-color="#6f9bb5"/><stop offset="1" stop-color="#d8effb"/></linearGradient>
-</defs>
-<g stroke="#8dbbd2" stroke-width="1.45" stroke-linejoin="round" stroke-linecap="round">
-<!-- neck and head -->
-<path d="M45 29Q52 25 60 29L62 46L57 53H47L42 46Z" fill="url(#centerSkin)"/>
-<!-- far arm: bent and tucked in -->
-<path d="M69 43Q79 42 84 53L91 76L83 94L76 89L69 69L63 58Z" fill="url(#centerJersey)"/>
-<path d="M83 88L91 91L96 111L88 119L79 111L76 99Z" fill="url(#centerSkin)"/>
-<!-- torso: athletic tapered hockey stance -->
-<path d="M37 42Q43 38 52 39Q64 38 70 43L81 54L75 83L72 119Q68 130 63 137H39Q33 128 30 117L27 83L22 54Z" fill="url(#centerJersey)"/>
-<path d="M22 54Q30 43 39 42L43 56L32 76L24 83L16 73Z" fill="url(#centerJersey)"/>
-<!-- near arm reaching forward -->
-<path d="M24 56L16 76L10 100Q7 111 15 116Q22 119 27 109L36 83L39 61Z" fill="url(#centerJersey)"/>
-<path d="M10 104Q17 99 25 106L28 119L20 132L9 128L5 117Z" fill="url(#centerSkin)"/>
-<!-- hips and shorts -->
-<path d="M34 124Q51 132 72 123L79 151L69 170L35 170L26 151Z" fill="url(#centerPants)" stroke="#6b9ab5"/>
-<path d="M35 162L50 164L47 194L40 207L25 205L23 194Z" fill="url(#centerSock)"/>
-<path d="M57 164L72 161L83 190L79 204L63 208L57 194Z" fill="url(#centerSock)"/>
-<!-- skates and blades -->
-<path d="M25 198L42 199L47 215L39 225L12 222L10 216Z" fill="#183d56"/>
-<path d="M63 198L80 197L95 213L91 222L64 225L57 215Z" fill="#183d56"/>
-<path d="M11 226L46 226M60 226L94 226" stroke="#e8f8ff" stroke-width="3"/>
-</g>
-<g fill="none" stroke="#b9e0f2" stroke-width="1.5" opacity=".55" stroke-linecap="round">
-<path d="M32 55L39 62M72 55L66 62M31 92L24 108M73 91L81 105"/>
-<path d="M37 133L43 140M67 133L62 140M33 177L39 184M68 176L74 184"/>
-</g>
-</svg>`;}
-function heroMannequinGearCenter(role:HeroRole,gear:string[]){const color=(slot:number)=>heroGearColor(role,slot,gear[slot]);
-const idx=(slot:number)=>Math.max(0,heroGearCatalog(role,slot).findIndex(x=>x.name===gear[slot]));
+function heroMannequinBaseCenter(){return '';}
+function heroMannequinGearCenter(role:HeroRole,gear:string[]){return '';}
+function heroMannequinVisual(role:HeroRole,gear:string[]){
+if(role!=='C')return heroMannequinBase(role)+heroMannequinGear(role,gear);
+const color=(slot:number)=>heroGearColor(role,slot,gear[slot]);
 const helmet=color(0),armor=color(1),glove=color(2),stick=color(3),skate=color(4),jersey=color(5),pants=color(6);
-const helmetDetail=idx(0)%3===0
-?'<path d="M35 25Q35 5 52 4Q70 5 70 25L67 35H38Z"/><path d="M38 24H67M42 10L52 7L63 11" fill="none" stroke="#f5fcff" stroke-width="1.7"/>'
-:idx(0)%3===1
-?'<path d="M33 25Q36 3 53 3Q72 4 72 25L68 36H37Z"/><path d="M38 14H68M36 21H70" fill="none" stroke="#f5fcff" stroke-width="1.6"/>'
-:'<path d="M35 25Q37 6 53 5Q70 5 71 25L67 35H38Z"/><path d="M41 8L53 4L65 9M40 18L66 18" fill="none" stroke="#f5fcff" stroke-width="1.8"/>';
-const chest=idx(1)%3===0
-?'<path d="M27 51L40 42H65L78 51L72 69H33Z"/><path d="M32 53L40 47H65L73 53" fill="none" stroke="#f6fcff" stroke-width="1.8"/>'
-:idx(1)%3===1
-?'<path d="M24 54L40 42H65L81 54L74 72H31Z"/><path d="M29 61H76M34 69H71" fill="none" stroke="#f6fcff" stroke-width="1.8"/>'
-:'<path d="M29 49L42 41H63L77 49L71 72H34Z"/><path d="M34 51L52 64L71 51M52 64V73" fill="none" stroke="#f6fcff" stroke-width="2.4"/>';
-const gloves=idx(2)%3===0
-?'<path d="M5 111Q4 99 15 99L28 105L29 123L21 135L8 130Z"/><path d="M77 104L88 100L99 108L97 128L84 135L75 122Z"/>'
-:idx(2)%3===1
-?'<path d="M4 111L12 98L25 101L31 119L23 136L8 131Z"/><path d="M75 108L86 98L99 106L98 128L83 136L73 121Z"/>'
-:'<path d="M7 105Q12 94 23 99L31 110L27 131L13 135L4 120Z"/><path d="M74 110L84 98L97 103L101 121L90 135L76 130Z"/>';
-return `<svg class="hero-man-gear hero-center-gear" viewBox="0 0 105 250" aria-hidden="true">
-<g stroke="#e5f8ff" stroke-width="1.65" stroke-linejoin="round" stroke-linecap="round">
-<!-- stick behind the hands -->
-<path d="M82 91L88 93L48 222L42 220Z" fill="${stick}" stroke="#dff7ff"/>
-<path d="M36 217L49 220L38 230L19 226L22 220Z" fill="${stick}" stroke="#dff7ff"/>
-<!-- helmet and cage -->
-<path d="M36 27Q36 7 52 5Q69 6 69 27L65 38H40Z" fill="${helmet}"/>
-<g fill="${helmet}">${helmetDetail}</g>
-<path d="M38 28L68 28M41 33L65 33M45 20L44 35M52 19V36M60 20L61 35" fill="none" stroke="#eafaff" stroke-width="1.35"/>
-<!-- shoulder caps and chest protection -->
-<g fill="${armor}">${chest}</g>
-<path d="M26 55L17 77L24 85L34 67M78 55L88 76L81 85L72 67" fill="${armor}" stroke="#dff7ff"/>
-<path d="M15 86L29 90L25 103L11 100Z" fill="${armor}"/>
-<path d="M76 85L91 81L96 95L81 101Z" fill="${armor}"/>
-<!-- jersey stripes, crest and number -->
-<path d="M31 83L73 83M29 94L75 94M34 106L70 106" fill="none" stroke="${jersey}" stroke-width="4"/>
-<path d="M39 88L65 88" stroke="#f5fcff" stroke-width="1.5" opacity=".9"/>
-<path d="M47 96L57 96L59 109L45 109Z" fill="${jersey}" stroke="#dff7ff" stroke-width="1"/>
-<path d="M52 97V107M47 102H57" stroke="#fff" stroke-width="1.2"/>
-<!-- shorts and thigh protection -->
-<path d="M29 132L47 135L45 160L35 166L26 155Z" fill="${pants}"/>
-<path d="M58 135L76 131L79 154L69 166L60 160Z" fill="${pants}"/>
-<path d="M31 140L43 144M62 144L75 139" fill="none" stroke="#f3fbff" stroke-width="1.5"/>
-<!-- socks / shin guards -->
-<path d="M26 166L47 164L44 197L38 207L23 204Z" fill="${armor}"/>
-<path d="M58 164L78 162L84 194L79 205L64 208Z" fill="${armor}"/>
-<path d="M27 179L45 178M26 190L43 190M62 178L80 177M64 190L82 190" fill="none" stroke="#f5fcff" stroke-width="2"/>
-<!-- gloves -->
-<g fill="${glove}">${gloves}</g>
-<path d="M9 111L25 116M79 115L96 111" stroke="#f8fdff" stroke-width="1.3" opacity=".85"/>
-<!-- skates -->
-<path d="M24 199L43 199L47 215L39 224L12 222L10 216Z" fill="${skate}"/>
-<path d="M63 198L81 197L95 213L91 222L64 225L57 215Z" fill="${skate}"/>
-<path d="M15 207L39 210M65 207L87 209M11 226H46M60 226H94" fill="none" stroke="#f4fcff" stroke-width="2"/>
-<path d="M17 216L42 216M65 216L89 216" fill="none" stroke="#132c40" stroke-width="1.4"/>
-</g>
-</svg>`;}
-function heroMannequinVisual(role:HeroRole,gear:string[]){return role==='C'?heroMannequinBaseCenter()+heroMannequinGearCenter(role,gear):heroMannequinBase(role)+heroMannequinGear(role,gear);}
+const variant=(slot:number)=>Math.max(0,heroGearCatalog(role,slot).findIndex(x=>x.name===gear[slot]));
+return `<svg class="hero-man-gear hero-center-gear" viewBox="0 0 180 420" role="img" aria-label="Центральный нападающий в хоккейной экипировке">
+<defs>
+ <linearGradient id="cfJersey" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#8bdcff"/><stop offset=".18" stop-color="${jersey}"/><stop offset=".58" stop-color="#123d5b"/><stop offset="1" stop-color="#061626"/></linearGradient>
+ <linearGradient id="cfArmor" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#e9fbff"/><stop offset=".2" stop-color="${armor}"/><stop offset=".68" stop-color="#17435f"/><stop offset="1" stop-color="#071a2b"/></linearGradient>
+ <linearGradient id="cfPants" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#456b84"/><stop offset=".28" stop-color="${pants}"/><stop offset=".75" stop-color="#0b2033"/><stop offset="1" stop-color="#030d18"/></linearGradient>
+ <linearGradient id="cfGlove" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#e7fbff"/><stop offset=".2" stop-color="${glove}"/><stop offset=".7" stop-color="#173c57"/><stop offset="1" stop-color="#061522"/></linearGradient>
+ <linearGradient id="cfHelmet" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f4fdff"/><stop offset=".2" stop-color="${helmet}"/><stop offset=".62" stop-color="#22516e"/><stop offset="1" stop-color="#071827"/></linearGradient>
+ <linearGradient id="cfSock" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#0b2135"/><stop offset=".25" stop-color="#eaf8ff"/><stop offset=".55" stop-color="#7fa8bf"/><stop offset=".82" stop-color="#effaff"/><stop offset="1" stop-color="#102b40"/></linearGradient>
+ <linearGradient id="cfSkin" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#704631"/><stop offset=".4" stop-color="#d6a17c"/><stop offset=".72" stop-color="#a96e50"/><stop offset="1" stop-color="#593624"/></linearGradient>
+ <linearGradient id="cfBlade" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#496b80"/><stop offset=".45" stop-color="#f2fcff"/><stop offset="1" stop-color="#54758a"/></linearGradient>
+ <filter id="cfShadow" x="-40%" y="-25%" width="180%" height="160%"><feGaussianBlur stdDeviation="3"/></filter>
+ <filter id="cfSoft" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="1.4"/></filter>
+ </defs>
+ <!-- soft cast shadow -->
+ <ellipse cx="91" cy="403" rx="66" ry="9" fill="#000" opacity=".42" filter="url(#cfShadow)"/>
+ <!-- hockey stick behind the player -->
+ <g stroke-linejoin="round" stroke-linecap="round">
+  <path d="M142 148L151 152L91 367L82 364Z" fill="${stick}" stroke="#d8f5ff" stroke-width="2"/>
+  <path d="M79 359L94 363L74 386Q69 391 60 390L31 384L34 376L62 380Z" fill="${stick}" stroke="#e4f8ff" stroke-width="2"/>
+  <path d="M143 158L149 160L112 292" fill="none" stroke="#fff" stroke-width="2" opacity=".35"/>
+  <path d="M34 379L63 385" fill="none" stroke="#fff" stroke-width="1.8" opacity=".4"/>
+ </g>
+ <!-- rear leg, bent at the knee -->
+ <path d="M103 278Q124 279 137 294L144 324Q145 343 133 361L116 385L91 374L105 344L105 325Q91 314 89 299Z" fill="url(#cfSock)" stroke="#071a2b" stroke-width="3"/>
+ <path d="M110 294Q127 300 133 315L128 331L108 326L99 310Z" fill="url(#cfArmor)" stroke="#9fc7dc" stroke-width="2"/>
+ <path d="M111 339Q127 345 137 350M105 352Q120 360 129 363" fill="none" stroke="#f1fbff" stroke-width="3" opacity=".65"/>
+ <path d="M118 370Q139 365 151 378L163 394Q166 400 157 403L111 405Q102 402 105 394Z" fill="#102b42" stroke="#b9e4f5" stroke-width="2.5"/>
+ <path d="M110 394L159 394M116 386L151 387M124 379L153 381" fill="none" stroke="#dff6ff" stroke-width="2"/>
+ <path d="M109 405L163 405" stroke="url(#cfBlade)" stroke-width="4" stroke-linecap="round"/>
+ <!-- forward leg -->
+ <path d="M48 278Q69 277 82 291L79 320L72 344L61 375L35 373L42 339L40 317Q31 301 35 288Z" fill="url(#cfSock)" stroke="#071a2b" stroke-width="3"/>
+ <path d="M37 292Q56 299 76 293L73 319Q57 329 40 318Z" fill="url(#cfArmor)" stroke="#a9d5e8" stroke-width="2"/>
+ <path d="M41 331Q57 337 75 330M38 344Q55 351 69 344M35 357Q50 363 65 356" fill="none" stroke="#eaf8ff" stroke-width="3" opacity=".65"/>
+ <path d="M29 365Q49 360 63 373L71 392Q72 400 62 402L14 397Q7 394 13 386Z" fill="#14344e" stroke="#c2e9f8" stroke-width="2.5"/>
+ <path d="M15 388L65 393M19 379L61 385M27 372L55 377" fill="none" stroke="#e6f8ff" stroke-width="2"/>
+ <path d="M11 402L68 404" stroke="url(#cfBlade)" stroke-width="4" stroke-linecap="round"/>
+ <!-- hips and padded shorts -->
+ <path d="M47 241Q66 250 91 247Q113 244 130 235L140 273Q131 291 109 300L91 292L75 303Q52 293 34 279Z" fill="url(#cfPants)" stroke="#071827" stroke-width="3"/>
+ <path d="M47 252Q61 265 78 264L73 291Q57 292 43 279Z" fill="#6e94aa" opacity=".34"/>
+ <path d="M97 263Q117 259 132 249L135 274Q124 287 105 291Z" fill="#d9f4ff" opacity=".12"/>
+ <path d="M46 252Q64 264 79 263M99 264Q117 259 131 250" fill="none" stroke="#d9f3ff" stroke-width="2" opacity=".65"/>
+ <path d="M84 254L94 260L91 287" fill="none" stroke="#020b14" stroke-width="2" opacity=".65"/>
+ <!-- neck -->
+ <path d="M72 53Q89 45 105 55L108 78Q98 91 80 84L70 70Z" fill="url(#cfSkin)" stroke="#5c3829" stroke-width="2"/>
+ <!-- torso silhouette, tapered and leaning forward -->
+ <path d="M62 75Q75 63 91 65Q113 65 127 81L145 111Q141 133 132 158L129 222Q124 246 106 257Q83 265 56 250Q42 241 39 221L37 164Q29 142 25 119Q32 94 48 82Z" fill="url(#cfJersey)" stroke="#071a2a" stroke-width="3"/>
+ <path d="M62 83Q78 72 91 75Q112 75 125 91L136 117Q128 142 120 159L119 218Q108 237 91 241Q69 239 52 222L51 162Q42 139 40 119Q45 97 62 83Z" fill="none" stroke="#bdeaff" stroke-width="2" opacity=".42"/>
+ <!-- jersey fabric folds -->
+ <g fill="none" stroke-linecap="round">
+  <path d="M48 126Q61 135 71 134M53 143Q66 150 77 148M105 130Q117 122 128 122M101 151Q115 145 126 140" stroke="#bdeaff" stroke-width="2" opacity=".24"/>
+  <path d="M53 209Q66 217 78 214M101 218Q114 211 122 201M63 232Q80 239 96 233" stroke="#020f1c" stroke-width="3" opacity=".42"/>
+  <path d="M56 100Q69 91 79 91M111 99Q123 108 127 118" stroke="#fff" stroke-width="2" opacity=".25"/>
+ </g>
+ <!-- shoulder and upper-arm pads -->
+ <path d="M43 83Q31 83 23 100L15 128Q18 141 34 145L50 124L61 99Z" fill="url(#cfArmor)" stroke="#092238" stroke-width="3"/>
+ <path d="M119 82Q135 82 145 100L158 124Q159 140 143 148L127 127L111 101Z" fill="url(#cfArmor)" stroke="#092238" stroke-width="3"/>
+ <path d="M28 107Q37 98 47 102M133 103Q144 105 151 119" fill="none" stroke="#f0fbff" stroke-width="3" opacity=".5"/>
+ <!-- left arm reaching toward stick -->
+ <path d="M26 127Q19 145 14 166L9 199Q9 215 22 219Q34 219 39 205L47 172L56 145L48 130Z" fill="url(#cfJersey)" stroke="#071a2b" stroke-width="3"/>
+ <path d="M15 173Q25 178 39 177M12 192Q23 198 36 194" fill="none" stroke="#d7f4ff" stroke-width="2" opacity=".35"/>
+ <path d="M10 207Q18 199 31 205L40 219L34 238Q22 247 9 237L4 222Z" fill="url(#cfGlove)" stroke="#071827" stroke-width="3"/>
+ <path d="M9 219Q22 213 35 221M13 232L31 235M20 207L23 240" fill="none" stroke="#eafaff" stroke-width="2" opacity=".7"/>
+ <!-- right arm bent across body -->
+ <path d="M137 128Q148 143 151 161L159 185Q161 201 149 207Q136 209 129 194L119 168L112 145L123 128Z" fill="url(#cfJersey)" stroke="#071a2b" stroke-width="3"/>
+ <path d="M131 160Q144 167 153 163M137 181Q148 184 157 179" fill="none" stroke="#d7f4ff" stroke-width="2" opacity=".35"/>
+ <path d="M145 194Q156 189 166 199L174 216L165 234Q153 242 141 230L137 213Z" fill="url(#cfGlove)" stroke="#071827" stroke-width="3"/>
+ <path d="M143 207Q157 202 170 211M145 224L165 228M153 198L157 235" fill="none" stroke="#eafaff" stroke-width="2" opacity=".7"/>
+ <!-- elbow seams and forearm guards -->
+ <path d="M13 161Q26 169 42 162L48 179Q29 190 9 180Z" fill="url(#cfArmor)" stroke="#12334a" stroke-width="2"/>
+ <path d="M125 157Q140 164 155 155L162 174Q145 186 132 179Z" fill="url(#cfArmor)" stroke="#12334a" stroke-width="2"/>
+ <!-- jersey stripes and center crest -->
+ <path d="M43 184Q87 199 132 180L129 191Q87 211 43 196Z" fill="${jersey}" opacity=".96"/>
+ <path d="M46 188Q87 202 130 185" fill="none" stroke="#f1fbff" stroke-width="3" opacity=".9"/>
+ <path d="M49 202Q88 216 127 199" fill="none" stroke="#071c2e" stroke-width="3" opacity=".55"/>
+ <path d="M77 119L103 119L110 145L88 159L70 144Z" fill="url(#cfArmor)" stroke="#bdeaff" stroke-width="2"/>
+ <path d="M83 127L99 127L103 141L88 149L77 140Z" fill="${jersey}" stroke="#effaff" stroke-width="1.5"/>
+ <path d="M84 132L97 132M87 138L96 138" stroke="#fff" stroke-width="2" opacity=".8"/>
+ <!-- chest number -->
+ <text x="90" y="180" text-anchor="middle" font-size="18" font-weight="900" fill="#f3fcff" stroke="#0b2940" stroke-width=".8" paint-order="stroke">9</text>
+ <path d="M70 92Q91 101 116 91" fill="none" stroke="#fff" stroke-width="2" opacity=".5"/>
+ <!-- shorts side panels and belt -->
+ <path d="M39 263Q57 275 77 276L72 293Q51 289 38 279Z" fill="${armor}" opacity=".82"/>
+ <path d="M105 273Q124 269 137 255L141 273Q128 289 109 296Z" fill="${armor}" opacity=".72"/>
+ <path d="M45 248Q88 263 133 244" fill="none" stroke="#d9f5ff" stroke-width="3" opacity=".65"/>
+ <!-- helmet shell and ear protection -->
+ <path d="M63 48Q61 18 88 12Q117 11 126 37L124 65Q112 79 87 77Q66 71 63 48Z" fill="url(#cfHelmet)" stroke="#071827" stroke-width="3"/>
+ <path d="M68 42Q72 19 91 18Q111 17 119 37" fill="none" stroke="#fff" stroke-width="3" opacity=".5"/>
+ <path d="M66 51Q88 61 125 48L123 64Q105 80 81 70Z" fill="${helmet}" stroke="#9ddbf2" stroke-width="2"/>
+ <path d="M68 56Q94 68 122 55" fill="none" stroke="#061827" stroke-width="2" opacity=".65"/>
+ <!-- cage: curved bars, chin cup, side hinge -->
+ <path d="M70 54Q68 83 87 88Q109 90 123 63" fill="none" stroke="#dff7ff" stroke-width="3"/>
+ <path d="M76 61Q88 67 119 60M76 69Q91 77 116 68M81 78Q96 83 111 76" fill="none" stroke="#f4fcff" stroke-width="2.2" opacity=".95"/>
+ <path d="M84 56L84 82M96 59L96 86M108 57L108 81" fill="none" stroke="#b9e8fa" stroke-width="1.8"/>
+ <circle cx="70" cy="53" r="3.2" fill="#f4fcff"/><circle cx="122" cy="51" r="3.2" fill="#f4fcff"/>
+ <!-- helmet vents, screws and shine -->
+ <path d="M80 27L86 23M92 22L99 21M105 25L111 29" stroke="#f4fcff" stroke-width="2" stroke-linecap="round" opacity=".7"/>
+ <path d="M75 38Q92 46 116 36" fill="none" stroke="#071827" stroke-width="2" opacity=".45"/>
+ <!-- shoulder and elbow panel stitching -->
+ <g fill="none" stroke="#f1fbff" stroke-width="1.6" opacity=".68">
+  <path d="M24 119Q32 128 43 126M139 118Q148 125 153 136"/>
+  <path d="M14 169Q26 176 41 170M132 166Q145 172 157 166"/>
+  <path d="M43 270Q57 281 70 281M112 280Q126 276 136 265"/>
+ </g>
+ <!-- equipment buckles and tiny material highlights -->
+ <g fill="#dff7ff" opacity=".78"><circle cx="41" cy="253" r="2"/><circle cx="132" cy="250" r="2"/><circle cx="54" cy="286" r="2"/><circle cx="120" cy="287" r="2"/></g>
+ <path d="M49 95Q57 87 67 88" fill="none" stroke="#fff" stroke-width="2" opacity=".35"/>
+ <path d="M114 95Q124 96 132 108" fill="none" stroke="#fff" stroke-width="2" opacity=".35"/>
+</svg>`;
+}function heroMannequinVisual(role:HeroRole,gear:string[]){return role==='C'?heroMannequinBaseCenter()+heroMannequinGearCenter(role,gear):heroMannequinBase(role)+heroMannequinGear(role,gear);}
 function heroRoomPage(){if(!hero)return heroSetupPage();const currentHero=hero;const gearSet=currentHero.gear;const goalie=currentHero.role==='G';const points=currentHero.skillPoints??5;const slots=heroGearSlots(currentHero.role);selectedHeroGearSlot=Math.max(0,Math.min(slots.length-1,selectedHeroGearSlot));const catalog=heroGearCatalog(currentHero.role,selectedHeroGearSlot);const gearIcons=goalie?['⛑️','🦵','🧤','🥅','🏒','🦺','⛸️']:['⛑️','🦺','🧤','🏒','⛸️','👕','🩳'];const statRows:[string,number][]=[['СКОРОСТЬ',currentHero.stats.speed],['ЛОВКОСТЬ',currentHero.stats.agility],['СИЛА',currentHero.stats.strength],['ВЫНОСЛИВОСТЬ',currentHero.stats.stamina],...(goalie?[['РЕАКЦИЯ',currentHero.stats.reaction] as [string,number]]:[])];return header('Комната героя')+'<section class="hero-room-heading"><div><small>ЛИЧНАЯ РАЗДЕВАЛКА · CAREER HQ</small><h2>'+esc(currentHero.name)+'</h2><span>'+heroRoleNames[currentHero.role]+' · УРОВЕНЬ '+currentHero.level+'</span></div><div class="hero-level-badge"><b>'+currentHero.level+'</b><small>LVL</small></div></section><section class="hero-room"><div class="hero-room-topline"><span>ЭКИПИРОВКА</span><span>КОМПЛЕКТ № 01</span></div><div class="hero-equipment-layout"><div class="hero-gear-column">'+slots.slice(0,Math.ceil(slots.length/2)).map((s,i)=>'<button class="hero-gear-slot '+(selectedHeroGearSlot===i?'active':'')+'" data-hero-slot="'+i+'"><span>'+gearIcons[i]+'</span><div><small>'+s.toUpperCase()+'</small><b>'+esc(gearSet[i]||'Не экипировано')+'</b></div><i>›</i></button>').join('')+'</div><div class="hero-player-stage '+(goalie?'is-goalie':'')+'"><div class="hero-stage-glow"></div><div class="hero-man" style="--helmet-color:'+heroGearColor(currentHero.role,0,gearSet[0])+';--armor-color:'+heroGearColor(currentHero.role,1,gearSet[1])+';--glove-color:'+heroGearColor(currentHero.role,2,gearSet[2])+';--stick-color:'+heroGearColor(currentHero.role,3,gearSet[3])+';--skate-color:'+heroGearColor(currentHero.role,4,gearSet[4])+';--jersey-color:'+heroGearColor(currentHero.role,5,gearSet[5])+';--pants-color:'+heroGearColor(currentHero.role,6,gearSet[6])+'"><div class="hero-stick"></div><div class="hero-helmet"><i></i></div><div class="hero-neck"></div><div class="hero-shoulders"></div><div class="hero-body"><b>PUCK IT!</b><small>'+heroRoleShort[currentHero.role]+'</small></div><div class="hero-arm left"></div><div class="hero-arm right"></div><div class="hero-gloves"><i></i></div><div class="hero-pants"></div><div class="hero-leg left"></div><div class="hero-leg right"></div><div class="hero-skate left"></div><div class="hero-skate right"></div>' +(goalie?'<div class="hero-goalie-pad left"></div><div class="hero-goalie-pad right"></div><div class="hero-catcher"></div><div class="hero-blocker"></div>':'')+heroMannequinVisual(currentHero.role,gearSet)+'</div><div class="hero-stage-caption">'+(goalie?'ВРАТАРСКИЙ КОМПЛЕКТ':'ИГРОВОЙ КОМПЛЕКТ')+'</div></div><div class="hero-gear-column">'+slots.slice(Math.ceil(slots.length/2)).map((s,i)=>{const n=i+Math.ceil(slots.length/2);return '<button class="hero-gear-slot '+(selectedHeroGearSlot===n?'active':'')+'" data-hero-slot="'+n+'"><span>'+gearIcons[n]+'</span><div><small>'+s.toUpperCase()+'</small><b>'+esc(gearSet[n]||'Не экипировано')+'</b></div><i>›</i></button>';}).join('')+'</div></div><div class="hero-gear-picker"><div class="hero-picker-heading"><span>ВЫБЕРИ '+slots[selectedHeroGearSlot].toUpperCase()+'</span><small>3 ВАРИАНТА · КОСМЕТИКА</small></div><div class="hero-item-grid">'+catalog.map((item,i)=>'<button class="hero-item-card '+(gearSet[selectedHeroGearSlot]===item.name?'equipped':'')+'" data-hero-item="'+selectedHeroGearSlot+':'+i+'" style="--item-accent:'+item.color+'"><span class="hero-item-art">'+heroGearArt(currentHero.role,selectedHeroGearSlot,i)+'</span><span class="hero-item-info"><small>'+item.rarity+'</small><b>'+item.name+'</b><i>'+item.detail+'</i></span>'+(gearSet[selectedHeroGearSlot]===item.name?'<em>НАДЕТО ✓</em>':'<em>НАДЕТЬ</em>')+'</button>').join('')+'</div></div><div class="hero-room-bottom"><span>ЭКИПИРОВКА ГЕРОЯ</span><span>ВСЕ ПРЕДМЕТЫ · '+slots.length+'</span></div></section><section class="hero-stats-panel"><div class="hero-panel-title"><span>ХАРАКТЕРИСТИКИ</span><b>ОБЩИЙ РЕЙТИНГ '+Math.round(Object.values(currentHero.stats).slice(0,goalie?5:4).reduce((a,b)=>a+b,0)/(goalie?5:4))+'</b></div><div class="hero-skill-points"><span>НЕРАСПРЕДЕЛЁННЫЕ ОЧКИ</span><b>'+points+'</b></div><div class="hero-stats-grid">'+statRows.map(([label,value])=>'<div class="hero-stat"><div><small>'+label+'</small><b>'+value+'</b></div><span><i style="width:'+Math.max(0,Math.min(100,Number(value)))+'%"></i></span><div class="hero-stat-actions"><small>+1 ЗА 1 ОЧКО</small><button data-hero-upgrade="'+({СКОРОСТЬ:'speed',ЛОВКОСТЬ:'agility',СИЛА:'strength',ВЫНОСЛИВОСТЬ:'stamina',РЕАКЦИЯ:'reaction'} as Record<string,string>)[label]+'" '+(points<1||value>=99?'disabled':'')+'>＋</button></div></div>').join('')+'</div><p class="hero-skill-note">Каждое очко повышает выбранный навык на 1 пункт. Максимум — 99.</p><div class="hero-xp"><span>ОПЫТ</span><b>'+currentHero.xp+' / 100 XP</b><i><em style="width:'+Math.min(100,currentHero.xp)+'%"></em></i></div></section><section class="hero-trophy-room"><div class="hero-panel-title"><span>ВИТРИНА ТРОФЕЕВ</span><b>'+currentHero.trophies.length+' НАГРАД</b></div><div class="hero-trophy-shelf">'+(currentHero.trophies.length?currentHero.trophies.map(t=>'<div class="hero-trophy"><b>🏆</b><small>'+esc(t)+'</small></div>').join(''):'<div class="hero-trophy empty"><b>🏆</b><small>ПЕРВЫЙ КУБОК</small><i>Здесь появится твоя первая победа</i></div><div class="hero-trophy empty"><b>🥇</b><small>ЗОЛОТЫЕ МЕДАЛИ</small><i>Награды за достижения</i></div><div class="hero-trophy empty"><b>⭐</b><small>ОСОБЫЕ НАГРАДЫ</small><i>За личные рекорды</i></div>')+'</div></section><button class="secondary hero-back-button" data-screen="office">← ВЕРНУТЬСЯ В ОФИС</button>';}
 function clubPage(){return header('Мой клуб')+'<section class="panel"><div class="panel-title">ПРОФИЛЬ КЛУБА</div><label>Название клуба<input id="club-name" maxlength="24" value="'+esc(team.club.displayName)+'"></label><label>Эмблема<input id="club-logo" maxlength="4" value="'+esc(team.club.logo)+'"></label><label>Домашняя форма<input id="home-jersey" value="'+esc(team.club.homeJersey)+'"></label><label>Гостевая форма<input id="away-jersey" value="'+esc(team.club.awayJersey)+'"></label><button class="primary" data-action="save-club">Сохранить клуб</button></section>';}
 function stadiumPage(){let s=team.stadium;let economy=team.economy;let items:[keyof Team['stadium'],string][]=[['capacityLevel','Вместимость'],['lightingLevel','Освещение'],['scoreboardLevel','Табло'],['lockerRoomLevel','Раздевалки'],['iceLevel','Качество льда'],['vipLevel','VIP-зона']];return header('Стадион')+'<section class="panel"><div class="panel-title">🏟️ '+esc(s.name)+'</div><h2>'+(500+(s.capacityLevel-1)*250)+' мест</h2><p>Доход за домашний матч: 💵 '+(100+s.capacityLevel*35+s.vipLevel*50+s.lightingLevel*15)+'</p><p>Бюджет клуба: 💵 '+money(economy.dollars)+'</p><label>Название стадиона<input id="stadium-name" value="'+esc(s.name)+'"></label><button class="secondary" data-action="save-stadium">Сохранить название</button></section>'+items.map(([k,label])=>'<section class="panel upgrade-row"><div><b>'+label+'</b><small>Уровень '+s[k]+' / 5 · улучшение: 💵 '+Number(s[k])*500+'</small></div><button class="secondary small" data-upgrade="'+k+'" '+(Number(s[k])>=5||economy.dollars<Number(s[k])*500?'disabled':'')+'>Улучшить</button></section>').join('');}

@@ -1590,3 +1590,50 @@ label{display:block;font-size:11px;color:#a8c8e2;margin:12px 0}input{display:blo
  .home-hero .arena-match-button b{font-size:clamp(6px,2vw,9px);letter-spacing:.2px;}
  .home-hero .arena-match-button i{font-size:10px;}
 }
+
+/* Final hero wordmark: wider, larger and forged with a controlled flame glow. */
+.home-hero .hero-brand{
+  width:100%;
+  max-width:100%;
+}
+.home-hero .hero-brand strong{
+  display:block;
+  width:max-content;
+  max-width:100%;
+  white-space:nowrap;
+  font-size:clamp(58px,9.6vw,104px) !important;
+  line-height:.92;
+  letter-spacing:-.065em;
+  transform:scaleX(1.08);
+  transform-origin:left center;
+  color:#fff0c2;
+  -webkit-text-fill-color:transparent;
+  -webkit-text-stroke:1.35px #71321f;
+  background:linear-gradient(180deg,
+    #fff9d9 0%,#fff0a6 12%,#ffc85c 27%,#ff8a32 43%,
+    #f34a28 60%,#b91f2c 78%,#681b32 100%);
+  background-clip:text;
+  -webkit-background-clip:text;
+  filter:
+    drop-shadow(0 1px 0 #ffda8a)
+    drop-shadow(0 4px 0 #8e2e25)
+    drop-shadow(0 8px 0 #421b2b)
+    drop-shadow(0 0 12px #ff6a2d99)
+    drop-shadow(0 0 27px #f13b2870);
+  text-shadow:0 0 8px #ffb34b88,0 0 19px #ff4a2c66;
+}
+.home-hero .hero-brand strong:after{
+  opacity:.62;
+  background:
+    linear-gradient(118deg,transparent 0 18%,#fff9d9c9 18.4% 19%,transparent 19.5% 47%,#fff0c288 47.4% 48%,transparent 48.5%),
+    linear-gradient(72deg,transparent 0 63%,#fff0c299 63.4% 64%,transparent 64.5%),
+    linear-gradient(180deg,transparent 0 72%,#8f1c2c55 100%);
+}
+@media(max-width:600px){
+  .home-hero .hero-brand strong{
+    font-size:clamp(44px,12.8vw,64px) !important;
+    transform:scaleX(1.035);
+    -webkit-text-stroke:1px #71321f;
+  }
+}
+

@@ -162,6 +162,51 @@ export default {
       return json({ ok: false, error: "Method not allowed." }, 405, origin);
     }
 
+    if (url.pathname === "/debug/proxy-test" && request.method === "GET") {
+      // A lightweight end-to-end check: create a Gradio session and poll its SSE result.
+      const startResponse = await fetch(HF_BASE + "/gradio_api/call/start_session", {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${env.HF_TOKEN}`,
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        body: JSON.stringify({ data: [] }),
+        redirect: "follow"
+      });
+      const startText = await startResponse.text();
+      let startData;
+      try { startData = JSON.parse(startText); } catch { startData = { responsePreview: startText.slice(0, 500) }; }
+      if (!startResponse.ok || !startData.event_id) {
+        return json({
+          ok: false,
+          step: "start_session",
+          upstreamStatus: startResponse.status,
+          response: startData
+        }, 502, origin);
+      }
+
+      const pollResponse = await fetch(
+        HF_BASE + "/gradio_api/call/start_session/" + encodeURIComponent(startData.event_id),
+        {
+          headers: {
+            "Authorization": `Bearer ${env.HF_TOKEN}`,
+            "Accept": "text/event-stream"
+          },
+          redirect: "follow"
+        }
+      );
+      const eventStream = await pollResponse.text();
+      return json({
+        ok: pollResponse.ok && eventStream.includes("event: complete"),
+        step: "start_session",
+        postStatus: startResponse.status,
+        pollStatus: pollResponse.status,
+        completed: eventStream.includes("event: complete"),
+        eventPreview: eventStream.slice(0, 1200)
+      }, pollResponse.ok ? 200 : 502, origin);
+    }
+
     if (url.pathname === "/debug/config" || url.pathname === "/debug/schema") {
       const result = await fetchHf("/config", env.HF_TOKEN);
       if (!result.ok) {

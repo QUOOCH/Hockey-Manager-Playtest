@@ -126,6 +126,43 @@ export default {
       }, 200, origin);
     }
 
+    if (url.pathname === "/debug/schema") {
+      const result = await fetchHf("/config", env.HF_TOKEN);
+      if (!result.ok) {
+        return json({
+          ok: false,
+          upstreamStatus: result.status,
+          authMode: result.authMode,
+          error: "Hugging Face Space config unavailable."
+        }, 502, origin);
+      }
+      const components = Array.isArray(result.data?.components) ? result.data.components : [];
+      const byId = new Map(components.map((item) => [item.id, item]));
+      const describe = (ids) => (Array.isArray(ids) ? ids : []).map((id) => {
+        const item = byId.get(id) || {};
+        const props = item.props || {};
+        return {
+          id,
+          type: item.type || item.component_class || null,
+          label: props.label ?? null,
+          value: props.value ?? null,
+          file_types: props.file_types ?? null,
+          sources: props.sources ?? null,
+          format: props.format ?? null
+        };
+      });
+      const dependencies = Array.isArray(result.data?.dependencies) ? result.data.dependencies : [];
+      return json({
+        ok: true,
+        authMode: result.authMode,
+        endpoints: dependencies.filter((item) => item.api_name).map((item) => ({
+          api_name: item.api_name,
+          inputs: describe(item.inputs),
+          outputs: describe(item.outputs)
+        }))
+      }, 200, origin);
+    }
+
     if (url.pathname === "/debug/openapi") {
       const result = await fetchHf("/gradio_api/openapi.json", env.HF_TOKEN);
       if (!result.ok) {
@@ -145,7 +182,7 @@ export default {
     return json({
       ok: false,
       error: "Not found.",
-      available: ["/health", "/debug/config", "/debug/openapi"]
+      available: ["/health", "/debug/config", "/debug/schema", "/debug/openapi"]
     }, 404, origin);
   }
 };

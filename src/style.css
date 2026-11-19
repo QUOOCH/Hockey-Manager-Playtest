@@ -550,3 +550,57 @@ label{display:block;font-size:11px;color:#a8c8e2;margin:12px 0}input{display:blo
 .hero-room-heading:after{content:"";position:absolute;right:18%;top:-70px;width:140px;height:140px;border-radius:50%;background:#55caff12;filter:blur(10px)}
 @media(max-width:600px){.locker-bank{width:15%;top:12%;bottom:28%;gap:2px;padding:3px}.locker-bank-left{left:1%}.locker-bank-right{right:1%}.locker-bench{left:13%;right:13%;bottom:15%;height:7%}.hero-room{border-radius:17px!important}.hero-equipment-layout{padding-top:12px!important;padding-bottom:16px!important}.hero-player-stage{border-radius:13px!important}}
 @media(prefers-reduced-motion:no-preference){.room-ceiling-light{animation:locker-room-breathe 5s ease-in-out infinite alternate}@keyframes locker-room-breathe{from{opacity:.62;box-shadow:0 0 9px 3px #54caff55,0 0 32px 12px #1688c322}to{opacity:1;box-shadow:0 0 15px 5px #54caff88,0 0 54px 22px #1688c344}}}
+
+
+/* Locker room focus pass — no player mannequin or equipment UI */
+.hero-room-heading{display:flex;align-items:center;justify-content:space-between;gap:14px;margin:0 0 14px;padding:18px 20px;border:1px solid #83d8fa35;border-radius:18px;background:linear-gradient(110deg,#173b54,#0a2034 70%,#102b40);box-shadow:0 14px 32px #0006}
+.hero-room-heading h2{margin:5px 0 4px;color:#f1faff;font-size:clamp(19px,5vw,27px);letter-spacing:1.4px}
+.hero-room-heading>div>small{color:#75c9ed;font-size:8px;font-weight:900;letter-spacing:1.8px}
+.hero-room-heading>div>span{color:#86a9be;font-size:8px;font-weight:800;letter-spacing:1.2px}
+.room-emblem{display:grid;place-items:center;flex:none;width:58px;height:58px;border:1px solid #8fe2ff66;border-radius:17px;background:linear-gradient(145deg,#287da4,#0c2a43);box-shadow:inset 0 1px 0 #fff7,0 8px 20px #0006}
+.room-emblem b{color:#e9faff;font-size:25px}.room-emblem small{color:#9cdef7;font-size:7px;font-weight:900;letter-spacing:1px}
+.locker-room-focus{min-height:590px;border-color:#77cce94d!important;background:#081a2a!important}
+.locker-room-focus .hero-room-environment{z-index:0;background:radial-gradient(ellipse at 50% 35%,#4ba7d54d 0%,transparent 40%),linear-gradient(180deg,#1d4058 0%,#102b40 48%,#081827 100%)}
+.locker-room-focus .hero-room-environment:before{inset:0;background:linear-gradient(90deg,#020b16a8,transparent 18%,transparent 82%,#020b16a8),repeating-linear-gradient(90deg,transparent 0 11.8%,#c9efff0b 12% 12.2%,transparent 12.4% 24%);opacity:1}
+.locker-room-focus .hero-room-environment:after{height:36%;background:repeating-linear-gradient(90deg,#b7e8ff12 0 1px,transparent 1px 62px),repeating-linear-gradient(0deg,#b7e8ff12 0 1px,transparent 1px 44px),linear-gradient(180deg,#1a3447,#07121e);transform:perspective(370px) rotateX(13deg);transform-origin:bottom}
+.locker-room-focus>.hero-room-topline,.locker-room-focus>.locker-room-caption,.locker-room-focus>.locker-room-floor-label,.locker-room-focus>.hero-room-bottom{position:relative;z-index:2}
+.locker-room-focus .hero-room-topline{display:flex;justify-content:space-between;gap:10px;padding:14px 17px!important;color:#a6d9ef;font-size:8px;font-weight:900;letter-spacing:1.4px}
+.locker-room-focus .room-ceiling-light{left:18%;right:18%;top:2%;height:6px;background:#e3faff;box-shadow:0 0 16px 6px #72d8ff99,0 0 85px 32px #279dd755}
+.locker-room-focus .room-ceiling-beam{position:absolute;left:5%;right:5%;top:8%;height:14px;border:1px solid #a5d7eb24;border-radius:4px;background:linear-gradient(180deg,#54788d,#142f43 50%,#071a2a);box-shadow:0 8px 18px #0007}
+.locker-room-focus .room-wall-sign{position:absolute;z-index:1;left:50%;top:17%;display:flex;flex-direction:column;align-items:center;gap:4px;width:44%;padding:13px 8px 11px;transform:translateX(-50%);border:1px solid #8fdfff55;border-radius:8px;background:linear-gradient(145deg,#173d57,#091b2b);box-shadow:0 8px 24px #0008,inset 0 1px 0 #ffffff24}
+.locker-room-focus .room-wall-sign:before{content:"";position:absolute;inset:4px;border:1px solid #9fe5ff20;border-radius:5px}
+.locker-room-focus .room-wall-sign small{color:#7ec6e8;font-size:6px;font-weight:900;letter-spacing:2.5px}
+.locker-room-focus .room-wall-sign b{color:#e9f8ff;font-size:clamp(17px,5vw,27px);font-weight:1000;letter-spacing:2px;text-shadow:0 2px 0 #31546a,0 0 18px #56cfff66}
+.locker-room-focus .room-wall-sign i{color:#8aaec2;font-size:5px;font-style:normal;font-weight:900;letter-spacing:1.3px}
+.locker-room-focus .locker-bank{z-index:1;top:29%;bottom:32%;width:24%;gap:5px;padding:7px;border-color:#b5e7ff45;background:linear-gradient(90deg,#061321,#385a70 12%,#1a394f 48%,#061321);box-shadow:inset 0 0 24px #000b,0 14px 28px #0008}
+.locker-room-focus .locker-bank-left{left:3%}.locker-room-focus .locker-bank-right{right:3%}
+.locker-room-focus .locker-bank i{background:linear-gradient(90deg,#071522,#34576c 18%,#1d3d52 72%,#071522);border-color:#b3e5f733}
+.locker-room-focus .locker-bank i:before{top:14%;height:42%;border-top:2px solid #a5dff077;border-bottom:1px solid #a5dff044;box-shadow:0 5px 0 #07152266}
+.locker-room-focus .locker-bank i:after{right:14%;top:62%;width:4px;height:18px;background:linear-gradient(90deg,#7899aa,#e1f4fa,#577789);box-shadow:0 0 8px #7bdcff77}
+.locker-room-focus .room-hooks{position:absolute;z-index:1;top:56%;display:flex;gap:13px;padding:8px 12px;border-top:2px solid #91b7c9;background:linear-gradient(180deg,#1b3b50,#0b1e2e);box-shadow:0 7px 12px #0006}
+.locker-room-focus .room-hooks-left{left:29%}.locker-room-focus .room-hooks-right{right:29%}
+.locker-room-focus .room-hooks i{position:relative;width:3px;height:18px;border-radius:2px;background:linear-gradient(90deg,#58788a,#d5e9f2,#496779)}
+.locker-room-focus .room-hooks i:after{content:"";position:absolute;left:-4px;bottom:-2px;width:10px;height:5px;border-radius:2px;background:#a6c5d3}
+.locker-room-focus .locker-bench{z-index:1;left:24%;right:24%;bottom:21%;height:8%;border:1px solid #d3f1ff55;border-radius:7px;background:linear-gradient(180deg,#d2e5ed 0%,#829eae 15%,#405d70 34%,#1b3548 78%,#091927 100%);box-shadow:0 18px 25px #000b,inset 0 2px 3px #fff9}
+.locker-room-focus .locker-bench:before,.locker-room-focus .locker-bench:after{height:45px;width:9px;background:linear-gradient(90deg,#091521,#a0b8c5 45%,#152b3b);box-shadow:0 0 0 2px #071521}
+.locker-room-focus .locker-bench i{position:absolute;top:24%;bottom:20%;width:27%;border-radius:3px;background:linear-gradient(180deg,#e1f0f5,#6f8998 50%,#304b5e);box-shadow:inset 0 0 0 1px #ffffff55}
+.locker-room-focus .locker-bench i:nth-child(1){left:8%}.locker-room-focus .locker-bench i:nth-child(2){left:36%}.locker-room-focus .locker-bench i:nth-child(3){right:8%}
+.locker-room-focus .room-floor-line{position:absolute;left:9%;right:9%;bottom:14%;height:1px;background:linear-gradient(90deg,transparent,#91dfff66,transparent);box-shadow:0 0 14px #4dc8ff66}
+.locker-room-focus .room-floor-reflection{position:absolute;left:25%;right:25%;bottom:5%;height:11%;background:radial-gradient(ellipse,#6acfff25,transparent 68%);filter:blur(9px)}
+.locker-room-caption{max-width:390px;margin:0 auto;padding-top:61%;text-align:center;text-shadow:0 2px 8px #001}
+.locker-room-caption small{color:#7ec9e9;font-size:7px;font-weight:900;letter-spacing:2.5px}
+.locker-room-caption h3{margin:8px 15px;color:#f0f9ff;font-size:clamp(12px,3.6vw,17px);font-weight:1000;letter-spacing:1.3px;line-height:1.4}
+.locker-room-caption p{max-width:300px;margin:0 auto;padding:0 15px;color:#9ab8ca;font-size:8px;line-height:1.6}
+.locker-room-floor-label{display:flex;justify-content:space-between;gap:8px;margin:54px 16px 12px;padding-top:9px;border-top:1px solid #b3e5ff20;color:#6f9eb8;font-size:6px;font-weight:900;letter-spacing:1.5px}
+.locker-room-focus .hero-room-bottom{display:flex;justify-content:space-between;gap:10px;padding:13px 17px!important;color:#91cce5;font-size:7px;font-weight:900;letter-spacing:1.1px}
+.hero-back-button{margin-top:14px}
+@media(max-width:600px){
+ .locker-room-focus{min-height:555px}
+ .locker-room-focus .locker-bank{top:30%;bottom:34%;width:23%;gap:3px;padding:4px}
+ .locker-room-focus .room-wall-sign{top:17%;width:48%;padding:10px 5px}
+ .locker-room-focus .room-hooks{top:56%;gap:8px;padding:6px 8px}
+ .locker-room-focus .room-hooks-left{left:27%}.locker-room-focus .room-hooks-right{right:27%}
+ .locker-room-focus .locker-bench{left:22%;right:22%;bottom:22%;height:7%}
+ .locker-room-caption{padding-top:63%}
+ .locker-room-floor-label{margin-top:50px}
+}

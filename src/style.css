@@ -1627,7 +1627,7 @@ label{display:block;font-size:11px;color:#a8c8e2;margin:12px 0}input{display:blo
 .locker-room-illustration{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.38;filter:saturate(.88) contrast(1.08)}
 .locker-room-focus .hero-3d-stage{position:absolute;z-index:2;left:23%;right:23%;top:26%;height:53%;min-height:330px;touch-action:pan-y;cursor:grab;filter:drop-shadow(0 16px 18px #00101d99)}
 .locker-room-focus .hero-3d-stage:active{cursor:grabbing}
-.hero-3d-canvas{display:block;width:100%;height:100%;outline:none;touch-action:pan-y}
+.hero-3d-canvas{display:block;width:100%;height:100%;outline:none;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;cursor:grab}.hero-3d-canvas:active{cursor:grabbing}
 .locker-room-focus .room-wall-sign{z-index:1;top:13%;width:40%;opacity:.94}
 .locker-room-focus .locker-bank{z-index:1;top:26%;bottom:27%;width:23%}
 .locker-room-focus .room-hooks{z-index:1}

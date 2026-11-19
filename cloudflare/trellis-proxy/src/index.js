@@ -3,7 +3,6 @@ const ALLOWED_ORIGINS = new Set([
 ]);
 
 const HF_BASE = "https://microsoft-trellis-2.hf.space";
-const MAX_DEBUG_BYTES = 2 * 1024 * 1024;
 
 function json(data, status = 200, origin = null) {
   const headers = {
@@ -22,24 +21,14 @@ function json(data, status = 200, origin = null) {
 }
 
 async function fetchHf(path, token) {
-  const url = HF_BASE + path;
   const headers = { "Accept": "application/json" };
-
   if (token) headers.Authorization = `Bearer ${token}`;
 
-  let response = await fetch(url, {
-    method: "GET",
-    headers,
-    redirect: "follow"
-  });
-
+  let response = await fetch(HF_BASE + path, { headers, redirect: "follow" });
   let authMode = token ? "token" : "anonymous";
 
-  // Public Spaces may reject a token created for a different HF scope.
-  // Retry anonymously only for authorization failures; never expose the token.
   if (token && (response.status === 401 || response.status === 403)) {
-    response = await fetch(url, {
-      method: "GET",
+    response = await fetch(HF_BASE + path, {
       headers: { "Accept": "application/json" },
       redirect: "follow"
     });
@@ -47,61 +36,33 @@ async function fetchHf(path, token) {
   }
 
   const body = await response.text();
-  if (new TextEncoder().encode(body).byteLength > MAX_DEBUG_BYTES) {
-    return {
-      ok: false,
-      status: response.status,
-      authMode,
-      error: "Hugging Face response exceeded the 2 MB diagnostic limit."
-    };
-  }
-
   let data;
   try {
     data = JSON.parse(body);
   } catch {
-    data = { responsePreview: body.slice(0, 1200) };
+    data = { responsePreview: body.slice(0, 500) };
   }
 
-  return {
-    ok: response.ok,
-    status: response.status,
-    authMode,
-    data
-  };
+  return { ok: response.ok, status: response.status, authMode, data };
 }
 
 function summarizeConfig(config) {
-  if (!config || typeof config !== "object") return config;
-
-  const components = Array.isArray(config.components)
-    ? config.components.map((item) => ({
-        id: item.id,
-        type: item.type,
-        component_class: item.component_class,
-        props: item.props,
-        api_info: item.api_info
-      }))
-    : [];
-
-  const dependencies = Array.isArray(config.dependencies)
-    ? config.dependencies.map((item) => ({
-        id: item.id,
-        targets: item.targets,
-        inputs: item.inputs,
-        outputs: item.outputs,
-        api_name: item.api_name,
-        trigger: item.trigger
-      }))
-    : [];
-
   return {
-    version: config.version,
-    mode: config.mode,
-    dev_mode: config.dev_mode,
-    enable_queue: config.enable_queue,
-    components,
-    dependencies
+    version: config?.version ?? null,
+    enable_queue: config?.enable_queue ?? null,
+    components: Array.isArray(config?.components)
+      ? config.components.map((item) => ({
+          id: item.id,
+          type: item.type || item.component_class
+        }))
+      : [],
+    endpoints: Array.isArray(config?.dependencies)
+      ? config.dependencies.map((item) => ({
+          api_name: item.api_name ?? null,
+          inputs: item.inputs ?? [],
+          outputs: item.outputs ?? []
+        })).filter((item) => item.api_name)
+      : []
   };
 }
 
@@ -152,16 +113,11 @@ export default {
           details: result.data
         }, 502, origin);
       }
-
-      const data = url.searchParams.get("raw") === "1"
-        ? result.data
-        : summarizeConfig(result.data);
-
       return json({
         ok: true,
         upstreamStatus: result.status,
         authMode: result.authMode,
-        data
+        data: summarizeConfig(result.data)
       }, 200, origin);
     }
 
@@ -176,18 +132,22 @@ export default {
           details: result.data
         }, 502, origin);
       }
+      const paths = result.data?.paths || {};
       return json({
         ok: true,
         upstreamStatus: result.status,
         authMode: result.authMode,
-        data: result.data
+        endpoints: Object.entries(paths).map(([path, value]) => ({
+          path,
+          methods: Object.keys(value || {})
+        }))
       }, 200, origin);
     }
 
     return json({
       ok: false,
       error: "Not found.",
-      available: ["/health", "/debug/config", "/debug/config?raw=1", "/debug/openapi"]
+      available: ["/health", "/debug/config", "/debug/openapi"]
     }, 404, origin);
   }
 };

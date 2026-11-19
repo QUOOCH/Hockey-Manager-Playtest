@@ -78,7 +78,7 @@ export function mountHero3DStage(host:HTMLElement,options:Hero3DOptions={}):Hero
   const down=(e:PointerEvent)=>{
     if(e.pointerType==='touch'||(e.pointerType==='mouse'&&e.button!==0))return;
     e.preventDefault();beginDrag(e.clientX);activePointerId=e.pointerId;
-    try{canvas.setPointerCapture(e.pointerId);}catch{/* capture is optional */}
+    try{host.setPointerCapture(e.pointerId);}catch{/* capture is optional */}
   };
   const move=(e:PointerEvent)=>{
     if(e.pointerType==='touch'||!dragging||activePointerId!==e.pointerId)return;
@@ -87,7 +87,7 @@ export function mountHero3DStage(host:HTMLElement,options:Hero3DOptions={}):Hero
   const up=(e:PointerEvent)=>{
     if(e.pointerType==='touch'||activePointerId!==e.pointerId)return;
     endDrag();
-    try{if(canvas.hasPointerCapture(e.pointerId))canvas.releasePointerCapture(e.pointerId);}catch{/* no-op */}
+    try{if(host.hasPointerCapture(e.pointerId))host.releasePointerCapture(e.pointerId);}catch{/* no-op */}
   };
   const touchStart=(e:TouchEvent)=>{
     if(e.touches.length!==1)return;
@@ -98,18 +98,18 @@ export function mountHero3DStage(host:HTMLElement,options:Hero3DOptions={}):Hero
     e.preventDefault();dragTo(e.touches[0].clientX);
   };
   const touchEnd=(e:TouchEvent)=>{if(e.touches.length===0)endDrag();};
-  canvas.addEventListener('pointerdown',down);
-  canvas.addEventListener('pointermove',move);
-  canvas.addEventListener('pointerup',up);
-  canvas.addEventListener('pointercancel',up);
-  canvas.addEventListener('lostpointercapture',up);
-  canvas.addEventListener('touchstart',touchStart,{passive:false});
-  canvas.addEventListener('touchmove',touchMove,{passive:false});
-  canvas.addEventListener('touchend',touchEnd,{passive:false});
-  canvas.addEventListener('touchcancel',touchEnd,{passive:false});
+  host.addEventListener('pointerdown',down);
+  host.addEventListener('pointermove',move);
+  host.addEventListener('pointerup',up);
+  host.addEventListener('pointercancel',up);
+  host.addEventListener('lostpointercapture',up);
+  host.addEventListener('touchstart',touchStart,{passive:false});
+  host.addEventListener('touchmove',touchMove,{passive:false});
+  host.addEventListener('touchend',touchEnd,{passive:false});
+  host.addEventListener('touchcancel',touchEnd,{passive:false});
     const load=(url:string)=>new Promise<THREE.Object3D>((resolve,reject)=>loader.load(url,g=>resolve(g.scene),undefined,reject));
   const loadBaseModel=async(file='base.glb')=>{try{const next=await load(root+file);if(disposed)return;const bounds=new THREE.Box3().setFromObject(next),size=bounds.getSize(new THREE.Vector3()),center=bounds.getCenter(new THREE.Vector3()),scale=3.25/Math.max(size.y,.01);next.scale.setScalar(scale);next.position.set(-center.x*scale,-bounds.min.y*scale,-center.z*scale);next.traverse(o=>{if(o instanceof THREE.Mesh){o.castShadow=true;o.receiveShadow=true;}});modelRoot.remove(procedural);if(baseModel)modelRoot.remove(baseModel);baseModel=next;modelRoot.add(next);options.onLoad?.();}catch{options.onLoad?.();}};
   const setEquipment=async(slot:HeroGearSlot,file:string|null)=>{const anchor=modelRoot.getObjectByName(ANCHORS[slot]);if(!anchor){if(file)options.onError?.('Для этой экипировки GLB-модель ещё не подключена.');return;}const previous=equipment.get(slot);if(previous){anchor.remove(previous);equipment.delete(slot);}if(!file)return;try{const part=await load(root+'equipment/'+file);if(disposed)return;anchor.add(part);equipment.set(slot,part);}catch(e){options.onError?.(e instanceof Error?e.message:'Не удалось загрузить предмет.');}};
   const animate=()=>{if(disposed)return;frame=requestAnimationFrame(animate);/* Deliberately stationary: rotation is controlled only by the user's drag. */renderer.render(scene,camera);};animate();
-  return{loadBaseModel,setEquipment,setRotation:r=>{rotation=r;modelRoot.rotation.y=r;},dispose:()=>{if(disposed)return;disposed=true;cancelAnimationFrame(frame);observer.disconnect();canvas.removeEventListener('pointerdown',down);canvas.removeEventListener('pointermove',move);canvas.removeEventListener('pointerup',up);canvas.removeEventListener('pointercancel',up);canvas.removeEventListener('lostpointercapture',up);canvas.removeEventListener('touchstart',touchStart);canvas.removeEventListener('touchmove',touchMove);canvas.removeEventListener('touchend',touchEnd);canvas.removeEventListener('touchcancel',touchEnd);scene.traverse(o=>{if(o instanceof THREE.Mesh){o.geometry.dispose();const ms=Array.isArray(o.material)?o.material:[o.material];ms.forEach(m=>m.dispose());}});renderer.dispose();renderer.domElement.remove();}};
+  return{loadBaseModel,setEquipment,setRotation:r=>{rotation=r;modelRoot.rotation.y=r;},dispose:()=>{if(disposed)return;disposed=true;cancelAnimationFrame(frame);observer.disconnect();host.removeEventListener('pointerdown',down);host.removeEventListener('pointermove',move);host.removeEventListener('pointerup',up);host.removeEventListener('pointercancel',up);host.removeEventListener('lostpointercapture',up);host.removeEventListener('touchstart',touchStart);host.removeEventListener('touchmove',touchMove);host.removeEventListener('touchend',touchEnd);host.removeEventListener('touchcancel',touchEnd);scene.traverse(o=>{if(o instanceof THREE.Mesh){o.geometry.dispose();const ms=Array.isArray(o.material)?o.material:[o.material];ms.forEach(m=>m.dispose());}});renderer.dispose();renderer.domElement.remove();}};
 }

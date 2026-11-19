@@ -508,3 +508,11 @@ label{display:block;font-size:11px;color:#a8c8e2;margin:12px 0}input{display:blo
 .hero-player-stage:has(.hero-center-base){background:radial-gradient(ellipse at 50% 43%,#7bdcff35,transparent 58%),linear-gradient(180deg,#102f4b,#06182b)}
 .hero-player-stage:has(.hero-center-base) .hero-stage-glow{width:118px;height:220px;background:#55cafa2b;filter:blur(22px)}
 .hero-player-stage:has(.hero-center-base) .hero-stage-caption{color:#9bdfff;letter-spacing:1.4px}
+
+/* Center forward: detailed sculpted equipment illustration */
+.hero-center-gear{position:absolute;inset:0;width:100%;height:100%;z-index:9;overflow:visible;filter:drop-shadow(0 7px 8px #00111fbb);pointer-events:none}
+.hero-player-stage:has(.hero-center-gear) .hero-man{width:160px;height:374px;margin-top:0}
+.hero-player-stage:has(.hero-center-gear) .hero-stage-glow{width:150px;height:270px;top:9%;background:#5bc9f52b;filter:blur(27px)}
+.hero-player-stage:has(.hero-center-gear){min-height:420px}
+@media(max-width:600px){.hero-player-stage:has(.hero-center-gear) .hero-man{width:150px;height:350px}}
+@media(min-width:700px){.hero-player-stage:has(.hero-center-gear) .hero-man{width:170px;height:397px}}

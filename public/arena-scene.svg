@@ -82,4 +82,59 @@
 <path d="M1120 188L830 630L690 652L1020 196Z" fill="#b9efff" opacity=".05"/>
 <path d="M180 655L450 690M260 680L570 713M830 680L1060 646" stroke="#f7fdff" stroke-opacity=".32" stroke-width="3" stroke-linecap="round"/>
 <g fill="#f4fcff" opacity=".7"><circle cx="188" cy="644" r="2"/><circle cx="365" cy="672" r="2"/><circle cx="1040" cy="650" r="2"/><circle cx="790" cy="687" r="2"/></g>
+
+<!-- foreground skater: cinematic focal point -->
+<defs>
+ <linearGradient id="jersey" x2=".9" y2="1"><stop stop-color="#34708f"/><stop offset=".32" stop-color="#123b59"/><stop offset=".72" stop-color="#09243b"/><stop offset="1" stop-color="#041522"/></linearGradient>
+ <linearGradient id="pants" x2="0" y2="1"><stop stop-color="#1d3e57"/><stop offset="1" stop-color="#061421"/></linearGradient>
+ <linearGradient id="helmet" x2=".25" y2="1"><stop stop-color="#fff"/><stop offset=".45" stop-color="#b9d8e6"/><stop offset="1" stop-color="#52758b"/></linearGradient>
+ <linearGradient id="steel" x2="0" y2="1"><stop stop-color="#effaff"/><stop offset=".45" stop-color="#739bb0"/><stop offset="1" stop-color="#1c3447"/></linearGradient>
+ <filter id="playerShadow" x="-40%" y="-30%" width="180%" height="180%"><feGaussianBlur stdDeviation="12"/></filter>
+</defs>
+<g transform="translate(0 0)">
+ <ellipse cx="1030" cy="728" rx="148" ry="22" fill="#061522" opacity=".58" filter="url(#playerShadow)"/>
+ <!-- ice spray -->
+ <g fill="#f4fdff" opacity=".8"><circle cx="923" cy="692" r="4"/><circle cx="945" cy="708" r="3"/><circle cx="963" cy="680" r="2"/><circle cx="1095" cy="696" r="3"/><circle cx="1112" cy="710" r="2"/><circle cx="986" cy="719" r="2"/></g>
+ <!-- rear leg -->
+ <path d="M1033 555Q1072 563 1080 598L1110 674Q1117 692 1096 700L1077 702Q1062 695 1058 677L1024 614Q1009 590 1008 574Z" fill="url(#pants)" stroke="#7da9bf" stroke-opacity=".55" stroke-width="5"/>
+ <path d="M1078 674l34 10 8 20-55 8-12-13z" fill="#101f2e" stroke="#b5d8e8" stroke-width="4"/>
+ <path d="M1080 693l38-3M1073 700l37-3" stroke="#d9f4ff" stroke-opacity=".65" stroke-width="3"/>
+ <!-- front leg -->
+ <path d="M1000 557Q1028 567 1020 602L981 668Q973 684 951 678L934 665Q928 650 942 633L965 578Q977 555 1000 557Z" fill="url(#pants)" stroke="#86b3c9" stroke-opacity=".65" stroke-width="5"/>
+ <path d="M944 649l37 15-7 24-59 5-11-10z" fill="#10263a" stroke="#c1e3f0" stroke-width="4"/>
+ <path d="M917 684l58-7M921 691l50-5" stroke="#d9f4ff" stroke-opacity=".65" stroke-width="3"/>
+ <!-- torso and shoulder pads -->
+ <path d="M981 489Q1001 470 1038 477Q1072 483 1083 511L1072 572Q1041 595 988 577L969 536Q966 507 981 489Z" fill="url(#jersey)" stroke="#9cc9dc" stroke-width="5"/>
+ <path d="M980 494Q1000 480 1014 482L1003 517 972 525Q966 508 980 494Z" fill="#5a8da7" stroke="#c5e7f4" stroke-width="3"/>
+ <path d="M1040 481Q1069 485 1080 506L1061 527 1037 510Z" fill="#214e6a" stroke="#b5ddeb" stroke-width="3"/>
+ <path d="M1008 484Q1033 495 1051 484L1061 568Q1033 585 1001 570Z" fill="#0c2c46" opacity=".85"/>
+ <path d="M1015 507l25 0-2 45-25 0z" fill="#d7edf6" opacity=".12"/>
+ <path d="M1019 530h24" stroke="#d7f1fb" stroke-opacity=".6" stroke-width="3"/>
+ <text x="1032" y="552" text-anchor="middle" font-family="Arial,sans-serif" font-size="27" font-weight="900" fill="#e7f8ff" opacity=".9">27</text>
+ <path d="M977 535l18 7M1064 535l15-9" stroke="#e34a63" stroke-width="7" opacity=".95"/>
+ <path d="M988 576Q1032 593 1071 573" fill="none" stroke="#eafaff" stroke-opacity=".55" stroke-width="4"/>
+ <!-- left arm reaching toward puck -->
+ <path d="M981 505Q957 512 946 535L920 567Q914 580 927 590L944 592Q956 586 961 570L990 543Z" fill="url(#jersey)" stroke="#9fc8da" stroke-width="5"/>
+ <path d="M919 564Q903 565 899 579L909 600Q923 608 940 593L946 578Z" fill="#142d43" stroke="#d5edf7" stroke-width="4"/>
+ <path d="M907 581l28 9M910 590l23 7" stroke="#d4eaf4" stroke-width="3"/>
+ <!-- right arm back -->
+ <path d="M1069 503Q1095 503 1105 525L1121 555Q1127 570 1113 579L1097 580Q1086 573 1080 557L1054 534Z" fill="url(#jersey)" stroke="#8dbbd0" stroke-width="5"/>
+ <path d="M1100 559Q1117 552 1128 566L1127 586Q1113 601 1097 586L1089 573Z" fill="#142d43" stroke="#d9f2fc" stroke-width="4"/>
+ <!-- helmet and cage -->
+ <path d="M987 474Q987 439 1021 432Q1055 434 1062 466L1053 488Q1020 501 991 485Z" fill="url(#helmet)" stroke="#e9f9ff" stroke-width="5"/>
+ <path d="M991 466Q1019 449 1058 466" fill="none" stroke="#537b92" stroke-width="5"/>
+ <path d="M1000 482Q1028 497 1052 482" fill="none" stroke="#172e42" stroke-width="5"/>
+ <path d="M1001 477l-2 24M1013 481l-1 23M1026 483v22M1039 482l2 20M1051 477l5 17" stroke="#233e53" stroke-width="3"/>
+ <path d="M1004 477l48 2" stroke="#f7fdff" stroke-opacity=".85" stroke-width="3"/>
+ <path d="M1007 440Q1028 426 1048 441" fill="none" stroke="#fff" stroke-opacity=".9" stroke-width="4"/>
+ <!-- stick, shaft and blade -->
+ <path d="M917 579L817 714" stroke="#102235" stroke-width="13" stroke-linecap="round"/>
+ <path d="M917 579L817 714" stroke="#c4e5f1" stroke-opacity=".65" stroke-width="3" stroke-linecap="round"/>
+ <path d="M817 714Q802 724 780 720L754 712Q749 708 755 704L785 708Q800 710 810 700Z" fill="#152b40" stroke="#d4edf7" stroke-width="4"/>
+ <path d="M909 588l-12 16" stroke="#e14a61" stroke-width="5"/>
+ <!-- puck and motion glint -->
+ <ellipse cx="748" cy="718" rx="19" ry="7" fill="#06111b"/>
+ <ellipse cx="748" cy="714" rx="18" ry="5" fill="#172b3d" stroke="#d5f0fb" stroke-opacity=".55" stroke-width="2"/>
+ <path d="M717 700l-33-8M722 711l-45 0" stroke="#f4fdff" stroke-opacity=".5" stroke-width="3" stroke-linecap="round"/>
+</g>
 </svg>

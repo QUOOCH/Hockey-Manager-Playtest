@@ -1511,3 +1511,14 @@ label{display:block;font-size:11px;color:#a8c8e2;margin:12px 0}input{display:blo
 .home-menu-card.ice-entry>.home-menu-number{right:8px;bottom:6px;font-size:7px;}
 .home-menu-card.ice-entry>i{right:9px;top:8px;font-size:12px;}
 @media(max-width:600px){.home-menu-card.ice-entry{min-height:82px;padding:9px 8px;column-gap:7px}.home-menu-card.ice-entry .home-menu-icon{width:28px;height:28px}.home-menu-card.ice-entry>b{font-size:8px}.home-menu-card.ice-entry>small{font-size:6px}}
+
+
+/* Compact, unmistakable match action below the menu tiles. */
+.home-match-entry{display:flex;justify-content:flex-end;align-items:center;margin:12px 0 2px;padding:0;}
+.home-match-entry .hero-play{position:static;display:flex;align-items:center;justify-content:flex-start;gap:10px;width:auto;min-width:205px;max-width:245px;min-height:54px;margin:0;padding:8px 13px;border:1px solid #59c9f5aa;border-radius:12px;background:linear-gradient(110deg,#174967,#0b263d);box-shadow:0 7px 18px #0006,inset 0 1px 0 #ffffff25;}
+.home-match-entry .hero-play .play-icon{display:grid;place-items:center;flex:0 0 30px;width:30px;height:30px;border-radius:9px;background:#42bff033;color:#8be1ff;font-size:12px;}
+.home-match-entry .hero-play span:nth-child(2){display:flex;flex-direction:column;gap:3px;}
+.home-match-entry .hero-play small{font-size:7px;letter-spacing:1.2px;color:#9fc6dc;}
+.home-match-entry .hero-play b{font-size:11px;letter-spacing:.8px;color:#f1fbff;}
+.home-match-entry .hero-play>strong{margin-left:auto;font-size:18px;color:#80dfff;}
+@media(max-width:600px){.home-match-entry{margin-top:10px}.home-match-entry .hero-play{min-width:190px;min-height:50px;padding:7px 11px}.home-match-entry .hero-play b{font-size:10px}}

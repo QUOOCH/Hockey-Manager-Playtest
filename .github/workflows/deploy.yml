@@ -52,3 +52,5 @@ jobs:
         uses: actions/deploy-pages@v4
 
 # Redeploy the restored b804e99 browser build.
+
+# Fresh deployment run after the previous run accumulated duplicate Pages artifacts.

@@ -1619,3 +1619,26 @@ label{display:block;font-size:11px;color:#a8c8e2;margin:12px 0}input{display:blo
  .locker-room-caption{padding-top:405px!important}
  .locker-room-floor-label{margin-top:18px!important}
 }
+
+
+/* PUCK IT! hero room: warm stylized 3D character in the cinematic locker environment */
+.locker-room-focus{min-height:690px!important;isolation:isolate}
+.locker-room-focus .hero-room-environment{z-index:0!important;overflow:hidden}
+.locker-room-illustration{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.38;filter:saturate(.88) contrast(1.08)}
+.locker-room-focus .hero-3d-stage{position:absolute;z-index:2;left:23%;right:23%;top:26%;height:53%;min-height:330px;touch-action:pan-y;cursor:grab;filter:drop-shadow(0 16px 18px #00101d99)}
+.locker-room-focus .hero-3d-stage:active{cursor:grabbing}
+.hero-3d-canvas{display:block;width:100%;height:100%;outline:none;touch-action:pan-y}
+.locker-room-focus .room-wall-sign{z-index:1;top:13%;width:40%;opacity:.94}
+.locker-room-focus .locker-bank{z-index:1;top:26%;bottom:27%;width:23%}
+.locker-room-focus .room-hooks{z-index:1}
+.locker-room-focus .locker-bench{z-index:1;bottom:18%;left:19%;right:19%;height:7%}
+.locker-room-focus .locker-room-caption{position:relative;z-index:3;padding-top:68%;text-shadow:0 3px 12px #001}
+.locker-room-focus .locker-room-floor-label,.locker-room-focus .hero-room-bottom,.locker-room-focus .hero-room-topline{position:relative;z-index:3}
+@media(max-width:600px){
+ .locker-room-focus{min-height:620px!important}
+ .locker-room-focus .hero-3d-stage{left:16%;right:16%;top:27%;height:49%;min-height:290px}
+ .locker-room-focus .room-wall-sign{top:14%;width:47%}
+ .locker-room-focus .locker-bank{top:29%;bottom:30%;width:23%}
+ .locker-room-focus .locker-room-caption{padding-top:76%}
+ .locker-room-focus .locker-bench{left:18%;right:18%;bottom:20%}
+}

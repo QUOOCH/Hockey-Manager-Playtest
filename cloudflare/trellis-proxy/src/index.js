@@ -109,15 +109,20 @@ export default {
           ok: false,
           upstreamStatus: result.status,
           authMode: result.authMode,
-          error: "Could not read the Hugging Face Space config.",
-          details: result.data
+          error: "Hugging Face Space config unavailable."
         }, 502, origin);
       }
+      const deps = Array.isArray(result.data?.dependencies) ? result.data.dependencies : [];
+      const endpoints = deps
+        .map((item) => item.api_name)
+        .filter(Boolean);
       return json({
         ok: true,
-        upstreamStatus: result.status,
+        space: "microsoft/TRELLIS.2",
+        status: "reachable",
         authMode: result.authMode,
-        data: summarizeConfig(result.data)
+        componentCount: Array.isArray(result.data?.components) ? result.data.components.length : 0,
+        apiEndpoints: [...new Set(endpoints)]
       }, 200, origin);
     }
 
@@ -128,19 +133,12 @@ export default {
           ok: false,
           upstreamStatus: result.status,
           authMode: result.authMode,
-          error: "Could not read the Gradio OpenAPI document.",
-          details: result.data
+          error: "Gradio OpenAPI unavailable."
         }, 502, origin);
       }
-      const paths = result.data?.paths || {};
       return json({
         ok: true,
-        upstreamStatus: result.status,
-        authMode: result.authMode,
-        endpoints: Object.entries(paths).map(([path, value]) => ({
-          path,
-          methods: Object.keys(value || {})
-        }))
+        endpoints: Object.keys(result.data?.paths || {})
       }, 200, origin);
     }
 

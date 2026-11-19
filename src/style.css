@@ -1458,6 +1458,8 @@ label{display:block;font-size:11px;color:#a8c8e2;margin:12px 0}input{display:blo
 }
 .intro-wordmark{
   position:relative;z-index:2;display:flex;align-items:center;justify-content:center;
+  opacity:0;transform:scale(.72);
+  animation:crestReveal .55s cubic-bezier(.16,.85,.25,1.2) .18s forwards;
   padding:.18em .34em .22em .25em;
   font-family:Impact,"Arial Black",system-ui,sans-serif;
   font-size:clamp(52px,11.5vw,132px);font-weight:1000;line-height:.9;
@@ -1469,27 +1471,33 @@ label{display:block;font-size:11px;color:#a8c8e2;margin:12px 0}input{display:blo
     0 12px 0 #07131e,0 24px 34px #000c;
 }
 .intro-logo-words{
-  opacity:0;transform:translateY(24px) scale(.94);
   color:#fff;background:none;
   -webkit-background-clip:border-box;background-clip:border-box;-webkit-text-fill-color:#fff;
   -webkit-text-stroke:1px #080b10;paint-order:stroke fill;
   text-shadow:0 2px 0 #7f0b15,0 4px 0 #4d050b;
-  animation:logoReveal .75s cubic-bezier(.18,.8,.22,1) .22s forwards;
+  display:inline-flex;align-items:center;
 }
+.intro-logo-words span{display:inline-block;opacity:0;transform:translateY(18px) scale(.45);animation:letterReveal .34s cubic-bezier(.16,.85,.25,1.35) forwards;}
+.intro-logo-words span:nth-child(1){animation-delay:.72s}
+.intro-logo-words span:nth-child(2){animation-delay:.84s}
+.intro-logo-words span:nth-child(3){animation-delay:.96s}
+.intro-logo-words span:nth-child(4){animation-delay:1.08s}
+.intro-logo-words span:nth-child(5){animation-delay:1.32s}
+.intro-logo-words span:nth-child(6){animation-delay:1.44s}
 .intro-bang{position:relative;display:inline-block;width:.19em;height:.91em;margin-left:.045em;flex:none;}
 .intro-bang-stem{
   position:absolute;left:50%;top:0;width:.15em;height:.66em;border-radius:.07em;
   transform:translateX(-50%) scaleY(0);transform-origin:bottom;
   background:linear-gradient(90deg,#8ba9b9,#fff 35%,#d8e9f1 70%,#7896a7);
   box-shadow:0 2px 0 #28495d,0 0 16px #b4eaff55;
-  animation:bangStemIn .3s ease 1s forwards;
+  animation:bangStemIn .3s ease 1.72s forwards;
 }
 .intro-puck{
   position:absolute;left:50%;bottom:-.12em;width:.24em;height:.115em;border-radius:50%;
   opacity:0;transform:translate(145px,-310px) rotate(-420deg) scale(.72);
   background:linear-gradient(180deg,#56616b 0%,#111820 40%,#020407 100%);
   border:1px solid #a9c2d1;box-shadow:0 3px 0 #000,0 0 0 2px #d9f5ff22,0 0 24px #9deaff77;
-  animation:puckBulletDrop .72s cubic-bezier(.12,.72,.18,1) 1.35s forwards;
+  animation:puckBulletDrop .72s cubic-bezier(.12,.72,.18,1) 2.02s forwards;
 }
 .intro-impact-cracks{
   position:absolute;z-index:1;left:calc(50% + clamp(140px,25vw,260px));top:calc(50% + 58px);
@@ -1514,6 +1522,8 @@ label{display:block;font-size:11px;color:#a8c8e2;margin:12px 0}input{display:blo
   opacity:0;animation:captionReveal .5s ease 2.55s forwards;
 }
 @keyframes logoReveal{to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes crestReveal{0%{opacity:0;transform:scale(.72)}75%{opacity:1;transform:scale(1.045)}100%{opacity:1;transform:scale(1)}}
+@keyframes letterReveal{to{opacity:1;transform:translateY(0) scale(1)}}
 @keyframes bangStemIn{to{transform:translateX(-50%) scaleY(1)}}
 @keyframes puckBulletDrop{
   0%{opacity:0;transform:translate(145px,-310px) rotate(-420deg) scale(.72)}

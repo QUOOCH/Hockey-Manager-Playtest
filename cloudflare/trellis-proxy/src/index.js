@@ -131,10 +131,11 @@ export default {
     }
 
     // Start or poll a Gradio queued API event.
-    const callMatch = url.pathname.match(/^\/gradio_api\/call\/([a-zA-Z0-9_-]+)(?:\/([a-zA-Z0-9_-]+))?$/);
+    const callMatch = url.pathname.match(/^\/gradio_api\/call\/(v2\/)?([a-zA-Z0-9_-]+)(?:\/([a-zA-Z0-9_-]+))?$/);
     if (callMatch) {
-      const apiName = callMatch[1];
-      const eventId = callMatch[2] || null;
+      const apiPrefix = callMatch[1] || "";
+      const apiName = callMatch[2];
+      const eventId = callMatch[3] || null;
       if (!ALLOWED_API.has(apiName)) {
         return json({ ok: false, error: "API endpoint not allowed." }, 404, origin);
       }
@@ -148,7 +149,7 @@ export default {
         if (body.length > 40_000_000) {
           return json({ ok: false, error: "Request payload is too large (40 MB limit)." }, 413, origin);
         }
-        const response = await fetch(HF_BASE + `/gradio_api/call/${apiName}`, {
+        const response = await fetch(HF_BASE + `/gradio_api/call/${apiPrefix}${apiName}`, {
           method: "POST",
           headers: {
             "Authorization": `Bearer ${env.HF_TOKEN}`,
@@ -163,7 +164,7 @@ export default {
 
       if (request.method === "GET" && eventId) {
         const response = await fetch(
-          HF_BASE + `/gradio_api/call/${apiName}/${eventId}` + url.search,
+          HF_BASE + `/gradio_api/call/${apiPrefix}${apiName}/${eventId}` + url.search,
           {
             headers: {
               "Authorization": `Bearer ${env.HF_TOKEN}`,

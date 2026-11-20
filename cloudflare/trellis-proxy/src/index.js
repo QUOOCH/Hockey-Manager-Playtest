@@ -149,30 +149,53 @@ export default {
         if (body.length > 40_000_000) {
           return json({ ok: false, error: "Request payload is too large (40 MB limit)." }, 413, origin);
         }
-        const response = await fetch(HF_BASE + `/gradio_api/call/${apiPrefix}${apiName}`, {
+        let payload;
+        try { payload = JSON.parse(body); } catch {
+          return json({ ok: false, error: "Invalid JSON request body." }, 400, origin);
+        }
+        const config = await fetchHf("/config", env.HF_TOKEN);
+        if (!config.ok) {
+          return json({ ok: false, error: "Hugging Face Space config unavailable.", upstreamStatus: config.status }, 502, origin);
+        }
+        const dependencies = Array.isArray(config.data?.dependencies) ? config.data.dependencies : [];
+        const dependencyIndex = dependencies.findIndex((item) => item.api_name === apiName);
+        if (dependencyIndex < 0) {
+          return json({ ok: false, error: "Gradio API endpoint not found in Space config.", apiName }, 404, origin);
+        }
+        const dependency = dependencies[dependencyIndex];
+        const queuePayload = {
+          ...payload,
+          fn_index: typeof dependency.id === "number" ? dependency.id : dependencyIndex
+        };
+        const response = await fetch(HF_BASE + "/gradio_api/queue/join", {
           method: "POST",
           headers: {
             "Authorization": `Bearer ${env.HF_TOKEN}`,
             "Content-Type": "application/json",
-            "Accept": "application/json"
+            "Accept": "application/json",
+            "x-gradio-user": "api"
           },
-          body,
+          body: JSON.stringify(queuePayload),
           redirect: "follow"
         });
         return upstreamResponse(response, origin);
       }
 
       if (request.method === "GET" && eventId) {
-        const response = await fetch(
-          HF_BASE + `/gradio_api/call/${apiPrefix}${apiName}/${eventId}` + url.search,
-          {
-            headers: {
-              "Authorization": `Bearer ${env.HF_TOKEN}`,
-              "Accept": "text/event-stream"
-            },
-            redirect: "follow"
-          }
-        );
+        const sessionHash = url.searchParams.get("session_hash");
+        if (!sessionHash) {
+          return json({ ok: false, error: "session_hash is required for the Gradio queue stream." }, 400, origin);
+        }
+        const streamUrl = new URL(HF_BASE + "/gradio_api/queue/data");
+        streamUrl.searchParams.set("session_hash", sessionHash);
+        const response = await fetch(streamUrl.toString(), {
+          headers: {
+            "Authorization": `Bearer ${env.HF_TOKEN}`,
+            "Accept": "text/event-stream",
+            "x-gradio-user": "api"
+          },
+          redirect: "follow"
+        });
         return upstreamResponse(response, origin);
       }
 

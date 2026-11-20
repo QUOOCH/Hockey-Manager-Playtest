@@ -2025,3 +2025,12 @@ label{display:block;font-size:11px;color:#a8c8e2;margin:12px 0}input{display:blo
   .manager-wall-emblem{left:59%;width:28%;padding:10px 5px 9px}
   .manager-wall-emblem small{font-size:5px;letter-spacing:1.3px}
 }
+
+/* The captain is part of the locker-room scene, not hidden in the model lab. */
+.hero-room-player-stage{position:absolute;z-index:5;left:34%;top:12%;width:32%;height:76%;min-height:280px;pointer-events:auto;touch-action:pan-y;filter:drop-shadow(0 18px 22px rgba(0,0,0,.42))}
+.hero-room-player-stage .hero-3d-canvas{width:100%;height:100%;display:block}
+.hero-room-player-stage:after{content:"";position:absolute;left:17%;right:17%;bottom:4%;height:12%;border-radius:50%;background:radial-gradient(ellipse,rgba(86,190,235,.2),transparent 70%);pointer-events:none}
+@media(max-width:600px){
+ .hero-room-player-stage{left:25%;top:14%;width:50%;height:70%;min-height:250px}
+ .locker-room-caption{z-index:6;pointer-events:none}
+}

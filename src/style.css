@@ -2126,3 +2126,84 @@ label{display:block;font-size:11px;color:#a8c8e2;margin:12px 0}input{display:blo
 @media(max-width:850px){.main-menu-stage{grid-template-columns:minmax(0,1.5fr) minmax(220px,.8fr)}.main-menu-links{grid-template-columns:repeat(2,minmax(0,1fr))}.main-menu-arena,.main-menu-stage{min-height:360px}.main-menu-match{padding:18px 16px}.main-menu-match-title{font-size:31px}.main-menu-season{display:none}}
 @media(max-width:560px){.main-menu-shell{padding:0 12px 24px}.main-menu-top{height:64px}.main-menu-mark{width:33px;height:33px}.main-menu-brand b{font-size:12px}.main-menu-profile{padding:5px 7px;gap:7px}.main-menu-profile>i{display:none}.main-menu-profile b{font-size:9px;max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.main-menu-stage{grid-template-columns:1fr;gap:9px;margin-top:10px}.main-menu-arena{min-height:330px}.main-menu-arena-copy{left:20px;max-width:85%}.main-menu-wordmark{font-size:61px;letter-spacing:-4px}.main-menu-slogan{font-size:10px;letter-spacing:1.6px}.main-menu-teamline{margin-top:23px}.main-menu-vertical-label{right:9px;font-size:7px}.main-menu-arena-foot{left:13px;right:13px;font-size:6px;letter-spacing:1px}.main-menu-match{padding:16px 17px}.main-menu-match-title{font-size:34px;margin-top:17px}.main-menu-match p{margin:8px 0 12px}.main-menu-match-stats{margin-bottom:12px}.main-menu-match-note{margin-top:12px}.main-menu-resources{grid-template-columns:1fr 1fr;gap:7px}.main-menu-resource{padding:10px 9px;gap:8px}.main-menu-resource.record{grid-column:1/-1}.main-menu-resource small{font-size:7px;letter-spacing:1px}.main-menu-resource b{font-size:12px}.resource-symbol{width:27px;height:27px;flex:0 0 27px}.main-menu-navigation{margin-top:23px}.main-menu-section-heading b{font-size:13px}.main-menu-section-heading>i{font-size:7px}.main-menu-links{gap:7px}.main-menu-link{min-height:78px;grid-template-columns:18px 27px 1fr 10px;gap:6px;padding:9px 7px}.menu-link-icon{width:26px;height:26px;font-size:16px}.menu-link-copy b{font-size:9px}.menu-link-copy small{font-size:7px}.main-menu-footer{font-size:6px;letter-spacing:.8px}.main-menu-footer>span:last-child{display:none}}
 @media(prefers-reduced-motion:reduce){.main-menu-link,.main-menu-play{transition:none}}
+
+
+/* =========================================================
+   PUCK IT! — collectible player cards, premium ice edition
+   ========================================================= */
+.collection-hero{position:relative;display:flex;align-items:center;justify-content:space-between;gap:18px;margin:18px 0 15px;padding:24px 25px;overflow:hidden;border:1px solid #9fc5d52b;border-radius:14px;background:radial-gradient(ellipse at 86% 20%,#2c85b34a,transparent 42%),linear-gradient(112deg,#132d40,#091a29 72%,#102b3b);box-shadow:0 16px 35px #0003}
+.collection-hero:after{content:"";position:absolute;right:-55px;top:-105px;width:280px;height:280px;border:1px solid #b5dce51c;border-radius:50%;box-shadow:0 0 0 22px #b5dce508,0 0 0 48px #b5dce506,0 0 0 76px #b5dce504;pointer-events:none}
+.collection-hero>div:first-child{position:relative;z-index:1;max-width:620px}
+.collection-hero small{font-size:8px;letter-spacing:2.6px;color:#8fb4c5;font-weight:800}
+.collection-hero h2{margin:8px 0 7px;font-size:clamp(23px,4vw,36px);line-height:1;letter-spacing:1.2px;color:#f5fbff}
+.collection-hero p{max-width:490px;margin:0;color:#9eb8c7;font-size:11px;line-height:1.65}
+.collection-total{position:relative;z-index:1;display:grid;justify-items:center;gap:3px;min-width:82px;padding:13px;border:1px solid #d5edf32b;border-radius:10px;background:#0615218c}
+.collection-total b{font-size:34px;line-height:1;color:#fff;font-variant-numeric:tabular-nums}
+.collection-total small{font-size:7px;letter-spacing:1.5px}
+.collection-filters{display:flex;gap:7px;overflow-x:auto;padding:2px 0 12px;scrollbar-width:thin}
+.collection-filters button{flex:0 0 auto;padding:9px 11px;border:1px solid #91b4c32b;border-radius:6px;background:linear-gradient(145deg,#132a3b,#0b1c29);color:#9eb7c5;font-size:8px;font-weight:900;letter-spacing:1px;cursor:pointer;transition:all .18s}
+.collection-filters button i{margin-left:5px;color:#6f8998;font-style:normal}
+.collection-filters button.active{border-color:#e34b5e99;background:linear-gradient(145deg,#512a36,#172738);color:#fff;box-shadow:0 0 18px #e33e521a}
+.collection-filters button.active i{color:#ff9ba5}
+.collection-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px;align-items:stretch}
+.collection-card{position:relative;display:block;width:100%;min-width:0;padding:0;border:0;background:transparent;color:#fff;text-align:left;cursor:pointer;perspective:900px;transition:transform .22s,filter .22s}
+.collection-card:hover{transform:translateY(-5px) rotateX(1deg);filter:brightness(1.12)}
+.collection-card-frame{--rarity:#aab8c5;--rarity2:#344455;--rarity-glow:#aab8c533;position:relative;display:flex;flex-direction:column;min-height:320px;padding:9px;border:1px solid color-mix(in srgb,var(--rarity) 85%,white);border-radius:11px;overflow:hidden;background:linear-gradient(145deg,#26394b 0%,#101d2b 24%,#07111d 75%,#1b2b3c);box-shadow:0 10px 24px #0008,inset 0 0 0 3px #050b12,inset 0 0 0 4px color-mix(in srgb,var(--rarity) 52%,transparent),0 0 20px var(--rarity-glow)}
+.collection-card-frame:before{content:"";position:absolute;inset:5px;border:1px solid color-mix(in srgb,var(--rarity) 52%,transparent);border-radius:7px;pointer-events:none;z-index:3}
+.collection-card-frame:after{content:"";position:absolute;inset:0;background:linear-gradient(118deg,transparent 0 26%,#fff0 38%,#fff2 46%,transparent 55%),repeating-linear-gradient(135deg,transparent 0 13px,#ffffff08 14px 15px);pointer-events:none;z-index:2}
+.rarity-common .collection-card-frame{--rarity:#c5d0dc;--rarity2:#526477;--rarity-glow:#d7e6f522}
+.rarity-rare .collection-card-frame{--rarity:#56f28b;--rarity2:#087d43;--rarity-glow:#28e87933}
+.rarity-epic .collection-card-frame{--rarity:#4ba8ff;--rarity2:#1749ad;--rarity-glow:#368dff44}
+.rarity-legendary .collection-card-frame{--rarity:#ff5662;--rarity2:#9d1727;--rarity-glow:#f42c493d}
+.collection-card-top{position:relative;z-index:4;display:flex;justify-content:space-between;align-items:center;gap:5px;padding:2px 3px 7px;color:var(--rarity);font-size:7px;font-weight:1000;letter-spacing:1.3px}
+.collection-card-top i{font-style:normal;color:#d7e5ee;font-size:8px}
+.collection-card-portrait{position:relative;display:block;height:150px;overflow:hidden;border:1px solid color-mix(in srgb,var(--rarity) 65%,transparent);border-radius:5px 5px 0 0;background:radial-gradient(ellipse at 50% 28%,color-mix(in srgb,var(--rarity) 45%,transparent),transparent 58%),linear-gradient(145deg,#24384a,#091522 72%);box-shadow:inset 0 0 24px #0008}
+.collection-card-portrait:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 50%,#06101cdd 100%);pointer-events:none}
+.collection-portrait-art{position:absolute;width:100%;height:100%;inset:0;filter:drop-shadow(0 6px 8px #0009)}
+.collection-card-position{position:absolute;z-index:2;bottom:7px;left:8px;color:#e5f1f8;font-size:6px;font-weight:900;letter-spacing:1.7px}
+.collection-card-name{position:relative;z-index:4;display:flex;flex-direction:column;gap:4px;padding:9px 5px 6px;min-width:0;border-bottom:1px solid #b8d5e22b}
+.collection-card-name b{font-size:clamp(9px,1vw,12px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:.1px}
+.collection-card-name small{font-size:6px;letter-spacing:1.3px;color:#91a9b9;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.collection-card-rating{position:absolute;z-index:5;right:13px;top:172px;display:grid;justify-items:center;gap:0;width:42px;padding:5px 2px;border:1px solid color-mix(in srgb,var(--rarity) 72%,transparent);border-radius:5px;background:#07131fe8;box-shadow:0 2px 10px #0008}
+.collection-card-rating b{font-size:18px;line-height:1;color:#fff}
+.collection-card-rating small{font-size:6px;letter-spacing:1px;color:var(--rarity)}
+.collection-card-stats{position:relative;z-index:4;display:grid;grid-template-columns:1fr 1fr;gap:5px;padding:8px 4px 3px;margin-top:auto}
+.collection-card-stats span{display:flex;align-items:center;gap:5px;padding:5px 6px;border:1px solid #c8dce316;border-radius:4px;background:#ffffff08}
+.collection-card-stats i{font-style:normal;color:var(--rarity);font-size:10px}
+.collection-card-stats b{margin-left:auto;color:#eaf4fb;font-size:9px;font-variant-numeric:tabular-nums}
+.collection-empty{grid-column:1/-1;padding:35px;text-align:center;color:#8da7b7;border:1px dashed #8da7b744;border-radius:10px}
+.player-detail-shell{display:grid;grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr);gap:14px;margin-top:16px;padding:14px;border:1px solid #9fc3d32b;border-radius:14px;background:linear-gradient(145deg,#132a3a,#091722);box-shadow:0 18px 40px #0005}
+.player-detail-card{position:relative;min-height:410px;overflow:hidden;padding:18px;border:1px solid #b6d5e33b;border-radius:10px;background:radial-gradient(ellipse at 50% 26%,#397b9d44,transparent 47%),linear-gradient(145deg,#20394b,#07131f 75%);display:flex;flex-direction:column}
+.player-detail-kicker{position:relative;z-index:4;font-size:8px;font-weight:900;letter-spacing:2px;color:#a8c6d5}
+.player-detail-art{position:absolute;inset:34px 0 85px;display:grid;place-items:center;overflow:hidden}
+.player-detail-art .collection-card{width:min(72%,240px);height:100%;cursor:default}
+.player-detail-art .collection-card-frame{height:100%;min-height:0}
+.player-detail-art .collection-card-top,.player-detail-art .collection-card-name,.player-detail-art .collection-card-rating,.player-detail-art .collection-card-stats{display:none}
+.player-detail-art .collection-card-portrait{height:100%;border-radius:6px}
+.player-detail-art .collection-portrait-art{height:100%;width:100%}
+.player-detail-name{position:relative;z-index:4;margin-top:auto;padding-top:230px;text-align:center}
+.player-detail-name small{font-size:7px;letter-spacing:2px;color:#9ab5c5}
+.player-detail-name h2{margin:5px 0;font-size:clamp(20px,3vw,28px);color:#fff}
+.player-detail-name span{font-size:9px;color:#9ab5c5;letter-spacing:1px}
+.player-detail-ovr{position:absolute;z-index:5;top:57px;right:20px;display:grid;justify-items:center;padding:8px 12px;border:1px solid #d5e9f044;border-radius:8px;background:#06131ddc}
+.player-detail-ovr b{font-size:28px;line-height:1;color:#fff}
+.player-detail-ovr small{font-size:7px;letter-spacing:1px;color:#9bb8c8}
+.player-detail-info{padding:9px 8px;display:flex;flex-direction:column;gap:14px}
+.detail-section-title{display:flex;justify-content:space-between;align-items:center;gap:8px;padding-bottom:11px;border-bottom:1px solid #b3d2e022}
+.detail-section-title span{font-size:11px;font-weight:900;letter-spacing:1.3px;color:#f3f8fc}
+.detail-section-title b{font-size:7px;letter-spacing:1.4px;color:#7795a7}
+.detail-stat{display:grid;grid-template-columns:1fr 34px;gap:7px;align-items:center}
+.detail-stat>span{font-size:8px;letter-spacing:1.4px;color:#91adbd}
+.detail-stat>b{text-align:right;font-size:12px;color:#fff;font-variant-numeric:tabular-nums}
+.detail-stat>i{grid-column:1/-1;height:5px;border-radius:5px;background:#ffffff14;overflow:hidden}
+.detail-stat>i em{display:block;height:100%;border-radius:5px;background:linear-gradient(90deg,#2c87b5,#a4e7ef);box-shadow:0 0 10px #63cce755}
+.detail-equipment{margin-top:auto;padding:12px;border:1px solid #a4c6d222;border-radius:8px;background:#ffffff07}
+.detail-equipment>div{display:flex;justify-content:space-between;gap:8px;align-items:center}
+.detail-equipment b{font-size:8px;letter-spacing:1.2px}
+.detail-equipment small{font-size:7px;color:#88a5b5}
+.detail-equipment>span{display:block;margin-top:8px;font-size:9px;line-height:1.6;color:#9fb8c5}
+.player-detail-action{width:100%;margin-top:4px}
+.player-detail-action i{float:right;font-style:normal}
+@media(max-width:850px){.collection-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.collection-card-frame{min-height:300px}.collection-card-portrait{height:135px}}
+@media(max-width:600px){.collection-hero{padding:18px 15px;margin-top:12px}.collection-hero p{font-size:10px;max-width:260px}.collection-total{min-width:65px;padding:9px}.collection-total b{font-size:27px}.collection-total small{font-size:6px}.collection-filters{gap:5px}.collection-filters button{padding:8px 9px;font-size:7px}.collection-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.collection-card-frame{min-height:285px;padding:7px}.collection-card-portrait{height:132px}.collection-card-rating{top:153px;right:11px;width:37px}.collection-card-rating b{font-size:16px}.collection-card-name{padding:8px 4px 5px}.collection-card-name b{font-size:9px}.collection-card-stats{gap:4px;padding:7px 3px 2px}.collection-card-stats span{padding:4px}.player-detail-shell{grid-template-columns:1fr;padding:9px;gap:8px}.player-detail-card{min-height:365px}.player-detail-art{inset:32px 0 75px}.player-detail-name{padding-top:210px}.player-detail-info{padding:12px 8px 8px;gap:12px}.detail-equipment>div{align-items:flex-start;flex-direction:column;gap:5px}}
+@media(prefers-reduced-motion:reduce){.collection-card,.collection-filters button{transition:none}}

@@ -2207,3 +2207,38 @@ label{display:block;font-size:11px;color:#a8c8e2;margin:12px 0}input{display:blo
 @media(max-width:850px){.collection-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.collection-card-frame{min-height:300px}.collection-card-portrait{height:135px}}
 @media(max-width:600px){.collection-hero{padding:18px 15px;margin-top:12px}.collection-hero p{font-size:10px;max-width:260px}.collection-total{min-width:65px;padding:9px}.collection-total b{font-size:27px}.collection-total small{font-size:6px}.collection-filters{gap:5px}.collection-filters button{padding:8px 9px;font-size:7px}.collection-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.collection-card-frame{min-height:285px;padding:7px}.collection-card-portrait{height:132px}.collection-card-rating{top:153px;right:11px;width:37px}.collection-card-rating b{font-size:16px}.collection-card-name{padding:8px 4px 5px}.collection-card-name b{font-size:9px}.collection-card-stats{gap:4px;padding:7px 3px 2px}.collection-card-stats span{padding:4px}.player-detail-shell{grid-template-columns:1fr;padding:9px;gap:8px}.player-detail-card{min-height:365px}.player-detail-art{inset:32px 0 75px}.player-detail-name{padding-top:210px}.player-detail-info{padding:12px 8px 8px;gap:12px}.detail-equipment>div{align-items:flex-start;flex-direction:column;gap:5px}}
 @media(prefers-reduced-motion:reduce){.collection-card,.collection-filters button{transition:none}}
+
+
+/* PUCK IT! reference-matched collectible card pass */
+.collection-grid{grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;align-items:stretch}
+.collection-card{min-width:0;filter:drop-shadow(0 10px 12px #0008);transition:transform .24s,filter .24s}
+.collection-card:hover{transform:translateY(-7px) scale(1.015);filter:brightness(1.16) drop-shadow(0 14px 18px #000a)}
+.collection-card-frame{--rarity:#d5e0e9;position:relative;display:flex;flex-direction:column;min-height:0;height:390px;padding:7px;border:2px solid var(--rarity);border-radius:0;background:linear-gradient(145deg,#dce8f4 0%,#263849 7%,#07111d 35%,#101b2a 90%,#dce8f4 100%);clip-path:polygon(0 4%,5% 0,95% 0,100% 4%,100% 96%,95% 100%,5% 100%,0 96%);box-shadow:inset 0 0 0 2px #02070d,inset 0 0 0 4px color-mix(in srgb,var(--rarity) 70%,transparent),0 0 18px color-mix(in srgb,var(--rarity) 35%,transparent)}
+.collection-card-frame:before{content:"";position:absolute;inset:5px;border:1px solid color-mix(in srgb,var(--rarity) 75%,white);clip-path:polygon(0 4%,5% 0,95% 0,100% 4%,100% 96%,95% 100%,5% 100%,0 96%);pointer-events:none;z-index:5}
+.collection-card-frame:after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 0 30%,#fff2 43%,transparent 52%),repeating-linear-gradient(135deg,transparent 0 18px,#fff08 19px 20px);pointer-events:none;z-index:4}
+.rarity-common .collection-card-frame{--rarity:#d8e2eb}
+.rarity-rare .collection-card-frame{--rarity:#39ff70}
+.rarity-epic .collection-card-frame{--rarity:#168dff}
+.rarity-legendary .collection-card-frame{--rarity:#ff303d}
+.collection-card-top{position:absolute;z-index:6;top:10px;left:12px;right:12px;display:flex;justify-content:space-between;align-items:center;padding:0;color:var(--rarity);font-size:7px;font-weight:1000;letter-spacing:1.6px;text-shadow:0 1px 5px #000}
+.collection-card-top i{font-style:normal;color:#fff;font-size:8px}
+.collection-card-portrait{position:relative;display:block;flex:0 0 58%;height:58%;overflow:hidden;margin:2px 1px 0;border:1px solid color-mix(in srgb,var(--rarity) 85%,white);border-bottom:3px solid var(--rarity);border-radius:0;background:radial-gradient(ellipse at 50% 35%,color-mix(in srgb,var(--rarity) 52%,#263b4c),transparent 64%),linear-gradient(145deg,#182b3d,#050b13 75%);box-shadow:inset 0 0 25px #0009}
+.collection-card-portrait:before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(135deg,transparent 0 19px,#fff0 20px,#fff1 21px,transparent 22px 40px);z-index:1;pointer-events:none}
+.collection-card-portrait:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,#0002 0%,transparent 45%,#02071188 100%);pointer-events:none;z-index:2}
+.collection-portrait-art{position:absolute;width:100%;height:100%;inset:0;filter:drop-shadow(0 7px 7px #000a)}
+.collection-card-position{position:absolute;z-index:3;bottom:7px;left:9px;color:#fff;font-size:6px;font-weight:900;letter-spacing:1.8px;text-shadow:0 1px 4px #000}
+.collection-card-ovr{position:absolute;z-index:3;right:8px;bottom:7px;display:grid;place-items:center;width:34px;height:34px;border:1px solid var(--rarity);background:#050b13eF;color:#fff;font-size:15px;font-weight:1000;box-shadow:0 0 12px color-mix(in srgb,var(--rarity) 45%,transparent)}
+.collection-card-name{position:relative;z-index:3;display:flex;flex-direction:column;justify-content:center;gap:3px;min-height:47px;padding:6px 9px;margin:0 1px;border:1px solid color-mix(in srgb,var(--rarity) 75%,#526477);border-top:0;border-bottom:1px solid var(--rarity);background:linear-gradient(105deg,#182433,#050b13 55%,#172333);text-align:left}
+.collection-card-name b{font-size:clamp(8px,.9vw,11px);font-weight:1000;letter-spacing:.3px;color:#f6fbff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.collection-card-name small{font-size:5px;letter-spacing:1.15px;color:#9eb3c5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.collection-card-stats{position:relative;z-index:3;display:grid;grid-template-columns:1fr 1fr;gap:5px;padding:7px 6px 4px;margin:0 1px;flex:1;background:linear-gradient(150deg,#111d2b,#050a12)}
+.collection-card-stats span{position:relative;display:grid;grid-template-columns:17px 1fr 25px;align-items:center;gap:3px;min-width:0;padding:4px 3px;border:1px solid color-mix(in srgb,var(--rarity) 42%,#506174);background:linear-gradient(90deg,#ffffff0b,#0004);box-shadow:inset 0 0 8px #0008}
+.collection-card-stats i{grid-row:1;color:var(--rarity);font-size:15px;font-style:normal;text-align:center;text-shadow:0 0 7px var(--rarity)}
+.collection-card-stats small{font-size:5px;font-weight:900;letter-spacing:.35px;color:#aabaca;white-space:nowrap}
+.collection-card-stats b{grid-column:3;grid-row:1;font-size:10px;color:#fff;text-align:center;font-variant-numeric:tabular-nums}
+.collection-empty{grid-column:1/-1}
+.player-detail-art .collection-card{width:min(72%,240px);height:100%}
+.player-detail-art .collection-card-frame{height:100%;min-height:0}
+@media(max-width:1100px){.collection-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:760px){.collection-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}.collection-card-frame{height:350px}.collection-card-stats{gap:4px;padding:6px 4px}.collection-card-stats span{grid-template-columns:14px 1fr 20px;padding:3px 2px}.collection-card-stats small{font-size:4.5px}}
+@media(max-width:520px){.collection-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.collection-card-frame{height:350px}.collection-card-portrait{flex-basis:58%;height:58%}.collection-card-name{min-height:44px}.collection-card-name b{font-size:9px}.collection-card-stats small{font-size:5px}}

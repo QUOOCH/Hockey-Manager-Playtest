@@ -2017,3 +2017,11 @@ label{display:block;font-size:11px;color:#a8c8e2;margin:12px 0}input{display:blo
 .manager-office-actions{color:#b4a18a}.manager-office-actions b{color:#f0ca91}
 .manager-contract-sheet{background:radial-gradient(ellipse at 50% 0%,#fff9e8,#f4e7cf 55%,#d6c09c);box-shadow:0 35px 100px #000e,0 0 0 8px #d5b17b12}
 @media(max-width:600px){.manager-office-viewport{height:620px}.manager-scene-camera{transform-origin:50% 73%}.manager-office.drawer-open .manager-scene-camera{transform:translate3d(0,-13%,0) scale(1.9)}.manager-window{left:4%;width:36%;height:30%;border-width:7px}.manager-wall-emblem{left:51%;width:33%;padding:11px 5px}.manager-bookshelf{right:2%;width:21%;height:36%;border-width:6px}.manager-desk{left:0;right:0;bottom:11%;height:37%}.manager-desk-drawer{left:26%;right:26%;height:57%}}
+
+/* Keep the wall plaque clear of the panoramic window */
+.manager-wall-emblem{left:59%;width:27%;transform:translateX(-50%);z-index:2}
+.manager-window{z-index:1}
+@media(max-width:600px){
+  .manager-wall-emblem{left:59%;width:28%;padding:10px 5px 9px}
+  .manager-wall-emblem small{font-size:5px;letter-spacing:1.3px}
+}

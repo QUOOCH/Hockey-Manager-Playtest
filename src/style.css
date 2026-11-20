@@ -1966,3 +1966,54 @@ label{display:block;font-size:11px;color:#a8c8e2;margin:12px 0}input{display:blo
 @media(prefers-reduced-motion:reduce){
  .manager-scene-camera,.manager-drawer-cavity,.manager-drawer-front,.manager-contract-sheet{transition:none!important;animation:none!important}
 }
+
+/* Premium art direction pass for the manager office */
+.manager-office-heading{position:relative;overflow:hidden;border-color:#c8a16b66;background:radial-gradient(ellipse at 86% 0%,#d4a96b25,transparent 42%),linear-gradient(112deg,#30251d,#17212b 54%,#101821)}
+.manager-office-heading:after{content:"";position:absolute;right:90px;top:-55px;width:180px;height:180px;border:1px solid #d5b17b22;border-radius:50%;box-shadow:0 0 0 14px #d5b17b08,0 0 0 30px #d5b17b06;pointer-events:none}
+.manager-office-seal{background:radial-gradient(circle at 35% 25%,#e9c99135,#1b252d 70%);border-color:#e0bd85aa;box-shadow:inset 0 0 0 4px #d9b77b18,inset 0 0 20px #0009,0 0 30px #d0a15a24}
+.manager-office-viewport{height:clamp(620px,82vh,820px);background:radial-gradient(ellipse at 50% 33%,#d7ad7430,transparent 48%),linear-gradient(180deg,#0d1924,#111820 65%,#080d12)}
+.manager-scene-camera{transform-origin:50% 73%;transition:transform 1.55s cubic-bezier(.16,.82,.16,1),filter 1.3s ease}
+.manager-office.drawer-open .manager-scene-camera{transform:translate3d(0,-14%,0) scale(1.78);filter:brightness(1.16) saturate(1.08)}
+.manager-room-wall{background:radial-gradient(ellipse at 48% 26%,#f0c98a26,transparent 32%),linear-gradient(90deg,#101923,#26303a 18%,#1a2631 50%,#101a24 82%,#0a1119)}
+.manager-room-wall:before{opacity:1;background:linear-gradient(90deg,transparent 0 7%,#d4b17b0b 7.1% 7.25%,transparent 7.4% 92%,#d4b17b0b 92.1% 92.25%,transparent 92.4%),repeating-linear-gradient(90deg,transparent 0 11%,#e0c49a0a 11.1% 11.3%,#02070c28 11.5% 11.8%,transparent 12% 23%),linear-gradient(180deg,transparent 0 58%,#02060bc9 100%)}
+.manager-room-wall:after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(112deg,transparent 0 27%,#f3d49a0b 36%,transparent 46%),linear-gradient(248deg,transparent 0 35%,#9dc8e00a 45%,transparent 55%),radial-gradient(ellipse at 50% 80%,transparent 20%,#02060b70 100%);mix-blend-mode:screen}
+.manager-window{left:6%;top:8%;width:35%;height:34%;border:10px solid #292724;background:radial-gradient(ellipse at 52% 72%,#e8f5f8 0 3%,transparent 4%),linear-gradient(180deg,#071827,#183b55 48%,#829aa5 74%,#e0d4bc);box-shadow:0 0 0 2px #c39b6c88,0 0 0 8px #05090d88,0 0 45px #7cb9dc28,inset 0 0 36px #07111b}
+.manager-window:before{background:radial-gradient(ellipse at 50% 70%,#e9f8ffb0 0 2%,transparent 3%),linear-gradient(180deg,#c7e8f0aa,transparent 34%),linear-gradient(180deg,transparent 42%,#edf5f2aa 65%,#a7c8d0 69%,#203746 70%,#0b1722 100%)}
+.manager-window:after{border-left:4px solid #bda27e;border-right:4px solid #bda27e;box-shadow:inset 0 0 22px #fff3}
+.manager-window i:first-child{height:32%;background:linear-gradient(180deg,#e7f2ef,#b8cbd0 38%,#e8e4d7 40%,#1c3442 44%,#0c1822)}
+.manager-window i:nth-child(2),.manager-window i:nth-child(3){filter:drop-shadow(0 0 8px #b8d5e0)}
+.manager-window span{left:49%;width:7px;background:linear-gradient(90deg,#161a1c,#b5a080,#24282b);box-shadow:0 0 0 1px #e4cda1}
+.manager-wall-emblem{top:12%;left:52%;width:31%;padding:16px 9px 14px;background:linear-gradient(145deg,#34434d,#121d27 70%);border-color:#d6b77b99;box-shadow:0 14px 35px #000b,inset 0 1px 0 #fff4,0 0 28px #d3a76a1b}
+.manager-wall-emblem:before{inset:5px;border-color:#d6b77b55}
+.manager-wall-emblem b{font-size:clamp(14px,3.3vw,23px);text-shadow:0 2px 8px #000}
+.manager-bookshelf{right:5%;top:9%;width:20%;height:39%;border-width:9px;background:linear-gradient(90deg,#160f0c,#69472d 12%,#38271c 88%,#120d0a);box-shadow:0 18px 35px #000b,inset 0 0 24px #000d,0 0 0 1px #c9a16b55}
+.manager-bookshelf:before,.manager-bookshelf:after{height:10px;background:linear-gradient(180deg,#c49a66,#49301e)}
+.manager-bookshelf i{width:13%;margin:2% 1% 0;box-shadow:2px 3px 7px #000b,inset 1px 0 #fff3}
+.manager-wall-light{left:39%;right:39%;top:2%;height:6px;background:linear-gradient(90deg,transparent,#fff0cf,#fff);box-shadow:0 0 16px 6px #ffe0a288,0 0 100px 40px #f4bb6a30}
+.manager-room-floor{height:48%;background:repeating-linear-gradient(90deg,#d2b18a0b 0 2px,transparent 2px 75px),repeating-linear-gradient(0deg,transparent 0 70px,#08060455 71px 73px),linear-gradient(180deg,#604832,#2a201a 72%,#100d0b)}
+.manager-rug{border:2px solid #c5a06c88;box-shadow:0 12px 28px #000b,inset 0 0 0 5px #d1b17b12}
+.manager-rug:after{color:#d5b17b35;text-shadow:0 2px 12px #000;letter-spacing:7px}
+.manager-desk{left:5%;right:5%;bottom:11%;height:39%;filter:drop-shadow(0 30px 24px #000d)}
+.manager-desk-top{height:50%;border:2px solid #d0a16b;background:repeating-linear-gradient(7deg,transparent 0 13px,#f2d3a00b 14px 15px,transparent 16px 27px),linear-gradient(180deg,#c79a67,#93663f 18%,#624329 76%,#382418);box-shadow:inset 0 4px 10px #ffe1b277,inset 0 -15px 20px #170e0acc,0 0 0 1px #120b07}
+.manager-desk-top:before{border-color:#f0d4a077}
+.manager-desk-face{background:repeating-linear-gradient(0deg,transparent 0 18px,#d2a16a0b 19px 20px),linear-gradient(90deg,#1d120d,#805533 12%,#4a2f1d 50%,#805533 88%,#1b110c);border-color:#c0935e;box-shadow:inset 0 12px 20px #0008,inset 0 -2px 0 #e4bd8255}
+.manager-blotter{border-color:#d5bd9666;background:linear-gradient(135deg,#34434b,#101a21);box-shadow:0 8px 18px #000b,inset 0 1px 0 #fff3}
+.manager-lamp{filter:drop-shadow(0 0 28px #ffd58a88)}
+.manager-lamp i{background:linear-gradient(180deg,#fff1c9,#c69a5e 80%);box-shadow:0 0 35px #ffcf7a,0 0 95px 28px #ffc66a35}
+.manager-lamp span{background:linear-gradient(180deg,#ffe4ae44,transparent)}
+.manager-drawer-cavity{padding:10px 9px 14px;border:4px solid #c29561;background:repeating-linear-gradient(90deg,transparent 0 22px,#c99a6420 23px 24px),linear-gradient(180deg,#21160f,#3d2819 65%,#120c08);box-shadow:inset 0 0 28px #000,0 0 0 2px #120b07}
+.manager-contract{min-height:38px;padding:6px 8px;border-color:#b28b58;background:linear-gradient(90deg,#f8efde,#e5d4b4 74%,#d7c19a);box-shadow:0 3px 7px #0009,inset 0 1px 0 #fff}
+.manager-contract:hover{transform:translateX(3px);filter:brightness(1.06)}
+.manager-contract .contract-fold{font-size:15px;color:#a27a45}
+.manager-contract .contract-copy b{font-family:Georgia,serif;font-size:9px}
+.manager-contract .contract-copy small{font-size:6px;letter-spacing:.8px}
+.manager-contract .contract-salary{font-size:8px}
+.manager-drawer-front{border-color:#e2bb83;background:repeating-linear-gradient(0deg,transparent 0 17px,#e6c18a10 18px 19px),linear-gradient(180deg,#bd925d,#78502f 18%,#49301d 80%,#28190f);box-shadow:inset 0 3px 7px #fff5,inset 0 -8px 14px #1a100a99,0 9px 16px #000b}
+.manager-drawer-front:before{border-color:#f0d1a077;inset:6px}
+.manager-drawer-front .drawer-nameplate{padding:4px 9px;border:1px solid #e3c18c77;background:#21160d66;box-shadow:0 2px 8px #0007}
+.manager-drawer-front i{width:28%;height:6px;box-shadow:0 2px 0 #24180e,0 0 10px #ffe0a0aa}
+.manager-chair:before{border-color:#0d1218;background:linear-gradient(110deg,#111922,#46515a 48%,#111820);box-shadow:inset 0 0 0 3px #b18b5d77,inset 0 10px 22px #fff1,0 12px 22px #0009}
+.manager-scene-caption{border-color:#d2aa7255;background:linear-gradient(90deg,#0d151e,#202831 50%,#0d151e)}
+.manager-office-actions{color:#b4a18a}.manager-office-actions b{color:#f0ca91}
+.manager-contract-sheet{background:radial-gradient(ellipse at 50% 0%,#fff9e8,#f4e7cf 55%,#d6c09c);box-shadow:0 35px 100px #000e,0 0 0 8px #d5b17b12}
+@media(max-width:600px){.manager-office-viewport{height:620px}.manager-scene-camera{transform-origin:50% 73%}.manager-office.drawer-open .manager-scene-camera{transform:translate3d(0,-13%,0) scale(1.9)}.manager-window{left:4%;width:36%;height:30%;border-width:7px}.manager-wall-emblem{left:51%;width:33%;padding:11px 5px}.manager-bookshelf{right:2%;width:21%;height:36%;border-width:6px}.manager-desk{left:0;right:0;bottom:11%;height:37%}.manager-desk-drawer{left:26%;right:26%;height:57%}}

@@ -15,38 +15,42 @@ function roundedBox(w:number,h:number,d:number,r:number,material:THREE.Material)
   geo.translate(0,0,-Math.max(.01,d-2*r)/2);return new THREE.Mesh(geo,material);
 }
 function makeProceduralHockeyPlayer(target:THREE.Group){
-  const navy=new THREE.MeshStandardMaterial({color:0x102e49,roughness:.48,metalness:.12}),blue=new THREE.MeshStandardMaterial({color:0x1678a8,roughness:.42,metalness:.16}),ice=new THREE.MeshStandardMaterial({color:0xe9f7fb,roughness:.28,metalness:.25}),red=new THREE.MeshStandardMaterial({color:0xd43a4b,roughness:.4,metalness:.12}),dark=new THREE.MeshStandardMaterial({color:0x081521,roughness:.56}),steel=new THREE.MeshStandardMaterial({color:0x9ab8c7,metalness:.8,roughness:.24}),skin=new THREE.MeshStandardMaterial({color:0xb97855,roughness:.72}),gold=new THREE.MeshStandardMaterial({color:0xd8ad5c,metalness:.55,roughness:.3});
+  const mat=(color:number,roughness=.48,metalness=0)=>new THREE.MeshStandardMaterial({color,roughness,metalness});
+  const navy=mat(0x101b31,.34,.18),purple=mat(0x6439bd,.38,.12),purpleDark=mat(0x38236f,.42,.18),white=mat(0xf1f4f8,.28,.12),black=mat(0x111722,.5,.16),steel=mat(0xa8c1d0,.22,.82),skin=mat(0xd99a78,.62),visor=mat(0x15283a,.16,.62),stitch=mat(0xb9a2ed,.5,.08);
   const group=new THREE.Group();target.add(group);
-  const add=(geo:THREE.BufferGeometry,mat:THREE.Material,x:number,y:number,z:number,rx=0,ry=0,rz=0)=>{const m=new THREE.Mesh(geo,mat);m.position.set(x,y,z);m.rotation.set(rx,ry,rz);m.castShadow=true;m.receiveShadow=true;group.add(m);return m;};
-  const sphere=(x:number,y:number,z:number,sx:number,sy:number,sz:number,mat:THREE.Material)=>{const m=add(new THREE.SphereGeometry(1,24,18),mat,x,y,z);m.scale.set(sx,sy,sz);return m;};
-  const limb=(a:THREE.Vector3,b:THREE.Vector3,r:number,mat:THREE.Material)=>{const d=new THREE.Vector3().subVectors(b,a);const m=add(new THREE.CapsuleGeometry(r,Math.max(.01,d.length()-r*2),5,12),mat,(a.x+b.x)/2,(a.y+b.y)/2,(a.z+b.z)/2);m.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),d.normalize());return m;};
-  // Broad shoulder silhouette, padded jersey and recognizable hockey proportions.
-  sphere(0,2.38,0,.39,.27,.25,blue);
-  const torso=roundedBox(.62,.78,.34,.11,blue);torso.position.set(0,1.98,0);group.add(torso);
-  const chest=roundedBox(.54,.42,.365,.08,navy);chest.position.set(0,2.08,.015);group.add(chest);
-  const stripe=roundedBox(.56,.075,.372,.025,red);stripe.position.set(0,1.91,.02);group.add(stripe);
-  const number=roundedBox(.18,.22,.018,.025,ice);number.position.set(0,2.08,.204);group.add(number);
-  add(new THREE.CylinderGeometry(.105,.12,.17,16),skin,0,2.83,0);sphere(0,3.04,0,.22,.25,.21,skin);
-  // Helmet, visor and metal face cage.
-  const helmet=sphere(0,3.11,0,.245,.22,.235,red);helmet.scale.y=.82;sphere(0,3.16,.09,.19,.12,.16,blue);
-  add(new THREE.BoxGeometry(.37,.055,.035),ice,0,3.06,.21);
-  for(let i=-2;i<=2;i++){const x=i*.061;limb(new THREE.Vector3(x,3.02,.224),new THREE.Vector3(x,2.91,.235),.009,steel);}
-  limb(new THREE.Vector3(-.2,3.02,.22),new THREE.Vector3(.2,3.02,.22),.012,steel);
-  // Arms and padded gloves in a natural stick-handling pose.
-  const shoulderL=new THREE.Vector3(-.34,2.48,0),elbowL=new THREE.Vector3(-.49,2.12,.06),handL=new THREE.Vector3(-.39,1.82,.22),shoulderR=new THREE.Vector3(.34,2.48,0),elbowR=new THREE.Vector3(.49,2.16,.1),handR=new THREE.Vector3(.32,1.93,.26);
-  limb(shoulderL,elbowL,.145,navy);limb(elbowL,handL,.105,blue);limb(shoulderR,elbowR,.145,navy);limb(elbowR,handR,.105,blue);
-  for(const [x,y,z] of [[-.39,1.82,.22],[.32,1.93,.26]] as number[][]){const g=roundedBox(.24,.18,.22,.055,red);g.position.set(x,y,z);group.add(g);const cuff=roundedBox(.22,.055,.225,.02,ice);cuff.position.set(x,y-.105,z);group.add(cuff);}
-  const pants=roundedBox(.62,.36,.39,.1,navy);pants.position.set(0,1.48,0);group.add(pants);
-  const belt=roundedBox(.58,.065,.4,.02,red);belt.position.set(0,1.66,0);group.add(belt);
-  limb(new THREE.Vector3(-.17,1.34,0),new THREE.Vector3(-.2,.72,.03),.12,navy);limb(new THREE.Vector3(.17,1.34,0),new THREE.Vector3(.2,.72,.03),.12,navy);
-  for(const x of [-.2,.2]){const pad=roundedBox(.23,.54,.24,.065,ice);pad.position.set(x,.85,.11);group.add(pad);const padStripe=roundedBox(.235,.055,.25,.02,red);padStripe.position.set(x,.84,.12);group.add(padStripe);sphere(x,1.14,.12,.14,.12,.14,blue);}
-  // Skates with steel blades and visible laces.
-  for(const x of [-.2,.2]){const boot=roundedBox(.25,.2,.43,.06,navy);boot.position.set(x,.48,.12);group.add(boot);sphere(x,.48,.29,.12,.085,.12,blue);add(new THREE.BoxGeometry(.24,.025,.5),steel,x,.36,.14);for(let n=0;n<4;n++)add(new THREE.BoxGeometry(.1,.012,.012),ice,x,.53+n*.027,.34);}
-  // Composite stick and puck.
-  limb(new THREE.Vector3(.43,1.94,.18),new THREE.Vector3(.7,.47,.25),.025,dark);
-  const blade=roundedBox(.3,.055,.075,.02,ice);blade.position.set(.82,.43,.25);blade.rotation.z=-.16;group.add(blade);
-  add(new THREE.CircleGeometry(.075,24),gold,-.13,2.23,.205);
-  add(new THREE.CylinderGeometry(.11,.11,.045,24),dark,.72,.18,.35,Math.PI/2);
+  const add=(geo:THREE.BufferGeometry,material:THREE.Material,x:number,y:number,z:number,rx=0,ry=0,rz=0)=>{const m=new THREE.Mesh(geo,material);m.position.set(x,y,z);m.rotation.set(rx,ry,rz);m.castShadow=true;m.receiveShadow=true;group.add(m);return m;};
+  const oval=(x:number,y:number,z:number,sx:number,sy:number,sz:number,material:THREE.Material)=>{const m=add(new THREE.SphereGeometry(1,32,24),material,x,y,z);m.scale.set(sx,sy,sz);return m;};
+  const link=(a:THREE.Vector3,b:THREE.Vector3,r1:number,r2:number,material:THREE.Material)=>{const d=new THREE.Vector3().subVectors(b,a),mesh=add(new THREE.CylinderGeometry(r2,r1,d.length(),18,1),material,(a.x+b.x)/2,(a.y+b.y)/2,(a.z+b.z)/2);mesh.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),d.normalize());return mesh;};
+  const capsule=(a:THREE.Vector3,b:THREE.Vector3,r:number,material:THREE.Material)=>{const d=new THREE.Vector3().subVectors(b,a),mesh=add(new THREE.CapsuleGeometry(r,Math.max(.02,d.length()-r*2),6,16),material,(a.x+b.x)/2,(a.y+b.y)/2,(a.z+b.z)/2);mesh.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),d.normalize());return mesh;};
+  const tube=(points:THREE.Vector3[],radius:number,material:THREE.Material)=>add(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(points),32,radius,10,false),material,0,0,0);
+  oval(0,2.38,0,.43,.3,.28,purple);oval(0,2.14,.005,.35,.47,.255,purple);oval(0,1.93,0,.34,.24,.25,purple);
+  oval(0,1.82,.012,.352,.055,.258,white);oval(0,1.77,.018,.34,.035,.25,purpleDark);
+  add(new THREE.TorusGeometry(.125,.025,10,32),white,0,2.55,.015,Math.PI/2);
+  link(new THREE.Vector3(0,2.52,0),new THREE.Vector3(0,2.78,0),.105,.09,skin);
+  oval(0,2.98,.012,.205,.25,.19,skin);oval(0,2.86,.075,.16,.115,.15,skin);
+  oval(-.207,2.99,0,.045,.075,.045,skin);oval(.207,2.99,0,.045,.075,.045,skin);
+  oval(.075,3.015,.183,.026,.018,.012,black);oval(-.075,3.015,.183,.026,.018,.012,black);
+  link(new THREE.Vector3(-.12,3.06,.18),new THREE.Vector3(-.035,3.075,.19),.012,.01,navy);link(new THREE.Vector3(.035,3.075,.19),new THREE.Vector3(.12,3.06,.18),.01,.012,navy);
+  oval(.015,2.965,.204,.018,.032,.018,skin);
+  oval(0,3.17,0,.238,.17,.225,navy);oval(0,3.105,.12,.225,.075,.155,navy);oval(0,3.105,.236,.19,.025,.018,visor);
+  oval(-.218,3.015,.015,.045,.09,.07,purpleDark);oval(.218,3.015,.015,.045,.09,.07,purpleDark);
+  for(let i=-2;i<=2;i++){const x=i*.072;link(new THREE.Vector3(x,3.07,.238),new THREE.Vector3(x*.92,2.94,.235),.008,.008,steel);}
+  link(new THREE.Vector3(-.17,3.07,.235),new THREE.Vector3(.17,3.07,.235),.01,.01,steel);
+  const lS=new THREE.Vector3(-.34,2.42,0),lE=new THREE.Vector3(-.51,2.12,.06),lW=new THREE.Vector3(-.4,1.83,.23),rS=new THREE.Vector3(.34,2.42,0),rE=new THREE.Vector3(.5,2.16,.09),rW=new THREE.Vector3(.34,1.94,.25);
+  oval(-.36,2.39,0,.19,.2,.2,purple);oval(.36,2.39,0,.19,.2,.2,purple);
+  capsule(lS,lE,.125,purple);capsule(lE,lW,.095,purpleDark);capsule(rS,rE,.125,purple);capsule(rE,rW,.095,purpleDark);
+  for(const [a,b] of [[lS,lE],[rS,rE]] as [THREE.Vector3,THREE.Vector3][]){const dir=new THREE.Vector3().subVectors(b,a).normalize();for(const t of [.34,.48]){const p=a.clone().lerp(b,t),ring=add(new THREE.TorusGeometry(.117,.025,8,24),white,p.x,p.y,p.z);ring.quaternion.setFromUnitVectors(new THREE.Vector3(0,0,1),dir);}}
+  for(const [x,y,z] of [[-.4,1.8,.24],[.34,1.91,.26]] as number[][]){oval(x,y,z,.145,.115,.14,navy);oval(x,y-.025,z+.065,.12,.09,.105,purpleDark);const cuff=add(new THREE.TorusGeometry(.095,.027,8,24),purple,x,y-.095,z);cuff.rotation.x=Math.PI/2;for(let n=0;n<3;n++)link(new THREE.Vector3(x-.075+n*.05,y-.06,z+.13),new THREE.Vector3(x-.07+n*.05,y-.12,z+.14),.012,.01,stitch);}
+  oval(0,1.48,0,.34,.24,.255,black);oval(0,1.62,.015,.35,.075,.26,purpleDark);
+  const leftHip=new THREE.Vector3(-.17,1.38,0),leftKnee=new THREE.Vector3(-.21,.86,.04),rightHip=new THREE.Vector3(.17,1.38,0),rightKnee=new THREE.Vector3(.21,.86,.04);
+  capsule(leftHip,leftKnee,.125,black);capsule(rightHip,rightKnee,.125,black);
+  for(const x of [-.21,.21]){capsule(new THREE.Vector3(x,.91,.08),new THREE.Vector3(x,.48,.1),.115,purple);for(const y of [.72,.62]){const band=add(new THREE.TorusGeometry(.108,.025,8,28),white,x,y,.09);band.rotation.x=Math.PI/2;}oval(x,.83,.16,.125,.23,.055,purpleDark);oval(x,.82,.205,.115,.19,.025,white);}
+  for(const x of [-.21,.21]){oval(x,.43,.15,.145,.12,.27,black);oval(x,.49,.21,.115,.09,.18,purpleDark);oval(x,.55,.31,.095,.07,.07,white);for(let n=0;n<5;n++){const yy=.46+n*.027;link(new THREE.Vector3(x-.065,yy,.29),new THREE.Vector3(x+.065,yy+.018,.29),.009,.009,white);}add(new THREE.BoxGeometry(.22,.045,.39),steel,x,.32,.16);add(new THREE.BoxGeometry(.018,.035,.43),black,x,.29,.16);add(new THREE.BoxGeometry(.018,.012,.46),steel,x,.265,.16);}
+  tube([new THREE.Vector3(.34,1.92,.28),new THREE.Vector3(.49,1.42,.3),new THREE.Vector3(.65,.92,.32),new THREE.Vector3(.78,.48,.34)],.025,black);
+  tube([new THREE.Vector3(.78,.48,.34),new THREE.Vector3(.91,.43,.34),new THREE.Vector3(1.05,.46,.34)],.035,white);
+  oval(-.13,2.17,.23,.065,.065,.035,white);
+  tube([new THREE.Vector3(-.28,2.48,.18),new THREE.Vector3(-.2,2.53,.22),new THREE.Vector3(0,2.55,.23),new THREE.Vector3(.2,2.53,.22),new THREE.Vector3(.28,2.48,.18)],.009,stitch);
+  link(new THREE.Vector3(-.31,1.97,.19),new THREE.Vector3(-.31,2.3,.19),.012,.012,white);link(new THREE.Vector3(.31,1.97,.19),new THREE.Vector3(.31,2.3,.19),.012,.012,white);
   group.position.y=.12;return group;
 }
 

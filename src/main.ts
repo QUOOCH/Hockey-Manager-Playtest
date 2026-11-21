@@ -8,6 +8,21 @@ type Screen='office'|'team'|'cards'|'match'|'wardrobe'|'club'|'stadium'|'playoff
 type SlotRef={kind:'line';line:number;field:'center'|'leftWing'|'rightWing'|'defense1'|'defense2'}|{kind:'goalie';number:1|2};
 const KEY='hockey-manager-web-save-v2';
 const HERO_KEY='hockey-puckit-hero-v1';
+const SEASON_KEY='puckit-season-end-v1';
+const SEASON_DURATION=14*24*60*60*1000;
+function getSeasonEnd():number{
+ let end=Number(localStorage.getItem(SEASON_KEY));
+ if(!Number.isFinite(end)||end<=0){end=Date.now()+SEASON_DURATION;localStorage.setItem(SEASON_KEY,String(end));}
+ if(Date.now()>=end){const periods=Math.floor((Date.now()-end)/SEASON_DURATION)+1;end+=periods*SEASON_DURATION;localStorage.setItem(SEASON_KEY,String(end));}
+ return end;
+}
+function seasonCountdownText():string{
+ const left=Math.max(0,getSeasonEnd()-Date.now());
+ const days=Math.floor(left/86400000),hours=Math.floor(left%86400000/3600000),minutes=Math.floor(left%3600000/60000),seconds=Math.floor(left%60000/1000);
+ return days+'Д '+[hours,minutes,seconds].map(v=>String(v).padStart(2,'0')).join(':');
+}
+window.setInterval(()=>{const node=$<HTMLElement>('[data-season-countdown]');if(node)node.textContent=seasonCountdownText();},1000);
+
 const TRELLIS_PROXY='https://little-morning-b296.bratskiymax0.workers.dev';
 const HERO_MODEL_DB='puckit-hero-models-v1';
 let heroGenerationBusy=false;
@@ -87,7 +102,7 @@ function office(){
  '<div class="puck-home-brand"><small>КЛУБ · КАПИТАН</small><b>'+esc(hero?.name||team.club.displayName)+'</b><span>'+esc(team.club.displayName)+' · УРОВЕНЬ '+(hero?.level||1)+'</span></div>'+
  '<div class="puck-home-wallet"><span>💵 <b>'+money(team.economy.dollars)+'</b></span><span>🟡 <b>'+team.economy.goldPucks+'</b></span><button data-screen="settings" aria-label="Настройки">⚙</button></div></header>'+
  '<section class="puck-home-progress"><div class="puck-home-progress-label"><span>ПРОГРЕСС КАПИТАНА</span><b>⚡ '+power+' МОЩЬ</b></div><div class="puck-home-progress-track"><i style="width:'+xp.toFixed(1)+'%"></i></div><div class="puck-home-progress-foot"><span>LVL '+(hero?.level||1)+'</span><span>'+(hero?.xp||0)+' / '+nextXp+' XP</span><span>'+filled+'/22 В СОСТАВЕ</span></div></section>'+
- '<section class="puck-home-season"><div><small>ТЕКУЩИЙ СЕЗОН</small><b>SEASON <em>01</em></b></div><span class="puck-season-clock">◷ <b>04 ДНЯ</b> <i>12 ЧАСОВ</i></span><span class="puck-season-reward">✦ <b>4%</b></span></section>'+
+ '<section class="puck-home-season"><div><small>ТЕКУЩИЙ СЕЗОН</small><b>SEASON <em>01</em></b></div><span class="puck-season-clock" data-season-countdown>◷ ' + seasonCountdownText() + '</span><span class="puck-season-reward">✦ <b>4%</b></span></section>'+
  '<nav class="puck-home-shortcuts">'+
  '<button data-screen="team"><i>♟</i><b>СОСТАВ</b></button><button data-screen="cards"><i>✦</i><b>КОЛЛЕКЦИЯ</b></button><button data-screen="standings"><i>▤</i><b>РЕЙТИНГ</b></button><button data-screen="managerOffice"><i>📋</i><b>КОНТРАКТЫ</b></button><button data-screen="settings"><i>⚙</i><b>ЕЩЁ</b></button></nav>'+
  '<section class="puck-home-activity"><div class="puck-home-activity-label"><span><small>ЕЖЕДНЕВНЫЙ ПЛАН</small><b>ВРЕМЯ РАБОТАТЬ</b></span><span class="puck-home-timer">◷ 17:15:09</span></div><button class="puck-home-training" data-screen="team"><span><small>ТРЕНИРОВКА</small><b>Улучши состав и тактику</b><i>▰ ▰ ▰</i></span><strong>🏒</strong><em>↗</em></button></section>'+

@@ -24,6 +24,33 @@ export type TrainingDecision = {
   observation: Record<string, number | string | boolean>;
 };
 
+const DECISION_OUTCOME_HORIZON = 8;
+
+/** Attach near-future, same-team event rewards to each decision at episode close. */
+export function scoreTrainingDecisions(
+  decisions: TrainingDecision[],
+  events: TrainingEvent[]
+): Array<TrainingDecision & { outcomeReward: number; outcomeEvents: number; outcomeHorizon: number }> {
+  return decisions.map((decision) => {
+    const outcomes = events.filter((event) =>
+      event.t > decision.t &&
+      event.t <= decision.t + DECISION_OUTCOME_HORIZON &&
+      event.side === decision.side &&
+      event.reward !== 0
+    );
+    const outcomeReward = outcomes.reduce((total, event) => {
+      const elapsed = event.t - decision.t;
+      return total + event.reward * Math.pow(0.9, elapsed);
+    }, 0);
+    return {
+      ...decision,
+      outcomeReward: Number(outcomeReward.toFixed(4)),
+      outcomeEvents: outcomes.length,
+      outcomeHorizon: DECISION_OUTCOME_HORIZON,
+    };
+  });
+}
+
 export type TrainingEpisode = {
   schemaVersion: 1;
   id: string;
@@ -101,7 +128,7 @@ export function finalizeTrainingEpisode(
     frameCount: episode.frames.length,
     eventCount: episode.events.length,
     decisionCount: episode.decisions.length,
-    decisions: episode.decisions,
+    decisions: scoreTrainingDecisions(episode.decisions, episode.events),
     frames: episode.frames,
     events: episode.events,
   };

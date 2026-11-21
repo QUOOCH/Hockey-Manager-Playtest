@@ -10,6 +10,7 @@ export type AttackObservation = {
   passProbability: number;
   passRoll: number;
   fallbackShotRoll: number;
+  passScore?: number;
 };
 
 export type AttackDecision = {

@@ -110,7 +110,9 @@ try {
   process.exit(1);
 }
 
+const archivedMatchCount = Array.isArray(root?.matches) ? root.matches.length : Array.isArray(root) ? root.length : 0;
 const matches = extractMatches(root);
+const matchesWithoutTraining = Math.max(0, archivedMatchCount - matches.length);
 const allSamples = matches.flatMap((match) => match.samples);
 const scoredSamples = allSamples.filter((sample) => Math.abs(sample.reward) > 0.0001);
 const sortedMatches = [...matches].sort((a, b) => {
@@ -129,7 +131,9 @@ for (const sample of allSamples) classCounts[sample.action]++;
 const report = {
   status: 'insufficient-data',
   generatedAt: new Date().toISOString(),
+  archivedMatchCount,
   sourceMatches: matches.length,
+  matchesWithoutTraining,
   sampleCount: allSamples.length,
   scoredSampleCount: scoredSamples.length,
   actionCounts: { hold: classCounts[0], pass: classCounts[1], shoot: classCounts[2] },

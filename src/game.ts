@@ -59,12 +59,12 @@ export const createGoalie = (rarity: Rarity = rarityRoll()): PlayerCard => ({
 const emptyLine = (): RosterLine => ({center:null,leftWing:null,rightWing:null,defense1:null,defense2:null});
 export function createTeam(name = 'Моя команда'): Team {
   return {
-    name, allCards: [...Array.from({length:18},()=>createPlayer()),createGoalie(),createGoalie()],
+    name, allCards: [...Array.from({length:20},()=>createPlayer()),createGoalie(),createGoalie()],
     lines: Array.from({length:4},emptyLine), goalie1:null, goalie2:null,
     club:{displayName:'Моя команда',logo:'🏒',primaryColor:'#246BCE',secondaryColor:'#FFFFFF',homeJersey:'Домашняя',awayJersey:'Гостевая'},
     equipment:{}, ownedEquipmentIds:[],
     stadium:{name:'Ледовая арена',capacityLevel:1,lightingLevel:1,scoreboardLevel:1,lockerRoomLevel:1,iceLevel:1,vipLevel:1,coins:1000},
-    economy:{dollars:5000,goldPucks:25,matchesPlayed:0,homeMatches:0,totalEarned:0}, rosterVersion:2
+    economy:{dollars:5000,goldPucks:25,matchesPlayed:0,homeMatches:0,totalEarned:0}, rosterVersion:3
   };
 }
 export const cardPower = (p: PlayerCard) => p.isGoalie ? (p.reaction+p.agility+p.strength+p.stamina)/4 : (p.speed+p.agility+p.strength+p.stamina)/4;
@@ -75,10 +75,13 @@ export function teamPower(t: Team): number {
 }
 const rarityPriority = (r: Rarity) => ({COMMON:1,RARE:2,EPIC:3,LEGENDARY:4}[r]);
 export function autoFillRoster(team: Team): Team {
-  const fields = team.allCards.filter(p=>!p.isGoalie).sort((a,b)=>(rarityPriority(b.rarity)*1000+b.speed+b.agility+b.strength+b.stamina)-(rarityPriority(a.rarity)*1000+a.speed+a.agility+a.strength+a.stamina));
+  const expandedCards = [...team.allCards];
+  while(expandedCards.filter(p=>!p.isGoalie).length<20) expandedCards.push(createPlayer());
+  while(expandedCards.filter(p=>p.isGoalie).length<2) expandedCards.push(createGoalie());
+  const fields = expandedCards.filter(p=>!p.isGoalie).sort((a,b)=>(rarityPriority(b.rarity)*1000+b.speed+b.agility+b.strength+b.stamina)-(rarityPriority(a.rarity)*1000+a.speed+a.agility+a.strength+a.stamina));
   const goalies = team.allCards.filter(p=>p.isGoalie).sort((a,b)=>(rarityPriority(b.rarity)*1000+b.reaction+b.agility+b.strength+b.stamina)-(rarityPriority(a.rarity)*1000+a.reaction+a.agility+a.strength+a.stamina));
-  const lines = Array.from({length:4},(_,i)=>({center:fields[i*3]??null,leftWing:fields[i*3+1]??null,rightWing:fields[i*3+2]??null,defense1:i<3?fields[12+i*2]??null:null,defense2:i<3?fields[13+i*2]??null:null}));
-  return {...team,rosterVersion:2,lines,goalie1:goalies[0]??null,goalie2:goalies[1]??null};
+  const lines = Array.from({length:4},(_,i)=>({center:fields[i*5]??null,leftWing:fields[i*5+1]??null,rightWing:fields[i*5+2]??null,defense1:fields[i*5+3]??null,defense2:fields[i*5+4]??null}));
+  return {...team,allCards:expandedCards,rosterVersion:3,lines,goalie1:goalies[0]??null,goalie2:goalies[1]??null};
 }
 export function applyEquipment(team: Team): Team {
   const adjust = (p: PlayerCard | null): PlayerCard | null => {
@@ -95,9 +98,9 @@ export function generateAiTeam(name: string, targetPower: number, statBonus: num
     const factor=target/Math.max(1,cardPower(p));
     return {...p,speed:p.isGoalie?0:Math.min(99,Math.max(20,Math.trunc(p.speed*factor))),agility:Math.min(99,Math.max(20,Math.trunc(p.agility*factor))),strength:Math.min(99,Math.max(20,Math.trunc(p.strength*factor))),stamina:Math.min(99,Math.max(20,Math.trunc(p.stamina*factor))),reaction:p.isGoalie?Math.min(99,Math.max(20,Math.trunc(p.reaction*factor))):0};
   };
-  const fields=Array.from({length:18},()=>scale(createPlayer()));
+  const fields=Array.from({length:20},()=>scale(createPlayer()));
   const goalies=Array.from({length:2},()=>scale(createGoalie()));
-  return {...createTeam(name),allCards:[...fields,...goalies],lines:Array.from({length:4},(_,idx)=>({center:fields[idx*3],leftWing:fields[idx*3+1],rightWing:fields[idx*3+2],defense1:idx<3?fields[12+idx*2]:null,defense2:idx<3?fields[13+idx*2]:null})),rosterVersion:2,goalie1:goalies[0],goalie2:goalies[1]};
+  return {...createTeam(name),allCards:[...fields,...goalies],lines:Array.from({length:4},(_,idx)=>({center:fields[idx*5],leftWing:fields[idx*5+1],rightWing:fields[idx*5+2],defense1:fields[idx*5+3],defense2:fields[idx*5+4]})),rosterVersion:3,goalie1:goalies[0],goalie2:goalies[1]};
 }
 export const fatigueFactor = (stamina:number) => .5+.5*stamina;
 type Line = {center:PlayerCard;leftWing:PlayerCard;rightWing:PlayerCard;defense1:PlayerCard;defense2:PlayerCard};

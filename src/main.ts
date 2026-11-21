@@ -1,5 +1,5 @@
 import './style.css';
-import { createTrainingEpisode, finalizeTrainingEpisode, recordTrainingEvent, recordTrainingFrame, type TrainingEpisode } from './ai/training';
+import { createTrainingEpisode, finalizeTrainingEpisode, recordTrainingDecision, recordTrainingEvent, recordTrainingFrame, type TrainingEpisode } from './ai/training';
 import { decideAttackAction } from './ai/decision';
 import { CARD_PLAYER_SPRITE } from './card-art';
 import { mountHero3DStage, type Hero3DStage } from './visual3d';
@@ -620,6 +620,7 @@ if(r.phase==='play'){
    const shotRoll=Math.random(),passRoll=Math.random(),fallbackShotRoll=Math.random();
    const decision=decideAttackAction({goalDistance,centrality,shootingLane,shotProbability:shotChance,shotRoll,passAvailable:best>=0,passProbability:passChance,passRoll,fallbackShotRoll});
    pushLiveDebug('ai-decision','Тактическое решение атакующего ИИ',{side:attacking,action:decision.action,goalDistance:+goalDistance.toFixed(1),centrality:+centrality.toFixed(2),shotProbability:shotChance,shotRoll:+shotRoll.toFixed(3),passProbability:passChance,passRoll:+passRoll.toFixed(3),passTarget:best,passScore:Number.isFinite(bestScore)?+bestScore.toFixed(1):-1,fallbackShotRoll:+fallbackShotRoll.toFixed(3)});
+   recordTrainingDecision(liveTrainingEpisode,{t:Number(r.elapsed.toFixed(2)),side:attacking==='home'?0:1,action:decision.action,reason:decision.reason,observation:{goalDistance:Number(goalDistance.toFixed(2)),centrality:Number(centrality.toFixed(3)),shootingLane,shotProbability:shotChance,shotRoll:Number(shotRoll.toFixed(4)),passAvailable:best>=0,passProbability:passChance,passRoll:Number(passRoll.toFixed(4)),fallbackShotRoll:Number(fallbackShotRoll.toFixed(4)),passScore:Number.isFinite(bestScore)?Number(bestScore.toFixed(2)):-1}});
    if(decision.action==='shoot'){
     r.phase='shot';r.shotElapsed=0;r.shotSide=attacking;r.shotFrom={x:r.puckX,y:r.puckY};
     if(decision.reason==='primary-shot'){pushLiveDebug('shot-decision','ИИ решил бросать',{side:attacking,goalDistance:+goalDistance.toFixed(1),centrality:+centrality.toFixed(2)});}

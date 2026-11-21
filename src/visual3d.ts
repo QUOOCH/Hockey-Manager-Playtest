@@ -128,7 +128,7 @@ export function mountHero3DStage(host:HTMLElement,options:Hero3DOptions={}):Hero
   const parents:Record<string,string|null>={pelvis:null,spine:'pelvis',chest:'spine',neck:'chest',head:'neck',shoulderL:'chest',elbowL:'shoulderL',wristL:'elbowL',shoulderR:'chest',elbowR:'shoulderR',wristR:'elbowR',hipL:'pelvis',kneeL:'hipL',ankleL:'kneeL',hipR:'pelvis',kneeR:'hipR',ankleR:'kneeR'};
   const defaults:Record<string,THREE.Vector3>={pelvis:new THREE.Vector3(0,1.43,.34),spine:new THREE.Vector3(0,1.92,.34),chest:new THREE.Vector3(0,2.25,.34),neck:new THREE.Vector3(0,2.57,.34),head:new THREE.Vector3(0,2.91,.34),shoulderL:new THREE.Vector3(-.34,2.35,.32),elbowL:new THREE.Vector3(-.49,2.02,.37),wristL:new THREE.Vector3(-.40,1.76,.42),shoulderR:new THREE.Vector3(.34,2.35,.32),elbowR:new THREE.Vector3(.49,2.02,.37),wristR:new THREE.Vector3(.40,1.76,.42),hipL:new THREE.Vector3(-.16,1.40,.27),kneeL:new THREE.Vector3(-.20,.84,.30),ankleL:new THREE.Vector3(-.20,.34,.32),hipR:new THREE.Vector3(.16,1.40,.27),kneeR:new THREE.Vector3(.20,.84,.30),ankleR:new THREE.Vector3(.20,.34,.32)};
   const jointBones=new Map<string,THREE.Bone>();
-  let autoRigReady=false;
+  
   const ensureJointPositions=()=>{if(Object.keys(jointPositions).length)return;let saved:Record<string,number[]>={};try{saved=JSON.parse(localStorage.getItem(SKELETON_KEY)||'{}');}catch{/* use defaults */}for(const [name,pos] of Object.entries(defaults)){const value=saved[name];jointPositions[name]=Array.isArray(value)&&value.length===3&&value.every(Number.isFinite)?new THREE.Vector3(value[0],value[1],value[2]):pos.clone();}};
   const syncGuideFromBones=()=>{modelRoot.updateMatrixWorld(true);for(const [name,bone] of jointBones){const world=bone.getWorldPosition(new THREE.Vector3());jointPositions[name].copy(modelRoot.worldToLocal(world));const marker=jointMeshes.get(name);if(marker)marker.position.copy(jointPositions[name]);}updateBoneLines();};
   const autoRigStaticModel=(next:THREE.Group)=>{
@@ -154,31 +154,31 @@ export function mountHero3DStage(host:HTMLElement,options:Hero3DOptions={}):Hero
         let total=0;for(let k=0;k<4;k++){const w=1/(bestD[k]+.0009);weights[i*4+k]=w;indices[i*4+k]=bestB[k];total+=w;}for(let k=0;k<4;k++)weights[i*4+k]/=total;
       }
       geometry.setAttribute('skinIndex',new THREE.Uint16BufferAttribute(indices,4));geometry.setAttribute('skinWeight',new THREE.Float32BufferAttribute(weights,4));geometry.computeBoundingSphere();geometry.computeBoundingBox();
-      const skinned=new THREE.SkinnedMesh(geometry,source.material);skinned.name=source.name||'PUCKIT_RIGGED_MESH';skinned.castShadow=true;skinned.receiveShadow=true;skinned.frustumCulled=false;skinned.userData={...source.userData};next.add(skinned);source.parent?.remove(source);skinned.bind(skeleton,skinned.matrixWorld);skinned.normalizeSkinWeights();
+      const skinned=new THREE.SkinnedMesh(geometry,source.material);skinned.name=source.name||'PUCKIT_RIGGED_MESH';skinned.castShadow=true;skinned.receiveShadow=true;skinned.frustumCulled=false;skinned.userData={...source.userData};next.add(skinned);source.parent?.remove(source);next.updateMatrixWorld(true);skinned.bind(skeleton,skinned.matrixWorld);skinned.normalizeSkinWeights();
     }
-    next.updateMatrixWorld(true);autoRigReady=true;return true;
+    next.updateMatrixWorld(true);return true;
   };
-  let jointDragLastX=0;
-  const rotateJointBranch=(jointName:string,angle:number)=>{
-    const bone=jointBones.get(jointName);if(!bone||Math.abs(angle)<.0001)return;
-    bone.rotation.z+=angle;syncGuideFromBones();
+  let jointDragLastX=0,jointDragLastY=0;
+  const rotateJointBranch=(jointName:string,angleZ:number,angleX:number)=>{
+    const bone=jointBones.get(jointName);if(!bone||(Math.abs(angleZ)<.0001&&Math.abs(angleX)<.0001))return;
+    bone.rotation.z+=angleZ;bone.rotation.x+=angleX;syncGuideFromBones();
   };
   const jointDown=(e:PointerEvent|TouchEvent)=>{
     if(!skeletonEditable||!skeletonGuide)return;
     const touch='touches'in e,point=touch?e.touches[0]:e as PointerEvent;if(!point)return;
     projectPointer(point.clientX,point.clientY);
     const hits=raycaster.intersectObjects([...jointMeshes.values()],false);if(!hits.length)return;
-    selectedJoint=hits[0].object as THREE.Mesh;jointDragLastX=point.clientX;
+    selectedJoint=hits[0].object as THREE.Mesh;jointDragLastX=point.clientX;jointDragLastY=point.clientY;
     e.preventDefault();e.stopPropagation();
   };
   const jointMove=(e:PointerEvent|TouchEvent)=>{
     if(!selectedJoint||!skeletonEditable)return;
     const touch='touches'in e,point=touch?e.touches[0]:e as PointerEvent;if(!point)return;
     e.preventDefault();e.stopPropagation();
-    const name=String(selectedJoint.userData.joint),dx=point.clientX-jointDragLastX;
-    jointDragLastX=point.clientX;
-    // Dragging a joint rotates its entire child branch around that joint.
-    rotateJointBranch(name,dx*.012);
+    const name=String(selectedJoint.userData.joint),dx=point.clientX-jointDragLastX,dy=point.clientY-jointDragLastY;
+    jointDragLastX=point.clientX;jointDragLastY=point.clientY;
+    // Horizontal drag bends in the character plane; vertical drag adds depth rotation.
+    rotateJointBranch(name,dx*.012,dy*.009);
   };
   const jointUp=()=>{if(selectedJoint){saveJointPositions();selectedJoint=null;}};
   canvas.addEventListener('pointerdown',jointDown as EventListener,true);canvas.addEventListener('pointermove',jointMove as EventListener,true);canvas.addEventListener('pointerup',jointUp,true);canvas.addEventListener('pointercancel',jointUp,true);

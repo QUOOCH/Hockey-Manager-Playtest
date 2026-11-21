@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 820">
+<defs>
+ <linearGradient id="sky" x2="0" y2="1"><stop stop-color="#b9dbe9"/><stop offset=".48" stop-color="#e7f2f6"/><stop offset="1" stop-color="#d5e8ef"/></linearGradient>
+ <linearGradient id="snow" x2="0" y2="1"><stop stop-color="#f8fdff"/><stop offset="1" stop-color="#b8d5e2"/></linearGradient>
+ <linearGradient id="road" x2="0" y2="1"><stop stop-color="#9bb9c8"/><stop offset="1" stop-color="#698b9d"/></linearGradient>
+ <linearGradient id="arenaRoof" x2="0" y2="1"><stop stop-color="#f8fcff"/><stop offset=".55" stop-color="#a8c8d7"/><stop offset="1" stop-color="#66899d"/></linearGradient>
+ <linearGradient id="arenaWall" x2="0" y2="1"><stop stop-color="#41667c"/><stop offset="1" stop-color="#142f45"/></linearGradient>
+ <linearGradient id="glass" x2="0" y2="1"><stop stop-color="#bce9f5"/><stop offset="1" stop-color="#39728d"/></linearGradient>
+ <linearGradient id="roofBlue" x2="0" y2="1"><stop stop-color="#4f819a"/><stop offset="1" stop-color="#193d55"/></linearGradient>
+ <linearGradient id="roofRed" x2="0" y2="1"><stop stop-color="#e86b77"/><stop offset="1" stop-color="#8f263b"/></linearGradient>
+ <filter id="shadow" x="-30%" y="-30%" width="160%" height="170%"><feGaussianBlur stdDeviation="18"/></filter>
+ <filter id="soft"><feGaussianBlur stdDeviation="7"/></filter>
+ <pattern id="windows" width="26" height="24" patternUnits="userSpaceOnUse"><rect x="5" y="5" width="10" height="11" rx="1" fill="#b9e8f4" opacity=".8"/><rect x="17" y="5" width="4" height="11" fill="#d9f6ff" opacity=".45"/></pattern>
+</defs>
+<rect width="1200" height="820" fill="url(#sky)"/>
+<path d="M0 0H1200V250Q850 220 600 285T0 260Z" fill="#f7fcff" opacity=".42"/>
+<g fill="#fff" opacity=".5"><path d="M70 105q55-55 110 0q45-30 75 5H55z"/><path d="M850 75q48-45 100 0q44-25 72 8H825z"/><path d="M480 155q35-40 75 0q35-22 60 8H465z"/></g>
+<!-- snowy city ground and roads -->
+<path d="M0 330L600 25 1200 330 600 800Z" fill="#d7e8ee"/>
+<path d="M-100 570L600 210 1300 570" fill="none" stroke="#edf7fa" stroke-width="92"/>
+<path d="M-100 570L600 210 1300 570" fill="none" stroke="url(#road)" stroke-width="57"/>
+<path d="M-100 570L600 210 1300 570" fill="none" stroke="#d7e8ef" stroke-width="3" stroke-dasharray="18 20" opacity=".75"/>
+<path d="M600 25L600 800" fill="none" stroke="#f3f9fb" stroke-width="68" opacity=".8"/>
+<path d="M600 25L600 800" fill="none" stroke="#9bb9c8" stroke-width="39" opacity=".85"/>
+<path d="M600 25L600 800" fill="none" stroke="#d9e8ee" stroke-width="2" stroke-dasharray="18 20"/>
+<!-- distant blocks -->
+<g opacity=".96">
+ <path d="M80 270l100-55 120 62-101 58z" fill="#f8fdff"/><path d="M80 270v72l119 64v-71z" fill="#9bbdcb"/><path d="M199 335v71l101-57v-72z" fill="#557e93"/><path d="M80 270l100-55 120 62-101 58z" fill="#d8eaf0" stroke="#fff" stroke-width="5"/><path d="M105 270l75-41 88 47-75 43z" fill="url(#roofBlue)"/><path d="M108 281l86 47v47l-86-47z" fill="url(#windows)"/>
+ <path d="M870 245l100-55 120 63-100 56z" fill="#f8fdff"/><path d="M870 245v77l120 64v-77z" fill="#9bbdcb"/><path d="M990 309v77l100-57v-76z" fill="#527b91"/><path d="M870 245l100-55 120 63-100 56z" fill="#e2eff3" stroke="#fff" stroke-width="5"/><path d="M894 246l76-42 91 48-77 43z" fill="url(#roofRed)"/>
+</g>
+<!-- training centre top left -->
+<g transform="translate(145 105)">
+ <ellipse cx="130" cy="210" rx="178" ry="38" fill="#547d91" opacity=".25" filter="url(#shadow)"/>
+ <path d="M0 105L130 35 260 105 130 178Z" fill="#f7fcff" stroke="#fff" stroke-width="7"/>
+ <path d="M0 105v95l130 72v-94z" fill="#8caebe"/><path d="M130 178v94l130-74v-93z" fill="#3c657c"/>
+ <path d="M18 108L130 49 242 108 130 171Z" fill="url(#roofBlue)" stroke="#d7f0f7" stroke-width="5"/>
+ <path d="M35 116L130 66 225 116 130 165Z" fill="#8cb7c9" opacity=".35"/>
+ <path d="M22 123v66l108 61v-79z" fill="url(#glass)"/><path d="M130 171v79l112-64v-67z" fill="#204b63"/>
+ <path d="M44 134v42M68 146v42M93 159v43M154 185v45M180 170v44M207 155v44" stroke="#d9f5fb" stroke-width="5" opacity=".55"/>
+ <path d="M105 29l25-13 25 13-25 14z" fill="#e8f7fb"/><path d="M130 43v-27" stroke="#315c73" stroke-width="4"/>
+ <path d="M115 97h30v22h-30z" fill="#e64b5e"/><path d="M120 102h20v12h-20z" fill="#fff" opacity=".9"/>
+</g>
+<!-- academy lower left -->
+<g transform="translate(45 465)">
+ <ellipse cx="145" cy="174" rx="170" ry="30" fill="#52798c" opacity=".25" filter="url(#shadow)"/>
+ <path d="M15 66L145 0 278 68 146 140Z" fill="#f7fdff" stroke="#fff" stroke-width="7"/>
+ <path d="M15 66v90l131 73v-89z" fill="#9bb9c7"/><path d="M146 140v89l132-73V68z" fill="#4a7187"/>
+ <path d="M34 68l111-56 111 57-111 60z" fill="url(#roofRed)" stroke="#f8fdff" stroke-width="4"/>
+ <path d="M48 81v63l98 54v-67z" fill="#234a62"/><path d="M146 131v67l116-64V75z" fill="#173a52"/>
+ <path d="M64 96v35M89 109v35M115 123v34M172 145v35M201 129v37M229 112v38" stroke="#bce8f4" stroke-width="7"/>
+ <path d="M120 46h52v31h-52z" fill="#edf8fb"/><path d="M128 53h36v17h-36z" fill="#e54a5c"/>
+</g>
+<!-- main arena -->
+<g transform="translate(390 265)">
+ <ellipse cx="210" cy="335" rx="310" ry="63" fill="#3f667d" opacity=".28" filter="url(#shadow)"/>
+ <path d="M0 145Q210 18 420 145V260Q210 385 0 260Z" fill="url(#arenaWall)" stroke="#e9f8fc" stroke-width="7"/>
+ <path d="M0 145Q210 18 420 145" fill="none" stroke="#e9f8fc" stroke-width="11"/>
+ <path d="M20 155Q210 52 400 155V220Q210 329 20 220Z" fill="#18384f"/>
+ <path d="M24 176Q210 76 396 176" fill="none" stroke="#91d8ec" stroke-width="8" opacity=".8"/>
+ <path d="M22 218Q210 322 398 218" fill="none" stroke="#d6f1f7" stroke-width="5" opacity=".4"/>
+ <g fill="#b8dbe7" opacity=".8"><path d="M35 163l13-6v74l-13 8z"/><path d="M70 145l12-6v107l-12 6z"/><path d="M340 139l12 6v107l-12-6z"/><path d="M375 157l13 6v77l-13-8z"/></g>
+ <path d="M0 145Q210 18 420 145L210 25Z" fill="url(#arenaRoof)" stroke="#fff" stroke-width="7"/>
+ <path d="M36 138Q210 45 384 138" fill="none" stroke="#f9fdff" stroke-width="15"/>
+ <path d="M80 114Q210 47 340 114" fill="none" stroke="#547f96" stroke-width="5" opacity=".6"/>
+ <path d="M112 98Q210 55 308 98" fill="none" stroke="#e9f7fb" stroke-width="3" opacity=".8"/>
+ <path d="M200 37v-22h20v22" fill="#e9f7fb" stroke="#5b7f91" stroke-width="4"/>
+ <path d="M180 12h60v27h-60z" fill="#1d4058" stroke="#f4fbfd" stroke-width="4"/>
+ <text x="210" y="31" font-family="Arial,sans-serif" font-size="13" font-weight="900" text-anchor="middle" fill="#fff" letter-spacing="2">PUCK IT!</text>
+ <path d="M35 245Q210 350 385 245" fill="none" stroke="#b6e4f0" stroke-width="5"/>
+ <path d="M52 255Q210 343 368 255" fill="none" stroke="#d9f3f8" stroke-width="2"/>
+ <g fill="#d9f4fa" opacity=".75"><circle cx="60" cy="182" r="3"/><circle cx="85" cy="198" r="3"/><circle cx="330" cy="198" r="3"/><circle cx="360" cy="180" r="3"/></g>
+ <path d="M20 260L20 292Q210 410 400 292V260Q210 378 20 260Z" fill="#102c42"/>
+ <path d="M45 280Q210 380 375 280" fill="none" stroke="#ed5969" stroke-width="9"/>
+ <path d="M54 291Q210 383 366 291" fill="none" stroke="#e8f6fa" stroke-width="3"/>
+</g>
+<!-- right side hockey hall / club base -->
+<g transform="translate(840 450)">
+ <ellipse cx="120" cy="180" rx="160" ry="34" fill="#547d91" opacity=".25" filter="url(#shadow)"/>
+ <path d="M0 70L120 5 245 70 123 140Z" fill="#f7fcff" stroke="#fff" stroke-width="6"/>
+ <path d="M0 70v88l123 68v-86z" fill="#8eafbe"/><path d="M123 140v86l122-68V70z" fill="#426b81"/>
+ <path d="M18 70L120 17 226 70 123 126Z" fill="url(#roofBlue)" stroke="#e7f7fa" stroke-width="4"/>
+ <path d="M20 91v54l103 57v-59z" fill="#1f465e"/><path d="M123 143v59l104-59V91z" fill="#15394f"/>
+ <path d="M40 104v28M67 118v29M95 133v30M148 153v28M176 136v30M203 119v29" stroke="#bce8f4" stroke-width="6"/>
+ <path d="M85 54h72v35H85z" fill="#e9f6fa"/><path d="M93 61h56v21H93z" fill="#e94e60"/>
+</g>
+<!-- small facility far right -->
+<g transform="translate(1010 270) scale(.72)">
+ <ellipse cx="90" cy="180" rx="140" ry="30" fill="#547d91" opacity=".23" filter="url(#shadow)"/>
+ <path d="M0 70L100 15 200 70 100 127Z" fill="#fff"/><path d="M0 70v90l100 60v-93z" fill="#9bb9c7"/><path d="M100 127v93l100-60V70z" fill="#547d91"/>
+ <path d="M15 70l85-45 85 45-85 48z" fill="url(#roofRed)" stroke="#fff" stroke-width="5"/>
+ <path d="M18 91v57l82 49v-61z" fill="#244a62"/><path d="M100 136v61l83-49V91z" fill="#173a52"/>
+ <path d="M40 104v30M66 119v31M125 153v30M155 136v31" stroke="#bdeaf4" stroke-width="7"/>
+</g>
+<!-- snow particles and tree clusters -->
+<g fill="#fff"><circle cx="85" cy="210" r="5"/><circle cx="330" cy="185" r="4"/><circle cx="350" cy="520" r="6"/><circle cx="775" cy="120" r="5"/><circle cx="1090" cy="450" r="5"/><circle cx="760" cy="680" r="6"/><circle cx="285" cy="700" r="5"/><circle cx="1115" cy="680" r="4"/><circle cx="690" cy="220" r="4"/></g>
+<g fill="#789eae" opacity=".45"><path d="M310 230l-17 42h34zM306 254l-22 52h44zM1090 570l-18 46h36zM1086 595l-24 55h48zM360 680l-18 44h36zM355 704l-23 51h46z"/></g>
+<g fill="#f9fdff" opacity=".85"><circle cx="170" cy="425" r="3"/><circle cx="265" cy="400" r="2"/><circle cx="720" cy="395" r="3"/><circle cx="785" cy="520" r="2"/><circle cx="930" cy="185" r="3"/><circle cx="1040" cy="350" r="2"/><circle cx="500" cy="690" r="3"/><circle cx="600" cy="760" r="2"/></g>
+</svg>

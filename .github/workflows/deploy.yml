@@ -91,7 +91,8 @@ jobs:
             if (!visible) {
               throw new Error('github-pages artifact did not become visible after 60 seconds');
             }
+            core.info('Artifact is listed. Waiting 15 seconds for Pages deployment API propagation.');
+            await new Promise((resolve) => setTimeout(resolve, 15000));
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-

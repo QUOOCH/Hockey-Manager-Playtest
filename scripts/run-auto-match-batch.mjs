@@ -3,7 +3,7 @@ import { chromium } from 'playwright';
 
 const BASE_URL = process.env.GAME_URL || 'https://quooch.github.io/Hockey-Manager-Playtest/';
 const MATCHES = Math.max(1, Math.min(60, Number(process.env.MATCHES || 3)));
-const BATCH_STEPS = Math.max(2, Math.min(240, Number(process.env.BATCH_STEPS || 120)));
+const BATCH_STEPS = Math.max(2, Math.min(480, Number(process.env.BATCH_STEPS || 120)));
 const WORKER_ENDPOINT = 'https://little-morning-b296.bratskiymax0.workers.dev/telemetry/matches';
 
 function makeSeedTeam() {

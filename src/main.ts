@@ -505,47 +505,60 @@ for(let i=0;i<10;i++){
  const side=i<5?'home':'away',idx=i%5,attack=side===attacking,p=r.players[i],velocity=r.velocities[i];
  const energyPlayer=activeSkaters(side)[idx],energyLevel=energyPlayer?(r.energy[side+':'+energyPlayer.id]??100):100;
  const skatingFactor=1-.32*Math.pow(1-energyLevel/100,1.5);
- const dir=side==='home'?-1:1,ownDir=-dir;
+ const dir=side==='home'?-1:1;
  let tx=200,ty=310;
  if(attack){
   if(idx===r.carrier){
-   const goalY=side==='home'?62:558,remaining=Math.abs(p.y-goalY);
-   tx=200+(200-p.x)*.18;
-   ty=p.y+dir*Math.min(r.breakoutTimer>0?82:62,Math.max(18,remaining-28));
+   // The puck carrier attacks the net, but brakes at shooting range instead of skating into the goal.
+   const goalY=side==='home'?62:558,stopY=side==='home'?104:516;
+   tx=Math.max(92,Math.min(308,p.x+(200-p.x)*.12));
+   const advance=Math.min(58,Math.max(0,Math.abs(p.y-stopY)));
+   ty=side==='home'?Math.max(stopY,p.y-advance):Math.min(stopY,p.y+advance);
   }else if(idx===0){
-   tx=200;ty=carrierPos.y-dir*52;
+   // Center supports behind the carrier, not on top of him.
+   tx=Math.max(125,Math.min(275,200+(carrierPos.x-200)*.42));
+   ty=carrierPos.y-dir*52;
   }else if(idx===1){
-   tx=92;ty=carrierPos.y-dir*28;
+   // Left winger keeps width and offers a passing lane.
+   tx=78;ty=carrierPos.y-dir*12;
   }else if(idx===2){
-   tx=308;ty=carrierPos.y-dir*28;
+   // Right winger mirrors the left winger.
+   tx=322;ty=carrierPos.y-dir*12;
   }else{
-   tx=idx===3?145:255;ty=carrierPos.y+dir*112;
+   // Defensemen stay high and spaced as a safety net.
+   tx=idx===3?145:255;ty=carrierPos.y-dir*132;
   }
  }else{
-  const ownGoalY=side==='home'?558:62;
-  const defensiveLine=Math.max(ownGoalY>300?105:130,Math.min(ownGoalY>300?490:490,carrierPos.y+ownDir*72));
-  if(idx===pressureIdx){
-   tx=carrierPos.x+(carrierPos.x<200?-12:12);
-   ty=carrierPos.y+ownDir*22;
+  const ownGoalY=side==='home'?62:558;
+  const lineY=ownGoalY+(ownGoalY<300?142:-142);
+  const inDefensiveZone=side==='home'?carrierPos.y<310:carrierPos.y>310;
+  if(inDefensiveZone&&idx===pressureIdx){
+   // Only one defender pressures the puck; stop short and angle the lane.
+   const dx=carrierPos.x-200,dy=carrierPos.y-lineY,d=Math.max(1,Math.hypot(dx,dy));
+   tx=carrierPos.x-dx/d*34;
+   ty=carrierPos.y-dy/d*34;
   }else if(idx===0){
-   tx=200;ty=defensiveLine+ownDir*18;
+   // Center protects the slot.
+   tx=200;ty=lineY;
   }else if(idx===1){
-   tx=116;ty=defensiveLine;
+   // Wingers guard the left and right passing lanes.
+   tx=105;ty=lineY+(ownGoalY<300?18:-18);
   }else if(idx===2){
-   tx=284;ty=defensiveLine;
+   tx=295;ty=lineY+(ownGoalY<300?18:-18);
   }else{
-   tx=idx===3?158:242;ty=defensiveLine+ownDir*42;
+   // Defensemen stay between the puck and their own net.
+   tx=idx===3?158:242;
+   ty=lineY+(ownGoalY<300?54:-54);
   }
-  if(idx===3||idx===4){tx=idx===3?150:250;ty=Math.max(100,Math.min(500,ty));}
  }
- tx=Math.max(48,Math.min(352,tx));ty=Math.max(72,Math.min(548,ty));
- const dx=tx-p.x,dy=ty-p.y,dist=Math.hypot(dx,dy),maxSpeed=(idx===r.carrier&&attack?138:116)*skatingFactor;
- const desiredSpeed=Math.min(maxSpeed,dist*1.9),desiredVx=dist>1?dx/dist*desiredSpeed:0,desiredVy=dist>1?dy/dist*desiredSpeed:0;
- const accel=Math.min(1,dt*3.4);velocity.x+=(desiredVx-velocity.x)*accel;velocity.y+=(desiredVy-velocity.y)*accel;
+ tx=Math.max(52,Math.min(348,tx));ty=Math.max(82,Math.min(538,ty));
+ const dx=tx-p.x,dy=ty-p.y,dist=Math.hypot(dx,dy),maxSpeed=(idx===r.carrier&&attack?128:108)*skatingFactor;
+ const desiredSpeed=Math.min(maxSpeed,dist*1.65),desiredVx=dist>1?dx/dist*desiredSpeed:0,desiredVy=dist>1?dy/dist*desiredSpeed:0;
+ const accel=Math.min(1,dt*2.7);velocity.x+=(desiredVx-velocity.x)*accel;velocity.y+=(desiredVy-velocity.y)*accel;
  const speed=Math.hypot(velocity.x,velocity.y);if(speed>maxSpeed){velocity.x=velocity.x/speed*maxSpeed;velocity.y=velocity.y/speed*maxSpeed;}
  p.x=Math.max(35,Math.min(365,p.x+velocity.x*dt));p.y=Math.max(65,Math.min(555,p.y+velocity.y*dt));
 }
-for(let pass=0;pass<3;pass++){for(let sideBase of [0,5]){for(let i=sideBase;i<sideBase+5;i++){for(let j=i+1;j<sideBase+5;j++){const a=r.players[i],b=r.players[j],dx=b.x-a.x,dy=b.y-a.y,d=Math.hypot(dx,dy),minDist=43;if(d>0&&d<minDist){const push=(minDist-d)*.34,ux=dx/d,uy=dy/d;a.x=Math.max(35,Math.min(365,a.x-ux*push));a.y=Math.max(65,Math.min(555,a.y-uy*push));b.x=Math.max(35,Math.min(365,b.x+ux*push));b.y=Math.max(65,Math.min(555,b.y+uy*push));}}}}}
+for(let pass=0;pass<3;pass++){for(let sideBase of [0,5]){for(let i=sideBase;i<sideBase+5;i++){for(let j=i+1;j<sideBase+5;j++){const a=r.players[i],b=r.players[j],dx=b.x-a.x,dy=b.y-a.y,d=Math.hypot(dx,dy),minDist=54;if(d>0&&d<minDist){const push=(minDist-d)*.48,ux=dx/d,uy=dy/d;a.x=Math.max(35,Math.min(365,a.x-ux*push));a.y=Math.max(65,Math.min(555,a.y-uy*push));b.x=Math.max(35,Math.min(365,b.x+ux*push));b.y=Math.max(65,Math.min(555,b.y+uy*push));}}}}}
 if(r.phase==='play'){
  const carrier=r.players[carrierIndex];r.puckX+=(carrier.x-r.puckX)*Math.min(1,dt*12);r.puckY+=(carrier.y-r.puckY)*Math.min(1,dt*12);
  r.actionTimer-=dt;

@@ -33,7 +33,7 @@ export function stepPlayerMotion(
   dt: number,
   options: PlayerMotionOptions,
 ): PlayerMotionResult {
-  const safeDt = Math.max(0, Math.min(0.05, Number.isFinite(dt) ? dt : 0));
+  const safeDt = Math.max(0, Math.min(0.1, Number.isFinite(dt) ? dt : 0));
   const dx = target.x - position.x;
   const dy = target.y - position.y;
   const distance = Math.hypot(dx, dy);

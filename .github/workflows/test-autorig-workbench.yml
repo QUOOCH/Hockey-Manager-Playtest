@@ -29,7 +29,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: autorig-experiment-\${{ github.ref }}
+  group: autorig-experiment-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -87,7 +87,7 @@ jobs:
           blender --version
 
       - name: Run Autorig Workbench tests
-        working-directory: \${{ env.AUTORIG_DIR }}
+        working-directory: ${{ runner.temp }}/autorig-workbench
         run: |
           python3 -m unittest discover -s tests -v
           node tests/viewer_logic_test.mjs
@@ -96,8 +96,8 @@ jobs:
       - name: Select player model input
         id: model
         env:
-          MODEL_URL: \${{ inputs.model_url }}
-          MODEL_NAME: \${{ inputs.model_name || 'PuckItPlayer' }}
+          MODEL_URL: ${{ inputs.model_url }}
+          MODEL_NAME: ${{ inputs.model_name || 'PuckItPlayer' }}
         run: |
           set -euo pipefail
           if [[ ! "$MODEL_NAME" =~ ^[A-Za-z0-9_-]+$ ]]; then
@@ -105,7 +105,7 @@ jobs:
             exit 1
           fi
           mkdir -p "$RUNNER_TEMP/puckit-input"
-          if [[ -n "\${MODEL_URL:-}" ]]; then
+          if [[ -n "${MODEL_URL:-}" ]]; then
             case "$MODEL_URL" in
               https://*) ;;
               *) echo "model_url must be a direct HTTPS file URL." >&2; exit 1 ;;
@@ -140,24 +140,24 @@ jobs:
       - name: Rig player with Autorig skinning
         if: steps.model.outputs.available == 'true'
         continue-on-error: true
-        working-directory: \${{ env.AUTORIG_DIR }}
+        working-directory: ${{ runner.temp }}/autorig-workbench
         env:
-          MODEL_PATH: \${{ steps.model.outputs.path }}
-          MODEL_NAME: \${{ steps.model.outputs.name }}
+          MODEL_PATH: ${{ steps.model.outputs.path }}
+          MODEL_NAME: ${{ steps.model.outputs.name }}
         run: |
           mkdir -p "$RUNNER_TEMP/puckit-results/autorig"
-          blender -b --python autorig/steps/m2m_rig.py -- --in "$MODEL_PATH" --name "\${MODEL_NAME}_autorig" --out "$RUNNER_TEMP/puckit-results/autorig" --template human --people m2m --height 3.25 --triangles 90000 --skin autorig --format glb,fbx
+          blender -b --python autorig/steps/m2m_rig.py -- --in "$MODEL_PATH" --name "${MODEL_NAME}_autorig" --out "$RUNNER_TEMP/puckit-results/autorig" --template human --people m2m --height 3.25 --triangles 90000 --skin autorig --format glb,fbx
 
       - name: Rig player with Mesh2Motion skinning
         if: steps.model.outputs.available == 'true'
         continue-on-error: true
-        working-directory: \${{ env.AUTORIG_DIR }}
+        working-directory: ${{ runner.temp }}/autorig-workbench
         env:
-          MODEL_PATH: \${{ steps.model.outputs.path }}
-          MODEL_NAME: \${{ steps.model.outputs.name }}
+          MODEL_PATH: ${{ steps.model.outputs.path }}
+          MODEL_NAME: ${{ steps.model.outputs.name }}
         run: |
           mkdir -p "$RUNNER_TEMP/puckit-results/mesh2motion"
-          blender -b --python autorig/steps/m2m_rig.py -- --in "$MODEL_PATH" --name "\${MODEL_NAME}_mesh2motion" --out "$RUNNER_TEMP/puckit-results/mesh2motion" --template human --people m2m --height 3.25 --triangles 90000 --skin m2m --format glb,fbx
+          blender -b --python autorig/steps/m2m_rig.py -- --in "$MODEL_PATH" --name "${MODEL_NAME}_mesh2motion" --out "$RUNNER_TEMP/puckit-results/mesh2motion" --template human --people m2m --height 3.25 --triangles 90000 --skin m2m --format glb,fbx
 
       - name: Publish rig test summary
         if: always()
@@ -169,7 +169,7 @@ jobs:
             echo "- Pinned revision: 80a127582aa55f4c8378d60dcff57725dd24ef8f"
             echo "- Blender: 5.2.2"
             echo
-            if [[ "\${{ steps.model.outputs.available }}" == "true" ]]; then
+            if [[ "${{ steps.model.outputs.available }}" == "true" ]]; then
               echo "A player model was supplied; both skinning methods were attempted independently."
             else
               echo "Only the upstream tool tests ran. Player-specific rigging is waiting for a GLB input."
@@ -181,6 +181,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: puck-it-autorig-experiment
-          path: \${{ runner.temp }}/puckit-results
+          path: ${{ runner.temp }}/puckit-results
           if-no-files-found: warn
           retention-days: 14

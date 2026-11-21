@@ -43,7 +43,7 @@ async function generateHeroModel(file:File){if(heroGenerationBusy)return;heroGen
 
 let hero3DStage:Hero3DStage|null=null;
 const batchMode=new URLSearchParams(location.search).get('batch')==='1';
-const batchStepCount=Math.max(2,Math.min(240,Number(new URLSearchParams(location.search).get('batchSteps'))||120));
+const batchStepCount=Math.max(2,Math.min(480,Number(new URLSearchParams(location.search).get('batchSteps'))||120));
 let startGateActive=!batchMode;
 let introActive=false;
 let introTimer:number|undefined;

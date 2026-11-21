@@ -58,8 +58,8 @@ function makeProceduralHockeyPlayer(target:THREE.Group){
 export function mountHero3DStage(host:HTMLElement,options:Hero3DOptions={}):Hero3DStage|null{
   let renderer:THREE.WebGLRenderer;
   try{renderer=new THREE.WebGLRenderer({alpha:true,antialias:true,powerPreference:'low-power'});}catch{options.onError?.('WebGL недоступен на этом устройстве.');return null;}
-  const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(32,1,.1,40);
-  camera.position.set(0,1.8,7.5);camera.lookAt(0,1.75,0);
+  const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(30,1,.1,40);
+  camera.position.set(.32,2.05,8.15);camera.lookAt(0,1.62,0);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1.5));renderer.setClearColor(0,0);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.32;
   renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.domElement.className='hero-3d-canvas';renderer.domElement.setAttribute('aria-label','Вращаемая 3D-модель хоккеиста');host.appendChild(renderer.domElement);
   scene.add(new THREE.HemisphereLight(0xd9edff,0x26364b,2.55));
@@ -71,7 +71,8 @@ export function mountHero3DStage(host:HTMLElement,options:Hero3DOptions={}):Hero
   const ring=new THREE.Mesh(new THREE.TorusGeometry(.88,.012,8,64),new THREE.MeshBasicMaterial({color:0x65d9ff}));ring.rotation.x=Math.PI/2;ring.position.y=.125;scene.add(ring);
   const modelRoot=new THREE.Group();scene.add(modelRoot);const procedural=makeProceduralHockeyPlayer(modelRoot);
   const loader=new GLTFLoader(),root=options.modelRoot||DEFAULT_ROOT,equipment=new Map<HeroGearSlot,THREE.Object3D>();
-  let baseModel:THREE.Object3D|null=null,frame=0,disposed=false,dragging=false,lastPointerX=0,rotation=0;
+  let baseModel:THREE.Object3D|null=null,frame=0,disposed=false,dragging=false,lastPointerX=0,rotation=-.28;
+  modelRoot.rotation.y=rotation;
   const resize=()=>{if(disposed)return;const w=Math.max(1,host.clientWidth),h=Math.max(1,host.clientHeight);camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h,false);};
   const observer=new ResizeObserver(resize);observer.observe(host);resize();
   let activePointerId:number|null=null;

@@ -12,7 +12,6 @@ const SEASON_KEY='puckit-season-end-v1';
 const SEASON_DURATION=14*24*60*60*1000;
 const LIVE_DEBUG_KEY='puckit-live-debug-v1';
 const MATCH_LOG_QUEUE_KEY='puckit-match-log-queue-v1';
-const MATCH_LOG_ENDPOINT=TRELLIS_PROXY+'/telemetry/matches';
 function getSeasonEnd():number{
  let end=Number(localStorage.getItem(SEASON_KEY));
  if(!Number.isFinite(end)||end<=0){end=Date.now()+SEASON_DURATION;localStorage.setItem(SEASON_KEY,String(end));}
@@ -27,6 +26,7 @@ function seasonCountdownText():string{
 window.setInterval(()=>{const node=$<HTMLElement>('[data-season-countdown]');if(node)node.textContent=seasonCountdownText();},1000);
 
 const TRELLIS_PROXY='https://little-morning-b296.bratskiymax0.workers.dev';
+const MATCH_LOG_ENDPOINT=TRELLIS_PROXY+'/telemetry/matches';
 const HERO_MODEL_DB='puckit-hero-models-v1';
 let heroGenerationBusy=false;
 const TRELLIS_SESSION=typeof crypto!=='undefined'&&'randomUUID'in crypto?crypto.randomUUID():'puckit-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2);

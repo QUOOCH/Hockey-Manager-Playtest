@@ -2648,3 +2648,17 @@ label{display:block;font-size:11px;color:#a8c8e2;margin:12px 0}input{display:blo
 .goalie-strip .lineup-player>strong{max-width:90px;background:transparent;color:#eaf4fa;text-align:left;box-shadow:none}
 .goalie-strip .lineup-player>small{font-size:7px;color:#89a9bd}
 @media(max-width:520px){.tactics-rink-vertical .tactics-spot{width:66px;max-width:66px}.lineup-avatar{width:49px;height:49px;border-width:2px}.lineup-player>strong{max-width:67px;font-size:7px}.lineup-empty{width:42px;height:42px}.goalie-strip .lineup-avatar{width:38px;height:38px;flex-basis:38px}}
+
+
+/* Match modes are opened directly from the main ice CTA. */
+.puck-match-mode-panel{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:9px;border:1px solid #d5b66b66;border-radius:12px;background:linear-gradient(145deg,#172b3b,#081521);box-shadow:0 9px 24px #0006;animation:puckModeReveal .22s ease-out}
+.puck-match-mode-panel>button:not(.puck-mode-close){display:grid;grid-template-columns:35px minmax(0,1fr) 12px;align-items:center;gap:7px;min-height:66px;padding:8px;border:1px solid #9bb5c733;border-radius:9px;background:linear-gradient(145deg,#263f52,#102233);color:#f3f7fa;text-align:left}
+.puck-mode-icon{display:grid;place-items:center;width:34px;height:34px;border-radius:9px;background:#d9b86622;font-size:21px}
+.puck-match-mode-panel span:nth-child(2){display:grid;gap:2px}
+.puck-match-mode-panel small{font-size:6px;letter-spacing:1px;color:#d9bd7a;font-weight:900}
+.puck-match-mode-panel b{font-size:12px;letter-spacing:.7px}
+.puck-match-mode-panel i{font-size:7px;font-style:normal;color:#a8bdca}
+.puck-match-mode-panel em{font-size:14px;color:#e5c779;font-style:normal}
+.puck-match-mode-panel .puck-mode-close{grid-column:1/-1;justify-self:center;padding:4px 12px;border:0;background:transparent;color:#91a9b8;font-size:7px;font-weight:900;letter-spacing:1.2px}
+@keyframes puckModeReveal{from{opacity:0;transform:translateY(-7px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:370px){.puck-match-mode-panel{gap:5px;padding:6px}.puck-match-mode-panel>button:not(.puck-mode-close){grid-template-columns:28px minmax(0,1fr) 9px;gap:5px;padding:6px}.puck-mode-icon{width:28px;height:28px;font-size:17px}.puck-match-mode-panel b{font-size:10px}.puck-match-mode-panel i{font-size:6px}}

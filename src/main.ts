@@ -1,6 +1,8 @@
 import './style.css';
 import { createTrainingEpisode, finalizeTrainingEpisode, recordTrainingDecision, recordTrainingEvent, recordTrainingFrame, type TrainingEpisode } from './ai/training';
 import { decideAttackAction } from './ai/decision';
+import { getAttackPolicySuggestion, loadAttackPolicyModel } from './ai/policy-model';
+void loadAttackPolicyModel();
 import { CARD_PLAYER_SPRITE } from './card-art';
 import { mountHero3DStage, type Hero3DStage } from './visual3d';
 import {Team,PlayerCard,MatchState,MatchDifficulty,Rarity,createTeam,autoFillRoster,teamPower,goaliePower,generateAiTeam,createMatchState,playMatchShift,awardHomeMatch,applyEquipment,equipmentCatalog} from './game';
@@ -618,7 +620,7 @@ if(r.phase==='play'){
    for(let j=0;j<5;j++){if(j===r.carrier)continue;const candidate=r.players[(attacking==='home'?0:5)+j],nearestDef=Math.min(...Array.from({length:5},(_,k)=>Math.hypot(candidate.x-r.players[base+k].x,candidate.y-r.players[base+k].y))),laneClear=Math.min(...Array.from({length:5},(_,k)=>{const d=r.players[base+k],sx=cp.x,sy=cp.y,ex=candidate.x,ey=candidate.y,dx=ex-sx,dy=ey-sy,u=Math.max(0,Math.min(1,((d.x-sx)*dx+(d.y-sy)*dy)/Math.max(1,dx*dx+dy*dy)));return Math.hypot(d.x-(sx+u*dx),d.y-(sy+u*dy));})),forward=(attacking==='home'?cp.y-candidate.y:candidate.y-cp.y),score=Math.min(115,nearestDef)+Math.min(55,laneClear)*.7+forward*.12-Math.hypot(candidate.x-cp.x,candidate.y-cp.y)*.12+(Math.random()*5);if(score>bestScore){bestScore=score;best=j;}}
    const passChance=goalDistance<125?.42:goalDistance<230?.68:.80;
    const shotRoll=Math.random(),passRoll=Math.random(),fallbackShotRoll=Math.random();
-   const decision=decideAttackAction({goalDistance,centrality,shootingLane,shotProbability:shotChance,shotRoll,passAvailable:best>=0,passProbability:passChance,passRoll,fallbackShotRoll});
+   const policyObservation={goalDistance,centrality,shootingLane,shotProbability:shotChance,shotRoll,passAvailable:best>=0,passProbability:passChance,passRoll,fallbackShotRoll,passScore:Number.isFinite(bestScore)?bestScore:-1};const decision=decideAttackAction(policyObservation);const learnedSuggestion=getAttackPolicySuggestion(policyObservation);if(learnedSuggestion)pushLiveDebug('policy-shadow','Рекомендация обученной модели (теневой режим)',{side:attacking,baselineAction:decision.action,modelAction:learnedSuggestion.action,confidence:learnedSuggestion.confidence,probabilities:JSON.stringify(learnedSuggestion.probabilities)});
    pushLiveDebug('ai-decision','Тактическое решение атакующего ИИ',{side:attacking,action:decision.action,goalDistance:+goalDistance.toFixed(1),centrality:+centrality.toFixed(2),shotProbability:shotChance,shotRoll:+shotRoll.toFixed(3),passProbability:passChance,passRoll:+passRoll.toFixed(3),passTarget:best,passScore:Number.isFinite(bestScore)?+bestScore.toFixed(1):-1,fallbackShotRoll:+fallbackShotRoll.toFixed(3)});
    recordTrainingDecision(liveTrainingEpisode,{t:Number(r.elapsed.toFixed(2)),side:attacking==='home'?0:1,action:decision.action,reason:decision.reason,observation:{goalDistance:Number(goalDistance.toFixed(2)),centrality:Number(centrality.toFixed(3)),shootingLane,shotProbability:shotChance,shotRoll:Number(shotRoll.toFixed(4)),passAvailable:best>=0,passProbability:passChance,passRoll:Number(passRoll.toFixed(4)),fallbackShotRoll:Number(fallbackShotRoll.toFixed(4)),passScore:Number.isFinite(bestScore)?Number(bestScore.toFixed(2)):-1}});
    if(decision.action==='shoot'){

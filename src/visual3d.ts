@@ -116,8 +116,8 @@ export function mountHero3DStage(host:HTMLElement,options:Hero3DOptions={}):Hero
   host.addEventListener('touchcancel',touchEnd,{passive:false});
     const load=(url:string):Promise<GLTF>=>loader.loadAsync(url);
   const loadBaseModel=async(file='base.glb')=>{try{const modelUrl=file.startsWith('blob:')||file.startsWith('http://')||file.startsWith('https://')?file:root+file;const gltf=await load(modelUrl);if(disposed)return;const next=gltf.scene;const bounds=new THREE.Box3().setFromObject(next),size=bounds.getSize(new THREE.Vector3()),center=bounds.getCenter(new THREE.Vector3()),scale=3.25/Math.max(size.y,.01);next.scale.setScalar(scale);next.position.set(-center.x*scale,-bounds.min.y*scale,-center.z*scale);let skinnedMeshes=0;next.traverse(o=>{if(o instanceof THREE.Mesh){o.castShadow=true;o.receiveShadow=true;}if(o instanceof THREE.SkinnedMesh)skinnedMeshes++;});modelRoot.remove(procedural);if(baseModel)modelRoot.remove(baseModel);if(mixer){mixer.stopAllAction();mixer=null;}baseModel=next;modelRoot.add(next);const autoRigged=skinnedMeshes===0?autoRigStaticModel(next):false;if(gltf.animations.length&&skinnedMeshes){mixer=new THREE.AnimationMixer(next);gltf.animations.forEach((clip,index)=>{const action=mixer!.clipAction(clip);if(index===0)action.play();});options.onAnimationInfo?.('Анимации найдены: '+gltf.animations.map(a=>a.name||'без названия').join(', ')+'. Автоматически запущена первая.');}else if(autoRigged){options.onAnimationInfo?.('Настоящий скелет создан: 18 костей, иерархия суставов и автоматические веса вершин. Вращение суставов деформирует модель.');}else if(skinnedMeshes){options.onAnimationInfo?.('Скелет найден ('+skinnedMeshes+' skinned mesh), но готовых анимаций в файле нет.');}else{options.onAnimationInfo?.('Не удалось автоматически привязать геометрию к скелету. Модель оставлена без изменений.');}options.onLoad?.();}catch(e){options.onError?.(e instanceof Error?'Не удалось загрузить модель: '+e.message:'Не удалось загрузить 3D-модель.');}};
-  const SKELETON_KEY='puckit-skeleton-joints-v2';
-  const SKELETON_ROTATION_KEY='puckit-skeleton-rotations-v1';
+  const SKELETON_KEY='puckit-skeleton-joints-v3';
+  const SKELETON_ROTATION_KEY='puckit-skeleton-rotations-v2';
   const jointPositions:Record<string,THREE.Vector3>={};
   const jointMeshes=new Map<string,THREE.Mesh>();
   const boneLines:THREE.Line[]=[];
@@ -127,7 +127,7 @@ export function mountHero3DStage(host:HTMLElement,options:Hero3DOptions={}):Hero
   const updateBoneLines=()=>{for(let i=0;i<links.length;i++){const [a,b]=links[i],line=boneLines[i];if(!line)continue;const attr=line.geometry.getAttribute('position') as THREE.BufferAttribute;attr.setXYZ(0,jointPositions[a].x,jointPositions[a].y,jointPositions[a].z);attr.setXYZ(1,jointPositions[b].x,jointPositions[b].y,jointPositions[b].z);attr.needsUpdate=true;line.geometry.computeBoundingSphere();}};
   const links:[string,string][]=[['pelvis','spine'],['spine','chest'],['chest','neck'],['neck','head'],['head','helmet'],['chest','shoulderL'],['shoulderL','elbowL'],['elbowL','wristL'],['chest','shoulderR'],['shoulderR','elbowR'],['elbowR','wristR'],['pelvis','hipL'],['hipL','kneeL'],['kneeL','ankleL'],['pelvis','hipR'],['hipR','kneeR'],['kneeR','ankleR']];
   const parents:Record<string,string|null>={pelvis:null,spine:'pelvis',chest:'spine',neck:'chest',head:'neck',helmet:'head',shoulderL:'chest',elbowL:'shoulderL',wristL:'elbowL',shoulderR:'chest',elbowR:'shoulderR',wristR:'elbowR',hipL:'pelvis',kneeL:'hipL',ankleL:'kneeL',hipR:'pelvis',kneeR:'hipR',ankleR:'kneeR'};
-  const defaults:Record<string,THREE.Vector3>={pelvis:new THREE.Vector3(0,1.43,.34),spine:new THREE.Vector3(0,1.92,.34),chest:new THREE.Vector3(0,2.25,.34),neck:new THREE.Vector3(0,2.57,.34),head:new THREE.Vector3(0,2.91,.34),helmet:new THREE.Vector3(0,3.12,.34),shoulderL:new THREE.Vector3(-.34,2.35,.32),elbowL:new THREE.Vector3(-.49,2.02,.37),wristL:new THREE.Vector3(-.40,1.76,.42),shoulderR:new THREE.Vector3(.34,2.35,.32),elbowR:new THREE.Vector3(.49,2.02,.37),wristR:new THREE.Vector3(.40,1.76,.42),hipL:new THREE.Vector3(-.16,1.40,.27),kneeL:new THREE.Vector3(-.20,.84,.30),ankleL:new THREE.Vector3(-.20,.34,.32),hipR:new THREE.Vector3(.16,1.40,.27),kneeR:new THREE.Vector3(.20,.84,.30),ankleR:new THREE.Vector3(.20,.34,.32)};
+  const defaults:Record<string,THREE.Vector3>={pelvis:new THREE.Vector3(.21,1.45,0),spine:new THREE.Vector3(.16,1.86,0),chest:new THREE.Vector3(-.08,2.20,0),neck:new THREE.Vector3(-.04,2.58,0),head:new THREE.Vector3(.02,2.96,0),helmet:new THREE.Vector3(.02,3.16,0),shoulderL:new THREE.Vector3(-.10,2.32,-.43),elbowL:new THREE.Vector3(-.04,2.02,-.68),wristL:new THREE.Vector3(.16,1.78,-.82),shoulderR:new THREE.Vector3(-.10,2.32,.43),elbowR:new THREE.Vector3(-.04,2.02,.68),wristR:new THREE.Vector3(.16,1.78,.82),hipL:new THREE.Vector3(.21,1.42,-.23),kneeL:new THREE.Vector3(.08,.88,-.25),ankleL:new THREE.Vector3(.10,.34,-.28),hipR:new THREE.Vector3(.21,1.42,.23),kneeR:new THREE.Vector3(.08,.88,.25),ankleR:new THREE.Vector3(.10,.34,.28)};
   const jointBones=new Map<string,THREE.Bone>();
   
   const ensureJointPositions=()=>{if(Object.keys(jointPositions).length)return;let saved:Record<string,number[]>={};try{saved=JSON.parse(localStorage.getItem(SKELETON_KEY)||'{}');}catch{/* use defaults */}for(const [name,pos] of Object.entries(defaults)){const value=saved[name];jointPositions[name]=Array.isArray(value)&&value.length===3&&value.every(Number.isFinite)?new THREE.Vector3(value[0],value[1],value[2]):pos.clone();}};
@@ -143,7 +143,8 @@ export function mountHero3DStage(host:HTMLElement,options:Hero3DOptions={}):Hero
     for(const name of Object.keys(parents)){const bone=new THREE.Bone();bone.name='PUCKIT_'+name;bone.userData.jointName=name;const parentName=parents[name];if(parentName){const parent=jointBones.get(parentName)!;bone.position.copy(localJoints[name]).sub(localJoints[parentName]);parent.add(bone);}else{bone.position.copy(localJoints[name]);next.add(bone);}jointBones.set(name,bone);bones.push(bone);}
     next.updateMatrixWorld(true);
     const skeleton=new THREE.Skeleton(bones);skeleton.calculateInverses();
-    const segmentData=links.map(([a,b])=>{const start=localJoints[a],end=localJoints[b],delta=end.clone().sub(start);return{bone:bones.findIndex(x=>x.userData.jointName===a),ax:start.x,ay:start.y,az:start.z,dx:delta.x,dy:delta.y,dz:delta.z,lenSq:Math.max(delta.lengthSq(),1e-8)};});
+    const segmentData=links.map(([a,b])=>{const start=localJoints[a],end=localJoints[b],delta=end.clone().sub(start);return{a,b,bone:bones.findIndex(x=>x.userData.jointName===a),ax:start.x,ay:start.y,az:start.z,dx:delta.x,dy:delta.y,dz:delta.z,lenSq:Math.max(delta.lengthSq(),1e-8)};});
+    const adjacentSegments=segmentData.map((seg,i)=>segmentData.map((other,j)=>({other,j})).filter(({other,j})=>j!==i&&(seg.a===other.a||seg.a===other.b||seg.b===other.a||seg.b===other.b)).map(x=>x.j));
     for(const source of meshes){
       const relative=new THREE.Matrix4().copy(next.matrixWorld).invert().multiply(source.matrixWorld);
       const geometry=source.geometry.clone();geometry.applyMatrix4(relative);
@@ -151,16 +152,14 @@ export function mountHero3DStage(host:HTMLElement,options:Hero3DOptions={}):Hero
       const indices=new Uint16Array(count*4),weights=new Float32Array(count*4);
       for(let i=0;i<count;i++){
         const x=pos.getX(i),y=pos.getY(i),z=pos.getZ(i);
-        let d0=Infinity,d1=Infinity,d2=Infinity,d3=Infinity,b0=0,b1=0,b2=0,b3=0;
-        for(const seg of segmentData){const vx=x-seg.ax,vy=y-seg.ay,vz=z-seg.az;const t=Math.max(0,Math.min(1,(vx*seg.dx+vy*seg.dy+vz*seg.dz)/seg.lenSq));const qx=seg.ax+t*seg.dx,qy=seg.ay+t*seg.dy,qz=seg.az+t*seg.dz;const ex=x-qx,ey=y-qy,ez=z-qz,d=ex*ex+ey*ey+ez*ez;
-          if(d<d0){d3=d2;b3=b2;d2=d1;b2=b1;d1=d0;b1=b0;d0=d;b0=seg.bone;}
-          else if(d<d1){d3=d2;b3=b2;d2=d1;b2=b1;d1=d;b1=seg.bone;}
-          else if(d<d2){d3=d2;b3=b2;d2=d;b2=seg.bone;}
-          else if(d<d3){d3=d;b3=seg.bone;}
-        }
-        const w0=1/(d0+.0009),w1=1/(d1+.0009),w2=1/(d2+.0009),w3=1/(d3+.0009),total=w0+w1+w2+w3,offset=i*4;
-        indices[offset]=b0;indices[offset+1]=b1;indices[offset+2]=b2;indices[offset+3]=b3;
-        weights[offset]=w0/total;weights[offset+1]=w1/total;weights[offset+2]=w2/total;weights[offset+3]=w3/total;
+        let nearest=-1,nearestD=Infinity;
+        for(let j=0;j<segmentData.length;j++){const seg=segmentData[j],vx=x-seg.ax,vy=y-seg.ay,vz=z-seg.az;const t=Math.max(0,Math.min(1,(vx*seg.dx+vy*seg.dy+vz*seg.dz)/seg.lenSq));const ex=vx-t*seg.dx,ey=vy-t*seg.dy,ez=vz-t*seg.dz,d=ex*ex+ey*ey+ez*ez;if(d<nearestD){nearestD=d;nearest=j;}}
+        let adjacent=-1,adjacentD=Infinity;
+        for(const j of adjacentSegments[nearest]){const seg=segmentData[j],vx=x-seg.ax,vy=y-seg.ay,vz=z-seg.az;const t=Math.max(0,Math.min(1,(vx*seg.dx+vy*seg.dy+vz*seg.dz)/seg.lenSq));const ex=vx-t*seg.dx,ey=vy-t*seg.dy,ez=vz-t*seg.dz,d=ex*ex+ey*ey+ez*ez;if(d<adjacentD){adjacentD=d;adjacent=j;}}
+        const offset=i*4,mainBone=segmentData[nearest].bone;
+        indices[offset]=mainBone;indices[offset+1]=mainBone;indices[offset+2]=mainBone;indices[offset+3]=mainBone;
+        weights[offset]=1;weights[offset+1]=0;weights[offset+2]=0;weights[offset+3]=0;
+        if(adjacent>=0){const gap=Math.sqrt(adjacentD)-Math.sqrt(nearestD),blend=Math.max(0,Math.min(.5,.5*(1-gap/.16)));if(blend>.001){indices[offset+1]=segmentData[adjacent].bone;weights[offset]=1-blend;weights[offset+1]=blend;}}
       }
       geometry.setAttribute('skinIndex',new THREE.Uint16BufferAttribute(indices,4));geometry.setAttribute('skinWeight',new THREE.Float32BufferAttribute(weights,4));geometry.computeBoundingSphere();geometry.computeBoundingBox();
       const skinned=new THREE.SkinnedMesh(geometry,source.material);skinned.name=source.name||'PUCKIT_RIGGED_MESH';skinned.castShadow=true;skinned.receiveShadow=true;skinned.frustumCulled=false;skinned.userData={...source.userData};next.add(skinned);source.parent?.remove(source);next.updateMatrixWorld(true);skinned.bind(skeleton,skinned.matrixWorld);skinned.normalizeSkinWeights();
@@ -169,9 +168,12 @@ export function mountHero3DStage(host:HTMLElement,options:Hero3DOptions={}):Hero
     next.updateMatrixWorld(true);syncGuideFromBones();return true;
   };
   let jointDragLastX=0,jointDragLastY=0;
-  const rotateJointBranch=(jointName:string,angleZ:number,angleX:number)=>{
-    const bone=jointBones.get(jointName);if(!bone||(Math.abs(angleZ)<.0001&&Math.abs(angleX)<.0001))return;
-    bone.rotation.z+=angleZ;bone.rotation.x+=angleX;syncGuideFromBones();
+  const rotateJointBranch=(jointName:string,horizontalAngle:number,verticalAngle:number)=>{
+    const bone=jointBones.get(jointName);if(!bone||(Math.abs(horizontalAngle)<.0001&&Math.abs(verticalAngle)<.0001))return;
+    const limbJoint=/^(shoulder|elbow|wrist|hip|knee|ankle)/.test(jointName);
+    if(limbJoint){bone.rotation.x+=horizontalAngle;bone.rotation.z+=verticalAngle;}
+    else{bone.rotation.z+=horizontalAngle;bone.rotation.x+=verticalAngle;}
+    syncGuideFromBones();
   };
   const jointDown=(e:PointerEvent|TouchEvent)=>{
     if(!skeletonEditable||!skeletonGuide)return;

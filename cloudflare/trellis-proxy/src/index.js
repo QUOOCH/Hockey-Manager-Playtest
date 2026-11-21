@@ -100,7 +100,7 @@ export default {
         return json({ ok: false, error: "MATCH_LOGS_DB binding is not configured." }, 503, origin);
       }
       const requestedLimit = Number(url.searchParams.get("limit") || 3);
-      const limit = Number.isFinite(requestedLimit) ? Math.max(1, Math.min(10, Math.floor(requestedLimit))) : 3;
+      const limit = Number.isFinite(requestedLimit) ? Math.max(1, Math.min(100, Math.floor(requestedLimit))) : 3;
       try {
         const result = await env.MATCH_LOGS_DB.prepare(
           "SELECT id, created_at, home_team, away_team, score, duration_seconds, payload FROM match_logs ORDER BY created_at DESC LIMIT ?"

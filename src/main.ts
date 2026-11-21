@@ -79,7 +79,7 @@ function office(){
  const power=teamPower(team).toFixed(1);
  const filled=team.lines.reduce((n,l)=>n+[l.center,l.leftWing,l.rightWing,l.defense1,l.defense2].filter(Boolean).length,0)+(team.goalie1?1:0)+(team.goalie2?1:0);
  const firstLine=team.lines[0];
- const names=firstLine?[firstLine.leftWing,firstLine.center,firstLine.rightWing,firstLine.defense1,firstLine.defense2].filter(Boolean):[];
+ const names=firstLine?[firstLine.leftWing,firstLine.center,firstLine.rightWing,firstLine.defense1,firstLine.defense2].filter((p):p is PlayerCard=>!!p):[];
  const miniPlayers=names.slice(0,5).map((p,i)=>'<span class="hub-player-chip"><i>'+(i+1)+'</i><b>'+esc(p.name)+'</b><small>'+rarity(p.rarity)+'</small></span>').join('');
  const pct=Math.min(100,Math.round(filled/22*100));
  return '<div class="main-menu-shell hub-shell">'+

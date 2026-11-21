@@ -1,4 +1,4 @@
-# Refresh on workflow updates and on the five-minute schedule; archive the latest 100 D1 matches for analysis.
+# Refresh on workflow updates and on the five-minute schedule; archive up to 100 D1 matches; Worker API now supports the same limit.
 name: Sync latest PUCK IT match logs
 
 on:

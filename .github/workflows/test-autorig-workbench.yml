@@ -1,0 +1,186 @@
+name: Test open-source auto-rig pipeline
+
+on:
+  push:
+    branches: [experiment/autorig-workbench]
+    paths:
+      - '.github/workflows/test-autorig-workbench.yml'
+      - 'rig-test-input/**'
+      - 'experiments/**'
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/test-autorig-workbench.yml'
+      - 'rig-test-input/**'
+      - 'experiments/**'
+  workflow_dispatch:
+    inputs:
+      model_url:
+        description: 'Optional direct HTTPS URL to a GLB model'
+        required: false
+        type: string
+      model_name:
+        description: 'Output model name'
+        required: false
+        default: 'PuckItPlayer'
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: autorig-experiment-\${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  upstream-tests:
+    name: Verify the open-source rigging tool
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - name: Check out this game repository
+        uses: actions/checkout@v4
+
+      - name: Check out pinned Autorig Workbench
+        run: |
+          git clone --recurse-submodules https://github.com/sambena/autorig-workbench.git "$RUNNER_TEMP/autorig-workbench"
+          git -C "$RUNNER_TEMP/autorig-workbench" checkout 80a127582aa55f4c8378d60dcff57725dd24ef8f
+          git -C "$RUNNER_TEMP/autorig-workbench" submodule update --init --recursive
+          echo "AUTORIG_DIR=$RUNNER_TEMP/autorig-workbench" >> "$GITHUB_ENV"
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Cache Blender 5.2.2
+        id: cache-blender
+        uses: actions/cache@v4
+        with:
+          path: /opt/blender
+          key: blender-5.2.2-linux-x64
+
+      - name: Install Blender 5.2.2
+        if: steps.cache-blender.outputs.cache-hit != 'true'
+        run: |
+          sudo mkdir -p /opt/blender
+          sudo chown "$USER" /opt/blender
+          curl -fsSL https://download.blender.org/release/Blender5.2/blender-5.2.2-linux-x64.tar.xz | tar -xJ -C /opt/blender --strip-components=1
+
+      - name: Install Blender runtime libraries
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq libxi6 libxxf86vm1 libxfixes3 libxrender1 libgl1 libxkbcommon0 libsm6 libegl1 libgles2 libegl-mesa0 libgl1-mesa-dri
+
+      - name: Install test dependencies
+        run: python3 -m pip install --quiet numpy jsonschema Pillow
+
+      - name: Configure Blender
+        run: |
+          echo "/opt/blender" >> "$GITHUB_PATH"
+          sudo ln -sf /opt/blender/blender /usr/local/bin/blender
+          blender --version
+
+      - name: Run Autorig Workbench tests
+        working-directory: \${{ env.AUTORIG_DIR }}
+        run: |
+          python3 -m unittest discover -s tests -v
+          node tests/viewer_logic_test.mjs
+          python3 scripts/ci_audit_thresholds.py
+
+      - name: Select player model input
+        id: model
+        env:
+          MODEL_URL: \${{ inputs.model_url }}
+          MODEL_NAME: \${{ inputs.model_name || 'PuckItPlayer' }}
+        run: |
+          set -euo pipefail
+          if [[ ! "$MODEL_NAME" =~ ^[A-Za-z0-9_-]+$ ]]; then
+            echo "Model name may contain only letters, numbers, underscores and hyphens." >&2
+            exit 1
+          fi
+          mkdir -p "$RUNNER_TEMP/puckit-input"
+          if [[ -n "\${MODEL_URL:-}" ]]; then
+            case "$MODEL_URL" in
+              https://*) ;;
+              *) echo "model_url must be a direct HTTPS file URL." >&2; exit 1 ;;
+            esac
+            curl --fail --location --silent --show-error --proto '=https' --tlsv1.2 --max-filesize 94371840 "$MODEL_URL" -o "$RUNNER_TEMP/puckit-input/player.glb"
+            echo "name=$MODEL_NAME" >> "$GITHUB_OUTPUT"
+            echo "path=$RUNNER_TEMP/puckit-input/player.glb" >> "$GITHUB_OUTPUT"
+            echo "available=true" >> "$GITHUB_OUTPUT"
+          elif [[ -f "$GITHUB_WORKSPACE/rig-test-input/puck-it-player.glb" ]]; then
+            cp "$GITHUB_WORKSPACE/rig-test-input/puck-it-player.glb" "$RUNNER_TEMP/puckit-input/player.glb"
+            echo "name=PuckItPlayer" >> "$GITHUB_OUTPUT"
+            echo "path=$RUNNER_TEMP/puckit-input/player.glb" >> "$GITHUB_OUTPUT"
+            echo "available=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "available=false" >> "$GITHUB_OUTPUT"
+            echo "No player GLB supplied. Tool tests passed; player-specific rigging is skipped."
+          fi
+          if [[ -f "$RUNNER_TEMP/puckit-input/player.glb" ]]; then
+            python3 - "$RUNNER_TEMP/puckit-input/player.glb" <<'PY'
+          import pathlib, struct, sys
+          p = pathlib.Path(sys.argv[1])
+          data = p.read_bytes()
+          if len(data) < 12 or data[:4] != b'glTF':
+              raise SystemExit("Input is not a binary GLB file")
+          version, declared = struct.unpack_from("<II", data, 4)
+          if version != 2 or declared != len(data):
+              raise SystemExit(f"Invalid GLB header: version={version}, declared={declared}, actual={len(data)}")
+          print(f"Validated GLB v{version}: {len(data):,} bytes")
+          PY
+          fi
+
+      - name: Rig player with Autorig skinning
+        if: steps.model.outputs.available == 'true'
+        continue-on-error: true
+        working-directory: \${{ env.AUTORIG_DIR }}
+        env:
+          MODEL_PATH: \${{ steps.model.outputs.path }}
+          MODEL_NAME: \${{ steps.model.outputs.name }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/puckit-results/autorig"
+          blender -b --python autorig/steps/m2m_rig.py -- --in "$MODEL_PATH" --name "\${MODEL_NAME}_autorig" --out "$RUNNER_TEMP/puckit-results/autorig" --template human --people m2m --height 3.25 --triangles 90000 --skin autorig --format glb,fbx
+
+      - name: Rig player with Mesh2Motion skinning
+        if: steps.model.outputs.available == 'true'
+        continue-on-error: true
+        working-directory: \${{ env.AUTORIG_DIR }}
+        env:
+          MODEL_PATH: \${{ steps.model.outputs.path }}
+          MODEL_NAME: \${{ steps.model.outputs.name }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/puckit-results/mesh2motion"
+          blender -b --python autorig/steps/m2m_rig.py -- --in "$MODEL_PATH" --name "\${MODEL_NAME}_mesh2motion" --out "$RUNNER_TEMP/puckit-results/mesh2motion" --template human --people m2m --height 3.25 --triangles 90000 --skin m2m --format glb,fbx
+
+      - name: Publish rig test summary
+        if: always()
+        run: |
+          {
+            echo "## Open-source auto-rig experiment"
+            echo
+            echo "- Tool: [Autorig Workbench](https://github.com/sambena/autorig-workbench)"
+            echo "- Pinned revision: 80a127582aa55f4c8378d60dcff57725dd24ef8f"
+            echo "- Blender: 5.2.2"
+            echo
+            if [[ "\${{ steps.model.outputs.available }}" == "true" ]]; then
+              echo "A player model was supplied; both skinning methods were attempted independently."
+            else
+              echo "Only the upstream tool tests ran. Player-specific rigging is waiting for a GLB input."
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload rig outputs and logs
+        if: always() && steps.model.outputs.available == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: puck-it-autorig-experiment
+          path: \${{ runner.temp }}/puckit-results
+          if-no-files-found: warn
+          retention-days: 14

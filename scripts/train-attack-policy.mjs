@@ -54,7 +54,7 @@ function train(samples, epochs = 650) {
     for (const sample of samples) {
       const x = [1, ...sample.features];
       const probabilities = softmax(weights.map((row) => row.reduce((sum, value, i) => sum + value * x[i], 0)));
-      // Reward-weighted imitation: reinforce useful decisions and reduce the
+      // Reward-weighted imitation over the expanded persistent match archive: reinforce useful decisions and reduce the
       // influence of neutral or unsuccessful actions without reversing labels.
       const sampleWeight = sample.reward > 0
         ? 1 + Math.min(2, sample.reward * 3)

@@ -1,0 +1,76 @@
+name: PUCK IT! background match factory
+
+on:
+  workflow_dispatch:
+    inputs:
+      matches:
+        description: Number of real simulated matches (1–60)
+        required: true
+        default: "10"
+        type: string
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/auto-match-batch.yml"
+      - "scripts/run-auto-match-batch.mjs"
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: puck-it-auto-match-batch
+  cancel-in-progress: false
+
+jobs:
+  simulate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Wait for this commit's browser deployment
+        if: github.event_name == 'push'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            let deployment = null;
+            for (let attempt = 1; attempt <= 60; attempt++) {
+              const { data } = await github.rest.actions.listWorkflowRuns({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                workflow_id: 'deploy.yml',
+                head_sha: context.sha,
+                per_page: 10,
+              });
+              deployment = data.workflow_runs.find((run) => run.head_sha === context.sha);
+              if (deployment?.status === 'completed') break;
+              core.info(`Waiting for Pages deployment (${attempt}/60)…`);
+              await new Promise((resolve) => setTimeout(resolve, 10000));
+            }
+            if (!deployment || deployment.status !== 'completed' || deployment.conclusion !== 'success') {
+              throw new Error('The matching GitHub Pages deployment did not complete successfully.');
+            }
+            core.info(`Pages deployment succeeded: ${deployment.html_url}`);
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install dependencies
+        run: npm install
+      - name: Install headless Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Run real matches in the deployed game
+        env:
+          MATCHES: ${{ github.event.inputs.matches || '3' }}
+          BATCH_STEPS: "120"
+          GAME_URL: https://quooch.github.io/Hockey-Manager-Playtest/
+        run: node scripts/run-auto-match-batch.mjs
+      - name: Publish batch results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: puck-it-background-match-batch
+          path: batch-results.json
+          if-no-files-found: warn
+          retention-days: 14

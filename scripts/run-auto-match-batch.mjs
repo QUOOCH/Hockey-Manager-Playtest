@@ -57,7 +57,6 @@ try {
     await page.locator('[data-screen="match"]').first().click();
     await page.locator('[data-action="start-match"]').waitFor();
     await page.locator('[data-action="start-match"]').click();
-    await page.locator('[data-action="fast-forward-match"]').waitFor();
     await page.locator('#match-live-clock').waitFor();
 
     const started = Date.now();
@@ -65,11 +64,24 @@ try {
       response.url() === WORKER_ENDPOINT && response.request().method() === 'POST',
       { timeout: 60000 }
     );
-    await page.locator('[data-action="fast-forward-match"]').click();
-    await page.waitForFunction(() =>
-      document.querySelector('#match-live-clock')?.textContent?.trim() === '00:00',
-      null, { timeout: 90000 }
-    );
+    try {
+      await page.waitForFunction(() =>
+        document.querySelector('#match-live-clock')?.textContent?.trim() === '00:00',
+        null, { timeout: 90000 }
+      );
+    } catch (error) {
+      const diagnostics = await page.evaluate(() => ({
+        url: location.href,
+        clock: document.querySelector('#match-live-clock')?.textContent?.trim() || null,
+        fastForwardLabel: document.querySelector('[data-action="fast-forward-match"]')?.textContent?.trim() || null,
+        startButton: document.querySelector('[data-action="start-match"]')?.textContent?.trim() || null,
+        queueLength: (() => { try { return JSON.parse(localStorage.getItem('puckit-match-log-queue-v1') || '[]').length; } catch { return -1; } })(),
+        visibleText: document.body.innerText.slice(-1800)
+      }));
+      await page.screenshot({ path: 'batch-failure.png', fullPage: true });
+      console.error('MATCH_DIAGNOSTICS ' + JSON.stringify(diagnostics));
+      throw error;
+    }
     const telemetry = await telemetryPromise;
     if (!telemetry.ok()) throw new Error('Telemetry POST failed: HTTP ' + telemetry.status());
     const posted = telemetry.request().postDataJSON();

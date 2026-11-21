@@ -46,7 +46,10 @@ await page.addInitScript(({ team, hero }) => {
 }, { team: seedTeam, hero });
 
 const results = [];
-const pendingUploads = [];
+const telemetryResponses = [];
+page.on('response', response => {
+  if (response.url() === WORKER_ENDPOINT && response.request().method() === 'POST') telemetryResponses.push(response);
+});
 const batchStarted = Date.now();
 try {
   for (let index = 0; index < MATCHES; index++) {
@@ -65,10 +68,6 @@ try {
     await page.locator('#match-live-clock').waitFor();
 
     const started = Date.now();
-    const telemetryPromise = page.waitForResponse(response =>
-      response.url() === WORKER_ENDPOINT && response.request().method() === 'POST',
-      { timeout: 60000 }
-    );
     try {
       await page.locator('[data-action="new-match"]').waitFor({ state: 'visible', timeout: 90000 });
     } catch (error) {
@@ -98,23 +97,32 @@ try {
       decisionCount: null,
       attackSampleCount: null
     });
-    pendingUploads.push(telemetryPromise.then(telemetry => {
-      if (!telemetry.ok()) throw new Error('Telemetry POST failed: HTTP ' + telemetry.status());
-      const posted = telemetry.request().postDataJSON();
-      return { telemetry, posted, training: posted?.training || posted?.trainingEpisode || {} };
-    }).catch(error => ({ error })));
+
   }
-  const uploads = await Promise.all(pendingUploads);
-  for (let index = 0; index < uploads.length; index++) {
-    const upload = uploads[index];
-    if (upload.error) throw upload.error;
+  const uploadDeadline = Date.now() + 120000;
+  while (telemetryResponses.length < MATCHES && Date.now() < uploadDeadline) {
+    await new Promise(resolve => setTimeout(resolve, 100));
+  }
+  if (telemetryResponses.length !== MATCHES) {
+    throw new Error('Expected ' + MATCHES + ' telemetry responses, received ' + telemetryResponses.length);
+  }
+  const uploadedIds = new Set();
+  for (let index = 0; index < telemetryResponses.length; index++) {
+    const telemetry = telemetryResponses[index];
+    if (!telemetry.ok()) throw new Error('Telemetry POST failed: HTTP ' + telemetry.status());
+    const posted = telemetry.request().postDataJSON();
+    const training = posted?.training || posted?.trainingEpisode || {};
+    const matchId = posted?.id || null;
+    if (!matchId) throw new Error('Telemetry response #' + (index + 1) + ' has no match ID');
+    if (uploadedIds.has(matchId)) throw new Error('Duplicate telemetry match ID: ' + matchId);
+    uploadedIds.add(matchId);
     const row = results[index];
-    row.matchId = upload.posted?.id || null;
-    row.telemetryStatus = upload.telemetry.status();
-    row.frameCount = upload.training.frameCount ?? null;
-    row.eventCount = upload.training.eventCount ?? null;
-    row.decisionCount = upload.training.decisionCount ?? null;
-    row.attackSampleCount = upload.training.attackSampleCount ?? null;
+    row.matchId = matchId;
+    row.telemetryStatus = telemetry.status();
+    row.frameCount = training.frameCount ?? null;
+    row.eventCount = training.eventCount ?? null;
+    row.decisionCount = training.decisionCount ?? null;
+    row.attackSampleCount = training.attackSampleCount ?? null;
     console.log(JSON.stringify(row));
   }
 } finally {

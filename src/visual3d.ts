@@ -71,7 +71,8 @@ export function mountHero3DStage(host:HTMLElement,options:Hero3DOptions={}):Hero
   const ring=new THREE.Mesh(new THREE.TorusGeometry(.88,.012,8,64),new THREE.MeshBasicMaterial({color:0x65d9ff}));ring.rotation.x=Math.PI/2;ring.position.y=.125;scene.add(ring);
   const modelRoot=new THREE.Group();scene.add(modelRoot);const procedural=makeProceduralHockeyPlayer(modelRoot);
   const loader=new GLTFLoader(),root=options.modelRoot||DEFAULT_ROOT,equipment=new Map<HeroGearSlot,THREE.Object3D>();
-  let baseModel:THREE.Object3D|null=null,mixer:THREE.AnimationMixer|null=null,frame=0,disposed=false,dragging=false,lastPointerX=0,rotation=-.28;\n  const clock=new THREE.Clock();
+  let baseModel:THREE.Object3D|null=null,mixer:THREE.AnimationMixer|null=null,frame=0,disposed=false,dragging=false,lastPointerX=0,rotation=-.28;
+  const clock=new THREE.Clock();
   modelRoot.rotation.y=rotation;
   const resize=()=>{if(disposed)return;const w=Math.max(1,host.clientWidth),h=Math.max(1,host.clientHeight);camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h,false);};
   const observer=new ResizeObserver(resize);observer.observe(host);resize();

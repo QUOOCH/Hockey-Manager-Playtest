@@ -220,7 +220,7 @@ function rinkVisual(){
  '<g fill="#d84f68"><circle cx="104.2" cy="106.45" r="2.2"/><circle cx="295.8" cy="106.45" r="2.2"/><circle cx="104.2" cy="513.55" r="2.2"/><circle cx="295.8" cy="513.55" r="2.2"/><circle cx="104.2" cy="251" r="2.2"/><circle cx="295.8" cy="251" r="2.2"/><circle cx="104.2" cy="369" r="2.2"/><circle cx="295.8" cy="369" r="2.2"/></g>'+
  '<g fill="none" stroke="#d84f68" stroke-width="1.1" stroke-linecap="round"><path d="M26 96 V117 M32 96 V117 M368 96 V117 M374 96 V117 M26 503 V524 M32 503 V524 M368 503 V524 M374 503 V524"/></g>'+
  '<path d="M15 47.45 H385 M15 572.55 H385" stroke="#d84f68" stroke-width=".75"/>'+
- '<path d="M174 47.45 A26.1 17.7 0 0 1 226 47.45 L226 47.45 Z M174 572.55 A26.1 17.7 0 0 0 226 572.55 L226 572.55 Z" fill="#8fd3f0" opacity=".5" stroke="#d84f68" stroke-width=".75"/>'+
+ '<path d="M174 47.45 A26.1 17.7 0 0 0 226 47.45 L226 47.45 Z M174 572.55 A26.1 17.7 0 0 1 226 572.55 L226 572.55 Z" fill="#8fd3f0" opacity=".5" stroke="#d84f68" stroke-width=".75"/>'+
  '<path d="M152 15 L165 47.45 M248 15 L235 47.45 M152 605 L165 572.55 M248 605 L235 572.55" fill="none" stroke="#277bc0" stroke-width=".75"/>'+
  '<g fill="#e9a2ad" fill-opacity=".52" stroke="#e14f65" stroke-width="1.2"><rect x="187" y="37.5" width="26" height="9.95" rx="1"/><rect x="187" y="572.55" width="26" height="9.95" rx="1"/></g>'+
  goalie(200,62,awayGoalie,'away',homeAttack)+goalie(200,558,homeGoalie,'home',!homeAttack)+players+

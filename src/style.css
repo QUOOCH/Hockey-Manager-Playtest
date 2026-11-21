@@ -2519,3 +2519,6 @@ label{display:block;font-size:11px;color:#a8c8e2;margin:12px 0}input{display:blo
 .puck-home-bottom button{display:grid;justify-items:center;gap:2px;padding:3px 1px;border:1px solid transparent;border-radius:6px;background:transparent;color:#8ca4b4}.puck-home-bottom button i{font-style:normal;font-size:20px;line-height:1}.puck-home-bottom button b{font-size:6px;letter-spacing:.5px}.puck-home-bottom button.active{color:#f3f7fa;background:#ffffff0b;border-color:#e4c36c55}.puck-home-bottom button.active i{color:#e9c66f}
 @media(min-width:650px){.puck-home-shell{min-height:100vh;padding:14px 16px 18px;gap:10px}.puck-home-match{min-height:220px}.puck-home-feature{min-height:116px}}
 @media(max-width:370px){.puck-home-shell{padding:7px 7px 10px;gap:6px}.puck-home-top{grid-template-columns:49px minmax(0,1fr) auto;gap:6px;padding:6px}.puck-home-crest{width:47px;height:47px}.puck-home-crest span{font-size:23px}.puck-home-brand b{font-size:11px}.puck-home-wallet span{font-size:8px}.puck-home-shortcuts button{min-height:53px}.puck-home-shortcuts i{font-size:18px}.puck-home-match{min-height:165px}.puck-home-feature{min-height:88px}}
+
+/* Live two-week season countdown */
+.puck-season-clock[data-season-countdown]{font-size:10px;font-weight:1000;letter-spacing:.45px;color:#f0d17b;font-variant-numeric:tabular-nums;white-space:nowrap;text-shadow:0 0 10px #e6bf6040}

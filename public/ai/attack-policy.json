@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "model": "linear-softmax-v1",
+  "trainedAt": "2026-11-21T11:28:28.968Z",
+  "featureNames": [
+    "goalDistance",
+    "centrality",
+    "shootingLane",
+    "shotProbability",
+    "passAvailable",
+    "passProbability",
+    "passScore"
+  ],
+  "actions": ["hold", "pass", "shoot"],
+  "weights": [
+    [-0.1438256, -0.0692054, -0.080858, -0.1364902, -0.0285187, -0.1364902, -0.1035965, -0.1260422],
+    [-0.0612396, 0.9834456, -0.1195813, -0.0619103, -0.6471281, -0.0619103, 0.533329, 0.3146194],
+    [0.2050652, -0.9142402, 0.2004393, 0.1984005, 0.6756468, 0.1984005, -0.4297327, -0.1885771]
+  ],
+  "trainingMatches": [
+    "43926d1d-2420-46ae-b33a-7795c58ce74e",
+    "cdc6a48d-72a5-41ab-9826-dc27f31a6717",
+    "fb199682-4f1c-4d12-971b-53fc304028db",
+    "2e7bcac6-f8f2-4dd8-a93e-f0fb646f33dc",
+    "3898d310-95fd-4052-a07e-f36760e585da"
+  ],
+  "validationMatches": [
+    "4ee62299-3c9d-4dac-bdf7-14f1d3eef8b9",
+    "5ce56136-bc78-4e5e-b378-9d23362153d5"
+  ],
+  "metrics": {
+    "training": {
+      "samples": 916,
+      "accuracy": 0.6212,
+      "logLoss": 0.9074,
+      "baselineAccuracy": 0.5579
+    },
+    "validation": {
+      "samples": 338,
+      "accuracy": 0.6361,
+      "logLoss": 0.9123,
+      "baselineAccuracy": 0.5089
+    }
+  }
+}

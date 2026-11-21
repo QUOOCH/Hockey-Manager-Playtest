@@ -1,6 +1,6 @@
 name: Train attack AI candidate
 
-# Trigger a fresh evaluation after the latest consecutive match uploads.
+# Re-evaluate the candidate against the expanded 100-match archive after each workflow update.
 on:
   schedule:
     - cron: "*/15 * * * *"

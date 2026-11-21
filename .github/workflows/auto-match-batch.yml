@@ -69,6 +69,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: puck-it-background-match-batch
-          path: batch-results.json
+          path: |
+            batch-results.json
+            batch-failure.png
           if-no-files-found: warn
           retention-days: 14

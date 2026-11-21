@@ -16,6 +16,14 @@ export type TrainingEvent = {
   reward: number;
   data?: Record<string, number | string | boolean>;
 };
+export type TrainingDecision = {
+  t: number;
+  side: 0 | 1;
+  action: 'shoot' | 'pass' | 'hold';
+  reason: string;
+  observation: Record<string, number | string | boolean>;
+};
+
 export type TrainingEpisode = {
   schemaVersion: 1;
   id: string;
@@ -23,6 +31,7 @@ export type TrainingEpisode = {
   frameInterval: number;
   frames: TrainingFrame[];
   events: TrainingEvent[];
+  decisions: TrainingDecision[];
   lastFrameAt: number;
 };
 
@@ -44,7 +53,7 @@ const EVENT_REWARDS: Record<string, number> = {
 };
 
 export function createTrainingEpisode(id: string, createdAt = new Date().toISOString()): TrainingEpisode {
-  return { schemaVersion: 1, id, createdAt, frameInterval: 0.5, frames: [], events: [], lastFrameAt: -1 };
+  return { schemaVersion: 1, id, createdAt, frameInterval: 0.5, frames: [], events: [], decisions: [], lastFrameAt: -1 };
 }
 
 export function recordTrainingFrame(episode: TrainingEpisode | null, frame: TrainingFrame): void {
@@ -52,6 +61,15 @@ export function recordTrainingFrame(episode: TrainingEpisode | null, frame: Trai
   episode.frames.push(frame);
   episode.lastFrameAt = frame.t;
   if (episode.frames.length > 900) episode.frames.shift();
+}
+
+export function recordTrainingDecision(
+  episode: TrainingEpisode | null,
+  decision: TrainingDecision
+): void {
+  if (!episode) return;
+  episode.decisions.push(decision);
+  if (episode.decisions.length > 500) episode.decisions.shift();
 }
 
 export function recordTrainingEvent(episode: TrainingEpisode | null, t: number, kind: string, rawData?: unknown): void {
@@ -82,6 +100,8 @@ export function finalizeTrainingEpisode(
     result: { score: result.score, duration: Number(result.duration.toFixed(2)) },
     frameCount: episode.frames.length,
     eventCount: episode.events.length,
+    decisionCount: episode.decisions.length,
+    decisions: episode.decisions,
     frames: episode.frames,
     events: episode.events,
   };

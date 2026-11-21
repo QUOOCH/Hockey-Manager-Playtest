@@ -1,3 +1,5 @@
+import { buildAttackTrainingDataset } from './dataset';
+
 export type TrainingSide = 'home' | 'away';
 export type TrainingPlayerFrame = readonly [number, number, number, number, number, number, number, number, number];
 export type TrainingFrame = {
@@ -24,31 +26,65 @@ export type TrainingDecision = {
   observation: Record<string, number | string | boolean>;
 };
 
-const DECISION_OUTCOME_HORIZON = 8;
+type ScoredDecision = TrainingDecision & {
+  outcomeReward: number;
+  outcomeEvents: number;
+  outcomeHorizon: number;
+};
 
-/** Attach near-future, same-team event rewards to each decision at episode close. */
+/**
+ * Attribute each result to only the closest preceding decision that could have
+ * caused it. This prevents one goal/pass result from rewarding several nearby
+ * decisions or leaking defensive events into the attacking policy.
+ */
 export function scoreTrainingDecisions(
   decisions: TrainingDecision[],
   events: TrainingEvent[]
-): Array<TrainingDecision & { outcomeReward: number; outcomeEvents: number; outcomeHorizon: number }> {
-  return decisions.map((decision) => {
-    const outcomes = events.filter((event) =>
-      event.t > decision.t &&
-      event.t <= decision.t + DECISION_OUTCOME_HORIZON &&
-      event.side === decision.side &&
-      event.reward !== 0
-    );
-    const outcomeReward = outcomes.reduce((total, event) => {
+): ScoredDecision[] {
+  const scored = decisions.map((decision) => ({
+    ...decision,
+    outcomeReward: 0,
+    outcomeEvents: 0,
+    outcomeHorizon: decision.action === 'shoot' ? 3 : decision.action === 'pass' ? 2 : 1.5,
+  }));
+
+  for (const event of events) {
+    let action: TrainingDecision['action'] | null = null;
+    let horizon = 0;
+    if (event.kind === 'shot-resolution') {
+      action = 'shoot';
+      horizon = 3;
+    } else if (event.kind === 'pass-complete' || event.kind === 'pass-interception') {
+      action = 'pass';
+      horizon = 2;
+    } else if (event.kind === 'turnover') {
+      action = 'hold';
+      horizon = 1.5;
+    }
+    if (!action || event.side < 0 || event.reward === 0) continue;
+
+    let bestIndex = -1;
+    let bestElapsed = Infinity;
+    for (let i = 0; i < scored.length; i++) {
+      const decision = scored[i];
       const elapsed = event.t - decision.t;
-      return total + event.reward * Math.pow(0.9, elapsed);
-    }, 0);
-    return {
-      ...decision,
-      outcomeReward: Number(outcomeReward.toFixed(4)),
-      outcomeEvents: outcomes.length,
-      outcomeHorizon: DECISION_OUTCOME_HORIZON,
-    };
-  });
+      if (decision.side !== event.side || decision.action !== action || elapsed <= 0 || elapsed > horizon) continue;
+      if (elapsed < bestElapsed) {
+        bestElapsed = elapsed;
+        bestIndex = i;
+      }
+    }
+    if (bestIndex < 0) continue;
+
+    const decision = scored[bestIndex];
+    decision.outcomeReward += event.reward * Math.pow(0.9, bestElapsed);
+    decision.outcomeEvents += 1;
+  }
+
+  return scored.map((decision) => ({
+    ...decision,
+    outcomeReward: Number(decision.outcomeReward.toFixed(4)),
+  }));
 }
 
 export type TrainingEpisode = {
@@ -63,20 +99,9 @@ export type TrainingEpisode = {
 };
 
 const EVENT_REWARDS: Record<string, number> = {
-  goal: 1,
-  'goal-event': 1,
-  'pass-complete': 0.055,
-  'pass-interception': -0.09,
+  'pass-complete': 0.08,
+  'pass-interception': -0.12,
   turnover: -0.1,
-  'shot-decision': 0.012,
-  'shot-resolution': 0.018,
-  'goalie-save': 0.12,
-  'save-event': 0.12,
-  'block-event': 0.08,
-  'deflection-event': 0.035,
-  'missed-shot': -0.045,
-  'blocked-shot': 0.025,
-  'faceoff': 0.015,
 };
 
 export function createTrainingEpisode(id: string, createdAt = new Date().toISOString()): TrainingEpisode {
@@ -103,8 +128,34 @@ export function recordTrainingEvent(episode: TrainingEpisode | null, t: number, 
   if (!episode) return;
   const data = rawData && typeof rawData === 'object' ? rawData as Record<string, unknown> : {};
   const rawSide = data.side ?? data.shotSide ?? data.defendingSide ?? data.owner;
-  const side: -1 | 0 | 1 = rawSide === 'home' ? 0 : rawSide === 'away' ? 1 : -1;
-  const reward = EVENT_REWARDS[kind] ?? 0;
+  let side: -1 | 0 | 1 = rawSide === 'home' ? 0 : rawSide === 'away' ? 1 : -1;
+  let reward = EVENT_REWARDS[kind] ?? 0;
+
+  // A pass interception is a negative outcome for the attacking passer, not
+  // a positive outcome for the defending team that made the interception.
+  if (kind === 'pass-interception') {
+    const defending = data.to;
+    side = defending === 'home' ? 1 : defending === 'away' ? 0 : -1;
+  }
+  if (kind === 'turnover') {
+    const losingSide = data.from;
+    side = losingSide === 'home' ? 0 : losingSide === 'away' ? 1 : side;
+  }
+
+  if (kind === 'shot-resolution') {
+    side = data.side === 'home' ? 0 : data.side === 'away' ? 1 : -1;
+    if (data.goal === true) reward = 1;
+    else if (data.blocked === true) reward = -0.035;
+    else if (data.onTarget === false) reward = -0.06;
+    else if (data.saved === true) reward = -0.025;
+    else if (data.goalieDeflection === true) reward = 0.005;
+    else reward = 0.02;
+  }
+
+  // Goalie saves are defensive outcomes; this dataset currently trains the
+  // attacking decision policy, so do not award them to the shooter.
+  if (kind === 'goalie-save' || kind === 'goalie-deflection') reward = 0;
+
   const compact: Record<string, number | string | boolean> = {};
   for (const [key, value] of Object.entries(data)) {
     if (typeof value === 'number' || typeof value === 'string' || typeof value === 'boolean') compact[key] = value;
@@ -118,6 +169,8 @@ export function finalizeTrainingEpisode(
   result: { home: string; away: string; score: string; duration: number }
 ): Record<string, unknown> | undefined {
   if (!episode) return undefined;
+  const scoredDecisions = scoreTrainingDecisions(episode.decisions, episode.events);
+  const attackDataset = buildAttackTrainingDataset(scoredDecisions);
   return {
     schemaVersion: episode.schemaVersion,
     id: episode.id,
@@ -128,7 +181,9 @@ export function finalizeTrainingEpisode(
     frameCount: episode.frames.length,
     eventCount: episode.events.length,
     decisionCount: episode.decisions.length,
-    decisions: scoreTrainingDecisions(episode.decisions, episode.events),
+    attackSampleCount: attackDataset.length,
+    attackDataset,
+    decisions: scoredDecisions,
     frames: episode.frames,
     events: episode.events,
   };

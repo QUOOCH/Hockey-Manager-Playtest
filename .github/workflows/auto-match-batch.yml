@@ -19,7 +19,7 @@ permissions:
   actions: read
 
 concurrency:
-  group: puck-it-auto-match-batch
+  group: puck-it-auto-match-batch-v2
   cancel-in-progress: false
 
 jobs:
@@ -29,8 +29,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Wait for this commit's browser deployment
-        if: github.event_name == 'push'
+      - name: Confirm latest browser deployment is ready
         uses: actions/github-script@v7
         with:
           script: |
@@ -40,18 +39,17 @@ jobs:
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 workflow_id: 'deploy.yml',
-                head_sha: context.sha,
-                per_page: 10,
+                per_page: 5,
               });
-              deployment = data.workflow_runs.find((run) => run.head_sha === context.sha);
+              deployment = data.workflow_runs[0];
               if (deployment?.status === 'completed') break;
-              core.info(`Waiting for Pages deployment (${attempt}/60)…`);
+              core.info(`Waiting for the latest Pages deployment (${attempt}/60)…`);
               await new Promise((resolve) => setTimeout(resolve, 10000));
             }
             if (!deployment || deployment.status !== 'completed' || deployment.conclusion !== 'success') {
-              throw new Error('The matching GitHub Pages deployment did not complete successfully.');
+              throw new Error('The latest GitHub Pages deployment is not successful.');
             }
-            core.info(`Pages deployment succeeded: ${deployment.html_url}`);
+            core.info(`Pages deployment is ready: ${deployment.html_url}`);
       - name: Setup Node
         uses: actions/setup-node@v4
         with:

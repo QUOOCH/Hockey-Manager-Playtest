@@ -125,12 +125,38 @@ export function mountHero3DStage(host:HTMLElement,options:Hero3DOptions={}):Hero
   const saveJointPositions=()=>{try{const data:Record<string,[number,number,number]>={};for(const [name,pos] of Object.entries(jointPositions))data[name]=[pos.x,pos.y,pos.z];localStorage.setItem(SKELETON_KEY,JSON.stringify(data));}catch{/* storage may be unavailable */}};
   const updateBoneLines=()=>{for(let i=0;i<links.length;i++){const [a,b]=links[i],line=boneLines[i];const attr=line.geometry.getAttribute('position') as THREE.BufferAttribute;attr.setXYZ(0,jointPositions[a].x,jointPositions[a].y,jointPositions[a].z);attr.setXYZ(1,jointPositions[b].x,jointPositions[b].y,jointPositions[b].z);attr.needsUpdate=true;line.geometry.computeBoundingSphere();}};
   const links:[string,string][]=[['pelvis','spine'],['spine','chest'],['chest','neck'],['neck','head'],['chest','shoulderL'],['shoulderL','elbowL'],['elbowL','wristL'],['chest','shoulderR'],['shoulderR','elbowR'],['elbowR','wristR'],['pelvis','hipL'],['hipL','kneeL'],['kneeL','ankleL'],['pelvis','hipR'],['hipR','kneeR'],['kneeR','ankleR']];
-  const jointDown=(e:PointerEvent|TouchEvent)=>{if(!skeletonEditable||!skeletonGuide)return;const touch='touches'in e,point=touch?e.touches[0]:e as PointerEvent;if(!point)return;projectPointer(point.clientX,point.clientY);const hits=raycaster.intersectObjects([...jointMeshes.values()],false);if(!hits.length)return;selectedJoint=hits[0].object as THREE.Mesh;e.preventDefault();e.stopPropagation();};
-  const jointMove=(e:PointerEvent|TouchEvent)=>{if(!selectedJoint||!skeletonEditable)return;const touch='touches'in e,point=touch?e.touches[0]:e as PointerEvent;if(!point)return;e.preventDefault();e.stopPropagation();const name=String(selectedJoint.userData.joint),current=jointPositions[name];projectPointer(point.clientX,point.clientY);const world=new THREE.Vector3(),normal=new THREE.Vector3(0,0,1).transformDirection(modelRoot.matrixWorld);modelRoot.updateMatrixWorld(true);const origin=selectedJoint.getWorldPosition(new THREE.Vector3());const plane=new THREE.Plane().setFromNormalAndCoplanarPoint(normal,origin);if(raycaster.ray.intersectPlane(plane,world)){const local=modelRoot.worldToLocal(world.clone());current.copy(local);selectedJoint.position.copy(local);updateBoneLines();}};
+  let jointDragLastX=0;
+  const rotateJointBranch=(jointName:string,angle:number)=>{
+    const pivot=jointPositions[jointName];if(!pivot||Math.abs(angle)<.0001)return;
+    const descendants=new Set<string>();
+    const collect=(parent:string)=>{for(const [a,b] of links){if(a===parent&&!descendants.has(b)){descendants.add(b);collect(b);}}};
+    collect(jointName);
+    const c=Math.cos(angle),sn=Math.sin(angle);
+    for(const name of descendants){const p=jointPositions[name],dx=p.x-pivot.x,dy=p.y-pivot.y;p.set(pivot.x+dx*c-dy*sn,pivot.y+dx*sn+dy*c,p.z);}
+    for(const [name,mesh] of jointMeshes){mesh.position.copy(jointPositions[name]);}
+    updateBoneLines();
+  };
+  const jointDown=(e:PointerEvent|TouchEvent)=>{
+    if(!skeletonEditable||!skeletonGuide)return;
+    const touch='touches'in e,point=touch?e.touches[0]:e as PointerEvent;if(!point)return;
+    projectPointer(point.clientX,point.clientY);
+    const hits=raycaster.intersectObjects([...jointMeshes.values()],false);if(!hits.length)return;
+    selectedJoint=hits[0].object as THREE.Mesh;jointDragLastX=point.clientX;
+    e.preventDefault();e.stopPropagation();
+  };
+  const jointMove=(e:PointerEvent|TouchEvent)=>{
+    if(!selectedJoint||!skeletonEditable)return;
+    const touch='touches'in e,point=touch?e.touches[0]:e as PointerEvent;if(!point)return;
+    e.preventDefault();e.stopPropagation();
+    const name=String(selectedJoint.userData.joint),dx=point.clientX-jointDragLastX;
+    jointDragLastX=point.clientX;
+    // Dragging a joint rotates its entire child branch around that joint.
+    rotateJointBranch(name,dx*.012);
+  };
   const jointUp=()=>{if(selectedJoint){saveJointPositions();selectedJoint=null;}};
   canvas.addEventListener('pointerdown',jointDown as EventListener,true);canvas.addEventListener('pointermove',jointMove as EventListener,true);canvas.addEventListener('pointerup',jointUp,true);canvas.addEventListener('pointercancel',jointUp,true);
   canvas.addEventListener('touchstart',jointDown as EventListener,{capture:true,passive:false});canvas.addEventListener('touchmove',jointMove as EventListener,{capture:true,passive:false});canvas.addEventListener('touchend',jointUp,true);canvas.addEventListener('touchcancel',jointUp,true);
-  const setSkeletonEditable=(enabled:boolean)=>{skeletonEditable=enabled;canvas.style.cursor=enabled?'grab':'grab';if(!enabled)jointUp();};
+  const setSkeletonEditable=(enabled:boolean)=>{skeletonEditable=enabled;canvas.style.cursor=enabled?'crosshair':'grab';if(!enabled)jointUp();};
   const setSkeletonVisible=(visible:boolean)=>{
     if(!visible){if(skeletonGuide){modelRoot.remove(skeletonGuide);skeletonGuide=null;}jointMeshes.clear();boneLines.length=0;selectedJoint=null;return;}
     if(skeletonGuide)return;

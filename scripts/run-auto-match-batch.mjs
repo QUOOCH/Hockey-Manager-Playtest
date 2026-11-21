@@ -49,12 +49,16 @@ const results = [];
 const batchStarted = Date.now();
 try {
   for (let index = 0; index < MATCHES; index++) {
-    const url = new URL(BASE_URL);
-    url.searchParams.set('batch', '1');
-    url.searchParams.set('batchSteps', String(BATCH_STEPS));
-    url.searchParams.set('batchRun', String(Date.now()) + '-' + index);
-    await page.goto(url.toString(), { waitUntil: 'domcontentloaded' });
-    await page.locator('[data-screen="match"]').first().click();
+    if (index === 0) {
+      const url = new URL(BASE_URL);
+      url.searchParams.set('batch', '1');
+      url.searchParams.set('batchSteps', String(BATCH_STEPS));
+      url.searchParams.set('batchRun', String(Date.now()));
+      await page.goto(url.toString(), { waitUntil: 'domcontentloaded' });
+      await page.locator('[data-screen="match"]').first().click();
+    } else {
+      await page.locator('[data-action="new-match"]').click();
+    }
     await page.locator('[data-action="start-match"]').waitFor();
     await page.locator('[data-action="start-match"]').click();
     await page.locator('#match-live-clock').waitFor();

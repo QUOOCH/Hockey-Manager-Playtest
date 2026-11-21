@@ -191,8 +191,8 @@ function rinkVisual(){
  const homeColor=matchHome?.club.primaryColor||'#168de0',awayColor=opponent.club.primaryColor||'#e46b48';
  const player=(p:PlayerCard|null|undefined,x:number,y:number,teamSide:'home'|'away',n:number,role:string,carrier=false)=>{
   const fill=teamSide==='home'?homeColor:awayColor;
-  const energy=p?(liveRuntime?.energy[teamSide+':'+p.id]??100):100;const energyColor=energy>=65?'#35c982':energy>=35?'#f0c45b':'#ef5c5c';const ringLength=125.7,rotation=teamSide==='away'?180:0;
-  return '<g class="ice-player '+teamSide+' '+role+' p'+n+(carrier?' puck-carrier':'')+(res?.blocked&&res.blockerIndex===n-1&&ev?.side!==(teamSide)?' shot-blocker':'')+'" data-skater="'+teamSide+'-'+(n-1)+'" transform="translate('+x+' '+y+') scale(.68 .461)"><g transform="rotate('+rotation+')">'+
+  const energy=p?(liveRuntime?.energy[teamSide+':'+p.id]??100):100;const energyColor=energy>=65?'#35c982':energy>=35?'#f0c45b':'#ef5c5c';const ringLength=150.8,rotation=teamSide==='away'?180:0;
+  return '<g class="ice-player '+teamSide+' '+role+' p'+n+(carrier?' puck-carrier':'')+(res?.blocked&&res.blockerIndex===n-1&&ev?.side!==(teamSide)?' shot-blocker':'')+'" data-skater="'+teamSide+'-'+(n-1)+'" transform="translate('+x+' '+y+') scale(.44 .298)"><g transform="rotate('+rotation+')">'+
   '<ellipse cx="0" cy="5" rx="17" ry="25" fill="#071521" opacity=".22"/>'+
   '<path d="M-12 -13 Q-15 -18 -9 -21 L-5 -24 L5 -24 L9 -21 Q15 -18 12 -13 L15 4 L10 17 L5 22 L-5 22 L-10 17 L-15 4 Z" fill="'+fill+'" stroke="#f4fbff" stroke-width="2.4"/>'+
   '<path d="M-12 -13 L-22 -8 L-24 2 L-19 7 L-13 2 M12 -13 L22 -8 L24 2 L19 7 L13 2" fill="none" stroke="'+fill+'" stroke-width="7" stroke-linecap="round"/>'+
@@ -202,6 +202,12 @@ function rinkVisual(){
   '<path d="M-7 -19 Q0 -23 7 -19" fill="none" stroke="#7ea5c1" stroke-width="1.5"/>'+
   '<path d="M-24 3 L-31 13 L-27 15 L-17 6" fill="none" stroke="#c9d8e3" stroke-width="3.2" stroke-linecap="round"/>'+
   '<path d="M-31 13 L-35 18 L-25 20" fill="none" stroke="#dcecf6" stroke-width="2.4" stroke-linecap="round"/>'+
+  '<path d="M-31 17 L-40 31 L-49 39" fill="none" stroke="#182532" stroke-width="2.8" stroke-linecap="round"/>'+
+  '<path d="M-49 39 Q-43 43 -35 41" fill="none" stroke="#dce5eb" stroke-width="3.4" stroke-linecap="round"/>'+
+  '<path d="M-10 -18 Q0 -15 10 -18 M-13 8 Q0 12 13 8" fill="none" stroke="#f4fbff" stroke-width="1.8" opacity=".82"/>'+
+  '<path d="M-9 19 Q0 22 9 19 L7 25 L-7 25 Z" fill="#17283a" stroke="#a8bfce" stroke-width="1.3"/>'+
+  '<path d="M-8 26 L-8 30 M8 26 L8 30" stroke="#e7f2f7" stroke-width="2.2" stroke-linecap="round"/>'+
+  '<path d="M-10 32 L-2 32 M2 32 L10 32" stroke="#9eb8c9" stroke-width="1.7" stroke-linecap="round"/>'+
   '<circle cx="0" cy="0" r="24" fill="none" stroke="#071521" stroke-width="3.2" opacity=".55"/>'+
   '<circle data-energy-ring cx="0" cy="0" r="24" fill="none" stroke="'+energyColor+'" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="'+ringLength+'" stroke-dashoffset="'+(ringLength*(1-energy/100)).toFixed(1)+'" transform="rotate(-90)"/>'+
   '<text x="0" y="5" text-anchor="middle" font-size="9" font-weight="900" fill="#fff" stroke="#102333" stroke-width="1.6" paint-order="stroke">'+(p?initials(p):String(n))+'</text></g></g>';
@@ -214,7 +220,23 @@ function rinkVisual(){
  a.map((p,i)=>player(p,awayXs[i],awayY[i],'away',i+1,i<3?'forward':'defender',!homeAttack&&i===carrierIndex)).join('');
  const homeGoalie=match.homeUseGoalie2?matchHome?.goalie2:matchHome?.goalie1;
  const awayGoalie=match.awayUseGoalie2?opponent.goalie2:opponent.goalie1;
- const goalie=(x:number,y:number,p:PlayerCard|null|undefined,teamSide:'home'|'away',defending=false)=>'<g class="ice-goalie '+teamSide+(defending?' defending-goalie':'')+'"><g transform="translate('+x+' '+y+') scale(.61 .414) rotate('+(teamSide==='away'?180:0)+')"><ellipse cx="0" cy="10" rx="22" ry="9" fill="#102b3c" opacity=".22"/><path d="M-16 8 Q-19 1 -13 -5 L-8 -11 Q0 -15 8 -11 L13 -5 Q19 1 16 8 L11 15 Q0 20 -11 15 Z" fill="'+(teamSide==='home'?homeColor:awayColor)+'" stroke="#fff" stroke-width="2.6"/><path d="M-10 5 L-23 13 Q-26 17 -21 21 L-13 20 L-4 11 Z" fill="#f3fbff" stroke="#6b8495" stroke-width="2"/><path d="M10 5 L23 13 Q26 17 21 21 L13 20 L4 11 Z" fill="#f3fbff" stroke="#6b8495" stroke-width="2"/><path d="M-7 10 L-17 25 Q-19 29 -15 31 L-7 29 L0 17 Z" fill="#d9e8f1" stroke="#607d91" stroke-width="2.2"/><path d="M7 10 L17 25 Q19 29 15 31 L7 29 L0 17 Z" fill="#d9e8f1" stroke="#607d91" stroke-width="2.2"/><path d="M-10 -10 Q-12 -21 0 -23 Q12 -21 10 -10 L7 -4 L-7 -4 Z" fill="#f5f8fc" stroke="#526f84" stroke-width="2.4"/><path d="M-9 -13 Q0 -18 9 -13 L8 -8 L-8 -8 Z" fill="#17374a"/><path d="M-7 -5 H7" stroke="#17374a" stroke-width="2.2" stroke-linecap="round"/><path d="M-15 0 L-23 -5 Q-27 -3 -25 4 L-18 9 L-12 6 Z" fill="#f6fbff" stroke="#607d91" stroke-width="2"/><path d="M15 0 L23 -5 Q27 -3 25 4 L18 9 L12 6 Z" fill="#273f53" stroke="#d7e7f2" stroke-width="2"/></g></g>'
+ const goalie=(x:number,y:number,p:PlayerCard|null|undefined,teamSide:'home'|'away',defending=false)=>'<g class="ice-goalie '+teamSide+(defending?' defending-goalie':'')+'"><g transform="translate('+x+' '+y+') scale(.45 .305) rotate('+(teamSide==='away'?180:0)+')"><ellipse cx="0" cy="10" rx="22" ry="9" fill="#102b3c" opacity=".22"/><path d="M-16 8 Q-19 1 -13 -5 L-8 -11 Q0 -15 8 -11 L13 -5 Q19 1 16 8 L11 15 Q0 20 -11 15 Z" fill="'+(teamSide==='home'?homeColor:awayColor)+'" stroke="#fff" stroke-width="2.6"/><path d="M-10 5 L-23 13 Q-26 17 -21 21 L-13 20 L-4 11 Z" fill="#f3fbff" stroke="#6b8495" stroke-width="2"/><path d="M10 5 L23 13 Q26 17 21 21 L13 20 L4 11 Z" fill="#f3fbff" stroke="#6b8495" stroke-width="2"/><path d="M-7 10 L-17 25 Q-19 29 -15 31 L-7 29 L0 17 Z" fill="#d9e8f1" stroke="#607d91" stroke-width="2.2"/><path d="M7 10 L17 25 Q19 29 15 31 L7 29 L0 17 Z" fill="#d9e8f1" stroke="#607d91" stroke-width="2.2"/><path d="M-10 -10 Q-12 -21 0 -23 Q12 -21 10 -10 L7 -4 L-7 -4 Z" fill="#f5f8fc" stroke="#526f84" stroke-width="2.4"/><path d="M-9 -13 Q0 -18 9 -13 L8 -8 L-8 -8 Z" fill="#17374a"/><path d="M-7 -5 H7" stroke="#17374a" stroke-width="2.2" stroke-linecap="round"/><path d="M-15 0 L-23 -5 Q-27 -3 -25 4 L-18 9 L-12 6 Z" fill="#f6fbff" stroke="#607d91" stroke-width="2"/><path d="M15 0 L23 -5 Q27 -3 25 4 L18 9 L12 6 Z" fill="#273f53" stroke="#d7e7f2" stroke-width="2"/></g></g>'
+ const goalCage=(line:number,direction:1|-1)=>{
+  const back=line+direction*12.2,leftFront=185.9,rightFront=214.1,leftBack=189,rightBack=211;
+  const mesh=[.25,.5,.75].map(t=>{
+   const y=line+(back-line)*t,left=leftFront+(leftBack-leftFront)*t,right=rightFront+(rightBack-rightFront)*t;
+   return '<path d="M'+left.toFixed(2)+' '+y.toFixed(2)+' H'+right.toFixed(2)+'" fill="none" stroke="#9aafbd" stroke-width=".55" opacity=".8"/>';
+  }).join('')+[.25,.5,.75].map(t=>{
+   const x=leftFront+(rightFront-leftFront)*t,bx=leftBack+(rightBack-leftBack)*t;
+   return '<path d="M'+x.toFixed(2)+' '+line+' L'+bx.toFixed(2)+' '+back.toFixed(2)+'" fill="none" stroke="#9aafbd" stroke-width=".55" opacity=".8"/>';
+  }).join('');
+  return '<g class="rink-goal-cage"><ellipse cx="200" cy="'+(line+direction*6.4).toFixed(2)+'" rx="17" ry="5.2" fill="#17344a" opacity=".22"/>'+
+   '<path d="M'+leftFront+' '+line+' L'+leftBack+' '+back+' H'+rightBack+' L'+rightFront+' '+line+' Z" fill="#d9e8ef" fill-opacity=".18" stroke="#8ca4b4" stroke-width=".8"/>'+mesh+
+   '<path d="M'+leftFront+' '+line+' L'+leftBack+' '+back+' M'+rightFront+' '+line+' L'+rightBack+' '+back+' M'+leftBack+' '+back+' H'+rightBack+'" fill="none" stroke="#e5edf2" stroke-width="2.2" stroke-linecap="round"/>'+
+   '<path d="M'+leftFront+' '+line+' H'+rightFront+'" fill="none" stroke="#e8495a" stroke-width="3.1" stroke-linecap="round"/>'+
+   '<circle cx="'+leftFront+'" cy="'+line+'" r="1.65" fill="#ff6470"/><circle cx="'+rightFront+'" cy="'+line+'" r="1.65" fill="#ff6470"/></g>';
+ };
+
  const shooterX= res?.attackerIndex===1?105:res?.attackerIndex===2?295:200;
  const shooterY=homeAttack?homeY[res?.attackerIndex??0]:awayY[res?.attackerIndex??0];
  const attackDir=homeAttack?-1:1;
@@ -249,7 +271,7 @@ function rinkVisual(){
  '<path d="M15 47.45 H385 M15 572.55 H385" stroke="#d84f68" stroke-width=".75"/>'+
  '<path d="M174 47.45 A26.1 17.7 0 0 0 226 47.45 L226 47.45 Z M174 572.55 A26.1 17.7 0 0 1 226 572.55 L226 572.55 Z" fill="#8fd3f0" opacity=".5" stroke="#d84f68" stroke-width=".75"/>'+
  '<path d="M152 15 L165 47.45 M248 15 L235 47.45 M152 605 L165 572.55 M248 605 L235 572.55" fill="none" stroke="#277bc0" stroke-width=".75"/>'+
- '<g fill="#e9a2ad" fill-opacity=".52" stroke="#e14f65" stroke-width="1.2"><rect x="187" y="37.5" width="26" height="9.95" rx="1"/><rect x="187" y="572.55" width="26" height="9.95" rx="1"/></g>'+
+ goalCage(47.45,1)+goalCage(572.55,-1)+
  goalie(200,62,awayGoalie,'away',homeAttack)+goalie(200,558,homeGoalie,'home',!homeAttack)+players+
  '<defs><clipPath id="rinkInterior"><path d="M132 22 H268 Q378 22 378 94 V526 Q378 598 268 598 H132 Q22 598 22 526 V94 Q22 22 132 22 Z"/></clipPath></defs>'+
  '<g clip-path="url(#rinkInterior)">'+

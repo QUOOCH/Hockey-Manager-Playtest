@@ -1,4 +1,4 @@
-# Manual refresh trigger: fetch the newest completed match from D1.
+# Refresh on workflow updates and on the five-minute schedule; archive recent D1 matches.
 name: Sync latest PUCK IT match logs
 
 on:

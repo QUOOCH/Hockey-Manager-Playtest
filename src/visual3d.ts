@@ -115,7 +115,7 @@ export function mountHero3DStage(host:HTMLElement,options:Hero3DOptions={}):Hero
   host.addEventListener('touchend',touchEnd,{passive:false});
   host.addEventListener('touchcancel',touchEnd,{passive:false});
     const load=(url:string):Promise<GLTF>=>loader.loadAsync(url);
-  const loadBaseModel=async(file='base.glb')=>{try{const modelUrl=file.startsWith('blob:')||file.startsWith('http://')||file.startsWith('https://')?file:root+file;const gltf=await load(modelUrl);if(disposed)return;const next=gltf.scene;const bounds=new THREE.Box3().setFromObject(next),size=bounds.getSize(new THREE.Vector3()),center=bounds.getCenter(new THREE.Vector3()),scale=3.25/Math.max(size.y,.01);next.scale.setScalar(scale);next.position.set(-center.x*scale,-bounds.min.y*scale,-center.z*scale);let skinnedMeshes=0;next.traverse(o=>{if(o instanceof THREE.Mesh){o.castShadow=true;o.receiveShadow=true;}if(o instanceof THREE.SkinnedMesh)skinnedMeshes++;});modelRoot.remove(procedural);if(baseModel)modelRoot.remove(baseModel);if(mixer){mixer.stopAllAction();mixer=null;}baseModel=next;modelRoot.add(next);if(gltf.animations.length){mixer=new THREE.AnimationMixer(next);gltf.animations.forEach((clip,index)=>{const action=mixer!.clipAction(clip);if(index===0)action.play();});options.onAnimationInfo?.('Анимации найдены: '+gltf.animations.map(a=>a.name||'без названия').join(', ')+'. Автоматически запущена первая.');}else if(skinnedMeshes){options.onAnimationInfo?.('Скелет найден ('+skinnedMeshes+' skinned mesh), но готовых анимаций в файле нет. Можно подключать motion capture/ретаргетинг.');}else{options.onAnimationInfo?.('В GLB нет ни готовых анимаций, ни скелетных мешей. Для движения рук, ног и клюшки понадобится авто-риггинг модели.');}options.onLoad?.();}catch(e){options.onError?.(e instanceof Error?'Не удалось загрузить модель: '+e.message:'Не удалось загрузить 3D-модель.');}};
+  const loadBaseModel=async(file='base.glb')=>{try{const modelUrl=file.startsWith('blob:')||file.startsWith('http://')||file.startsWith('https://')?file:root+file;const gltf=await load(modelUrl);if(disposed)return;const next=gltf.scene;const bounds=new THREE.Box3().setFromObject(next),size=bounds.getSize(new THREE.Vector3()),center=bounds.getCenter(new THREE.Vector3()),scale=3.25/Math.max(size.y,.01);next.scale.setScalar(scale);next.position.set(-center.x*scale,-bounds.min.y*scale,-center.z*scale);let skinnedMeshes=0;next.traverse(o=>{if(o instanceof THREE.Mesh){o.castShadow=true;o.receiveShadow=true;}if(o instanceof THREE.SkinnedMesh)skinnedMeshes++;});modelRoot.remove(procedural);if(baseModel)modelRoot.remove(baseModel);if(mixer){mixer.stopAllAction();mixer=null;}baseModel=next;modelRoot.add(next);const autoRigged=skinnedMeshes===0?autoRigStaticModel(next):false;if(gltf.animations.length&&skinnedMeshes){mixer=new THREE.AnimationMixer(next);gltf.animations.forEach((clip,index)=>{const action=mixer!.clipAction(clip);if(index===0)action.play();});options.onAnimationInfo?.('Анимации найдены: '+gltf.animations.map(a=>a.name||'без названия').join(', ')+'. Автоматически запущена первая.');}else if(autoRigged){options.onAnimationInfo?.('Настоящий скелет создан: 18 костей, иерархия суставов и автоматические веса вершин. Вращение суставов деформирует модель.');}else if(skinnedMeshes){options.onAnimationInfo?.('Скелет найден ('+skinnedMeshes+' skinned mesh), но готовых анимаций в файле нет.');}else{options.onAnimationInfo?.('Не удалось автоматически привязать геометрию к скелету. Модель оставлена без изменений.');}options.onLoad?.();}catch(e){options.onError?.(e instanceof Error?'Не удалось загрузить модель: '+e.message:'Не удалось загрузить 3D-модель.');}};
   const SKELETON_KEY='puckit-skeleton-joints-v1';
   const jointPositions:Record<string,THREE.Vector3>={};
   const jointMeshes=new Map<string,THREE.Mesh>();
@@ -125,16 +125,43 @@ export function mountHero3DStage(host:HTMLElement,options:Hero3DOptions={}):Hero
   const saveJointPositions=()=>{try{const data:Record<string,[number,number,number]>={};for(const [name,pos] of Object.entries(jointPositions))data[name]=[pos.x,pos.y,pos.z];localStorage.setItem(SKELETON_KEY,JSON.stringify(data));}catch{/* storage may be unavailable */}};
   const updateBoneLines=()=>{for(let i=0;i<links.length;i++){const [a,b]=links[i],line=boneLines[i];const attr=line.geometry.getAttribute('position') as THREE.BufferAttribute;attr.setXYZ(0,jointPositions[a].x,jointPositions[a].y,jointPositions[a].z);attr.setXYZ(1,jointPositions[b].x,jointPositions[b].y,jointPositions[b].z);attr.needsUpdate=true;line.geometry.computeBoundingSphere();}};
   const links:[string,string][]=[['pelvis','spine'],['spine','chest'],['chest','neck'],['neck','head'],['chest','shoulderL'],['shoulderL','elbowL'],['elbowL','wristL'],['chest','shoulderR'],['shoulderR','elbowR'],['elbowR','wristR'],['pelvis','hipL'],['hipL','kneeL'],['kneeL','ankleL'],['pelvis','hipR'],['hipR','kneeR'],['kneeR','ankleR']];
+  const parents:Record<string,string|null>={pelvis:null,spine:'pelvis',chest:'spine',neck:'chest',head:'neck',shoulderL:'chest',elbowL:'shoulderL',wristL:'elbowL',shoulderR:'chest',elbowR:'shoulderR',wristR:'elbowR',hipL:'pelvis',kneeL:'hipL',ankleL:'kneeL',hipR:'pelvis',kneeR:'hipR',ankleR:'kneeR'};
+  const defaults:Record<string,THREE.Vector3>={pelvis:new THREE.Vector3(0,1.43,.34),spine:new THREE.Vector3(0,1.92,.34),chest:new THREE.Vector3(0,2.25,.34),neck:new THREE.Vector3(0,2.57,.34),head:new THREE.Vector3(0,2.91,.34),shoulderL:new THREE.Vector3(-.34,2.35,.32),elbowL:new THREE.Vector3(-.49,2.02,.37),wristL:new THREE.Vector3(-.40,1.76,.42),shoulderR:new THREE.Vector3(.34,2.35,.32),elbowR:new THREE.Vector3(.49,2.02,.37),wristR:new THREE.Vector3(.40,1.76,.42),hipL:new THREE.Vector3(-.16,1.40,.27),kneeL:new THREE.Vector3(-.20,.84,.30),ankleL:new THREE.Vector3(-.20,.34,.32),hipR:new THREE.Vector3(.16,1.40,.27),kneeR:new THREE.Vector3(.20,.84,.30),ankleR:new THREE.Vector3(.20,.34,.32)};
+  const jointBones=new Map<string,THREE.Bone>();
+  let autoRigReady=false;
+  const ensureJointPositions=()=>{if(Object.keys(jointPositions).length)return;let saved:Record<string,number[]>={};try{saved=JSON.parse(localStorage.getItem(SKELETON_KEY)||'{}');}catch{/* use defaults */}for(const [name,pos] of Object.entries(defaults)){const value=saved[name];jointPositions[name]=Array.isArray(value)&&value.length===3&&value.every(Number.isFinite)?new THREE.Vector3(value[0],value[1],value[2]):pos.clone();}};
+  const syncGuideFromBones=()=>{modelRoot.updateMatrixWorld(true);for(const [name,bone] of jointBones){const world=bone.getWorldPosition(new THREE.Vector3());jointPositions[name].copy(modelRoot.worldToLocal(world));const marker=jointMeshes.get(name);if(marker)marker.position.copy(jointPositions[name]);}updateBoneLines();};
+  const autoRigStaticModel=(next:THREE.Group)=>{
+    ensureJointPositions();
+    const meshes:THREE.Mesh[]=[];next.traverse(o=>{if(o instanceof THREE.Mesh&&!(o instanceof THREE.SkinnedMesh))meshes.push(o);});
+    if(!meshes.length)return false;
+    next.updateMatrixWorld(true);modelRoot.updateMatrixWorld(true);
+    const toNext=(p:THREE.Vector3)=>next.worldToLocal(modelRoot.localToWorld(p.clone()));
+    const localJoints:Record<string,THREE.Vector3>={};for(const [name,p] of Object.entries(jointPositions))localJoints[name]=toNext(p);
+    const bones:THREE.Bone[]=[];
+    for(const name of Object.keys(parents)){const bone=new THREE.Bone();bone.name='PUCKIT_'+name;bone.userData.jointName=name;const parentName=parents[name];if(parentName){const parent=jointBones.get(parentName)!;bone.position.copy(localJoints[name]).sub(localJoints[parentName]);parent.add(bone);}else{bone.position.copy(localJoints[name]);next.add(bone);}jointBones.set(name,bone);bones.push(bone);}
+    next.updateMatrixWorld(true);
+    const skeleton=new THREE.Skeleton(bones);skeleton.calculateInverses();
+    const segmentData=links.map(([a,b])=>{const start=localJoints[a],end=localJoints[b],delta=end.clone().sub(start);return{bone:bones.findIndex(x=>x.userData.jointName===b),ax:start.x,ay:start.y,az:start.z,dx:delta.x,dy:delta.y,dz:delta.z,lenSq:Math.max(delta.lengthSq(),1e-8)};});
+    for(const source of meshes){
+      const relative=new THREE.Matrix4().copy(next.matrixWorld).invert().multiply(source.matrixWorld);
+      const geometry=source.geometry.clone();geometry.applyMatrix4(relative);
+      const pos=geometry.getAttribute('position');const count=pos.count;
+      const indices=new Uint16Array(count*4),weights=new Float32Array(count*4);
+      for(let i=0;i<count;i++){
+        const x=pos.getX(i),y=pos.getY(i),z=pos.getZ(i);const bestD=[Infinity,Infinity,Infinity,Infinity],bestB=[0,0,0,0];
+        for(const seg of segmentData){const vx=x-seg.ax,vy=y-seg.ay,vz=z-seg.az;const t=Math.max(0,Math.min(1,(vx*seg.dx+vy*seg.dy+vz*seg.dz)/seg.lenSq));const qx=seg.ax+t*seg.dx,qy=seg.ay+t*seg.dy,qz=seg.az+t*seg.dz;const ex=x-qx,ey=y-qy,ez=z-qz,d=ex*ex+ey*ey+ez*ez;if(d<bestD[3]){let k=3;while(k>0&&d<bestD[k-1]){bestD[k]=bestD[k-1];bestB[k]=bestB[k-1];k--;}bestD[k]=d;bestB[k]=seg.bone;}}
+        let total=0;for(let k=0;k<4;k++){const w=1/(bestD[k]+.0009);weights[i*4+k]=w;indices[i*4+k]=bestB[k];total+=w;}for(let k=0;k<4;k++)weights[i*4+k]/=total;
+      }
+      geometry.setAttribute('skinIndex',new THREE.Uint16BufferAttribute(indices,4));geometry.setAttribute('skinWeight',new THREE.Float32BufferAttribute(weights,4));geometry.computeBoundingSphere();geometry.computeBoundingBox();
+      const skinned=new THREE.SkinnedMesh(geometry,source.material);skinned.name=source.name||'PUCKIT_RIGGED_MESH';skinned.castShadow=true;skinned.receiveShadow=true;skinned.frustumCulled=false;skinned.userData={...source.userData};next.add(skinned);source.parent?.remove(source);skinned.bind(skeleton,skinned.matrixWorld);skinned.normalizeSkinWeights();
+    }
+    next.updateMatrixWorld(true);autoRigReady=true;return true;
+  };
   let jointDragLastX=0;
   const rotateJointBranch=(jointName:string,angle:number)=>{
-    const pivot=jointPositions[jointName];if(!pivot||Math.abs(angle)<.0001)return;
-    const descendants=new Set<string>();
-    const collect=(parent:string)=>{for(const [a,b] of links){if(a===parent&&!descendants.has(b)){descendants.add(b);collect(b);}}};
-    collect(jointName);
-    const c=Math.cos(angle),sn=Math.sin(angle);
-    for(const name of descendants){const p=jointPositions[name],dx=p.x-pivot.x,dy=p.y-pivot.y;p.set(pivot.x+dx*c-dy*sn,pivot.y+dx*sn+dy*c,p.z);}
-    for(const [name,mesh] of jointMeshes){mesh.position.copy(jointPositions[name]);}
-    updateBoneLines();
+    const bone=jointBones.get(jointName);if(!bone||Math.abs(angle)<.0001)return;
+    bone.rotation.z+=angle;syncGuideFromBones();
   };
   const jointDown=(e:PointerEvent|TouchEvent)=>{
     if(!skeletonEditable||!skeletonGuide)return;
@@ -164,15 +191,7 @@ export function mountHero3DStage(host:HTMLElement,options:Hero3DOptions={}):Hero
     const jointMat=new THREE.MeshBasicMaterial({color:0x65e7ff,depthTest:false});
     const selectedMat=new THREE.MeshBasicMaterial({color:0xffc857,depthTest:false});
     const boneMat=new THREE.LineBasicMaterial({color:0x8beaff,transparent:true,opacity:.95,depthTest:false});
-    const defaults:Record<string,THREE.Vector3>={
-      pelvis:new THREE.Vector3(0,1.43,.34),spine:new THREE.Vector3(0,1.92,.34),chest:new THREE.Vector3(0,2.25,.34),neck:new THREE.Vector3(0,2.57,.34),head:new THREE.Vector3(0,2.91,.34),
-      shoulderL:new THREE.Vector3(-.34,2.35,.32),elbowL:new THREE.Vector3(-.49,2.02,.37),wristL:new THREE.Vector3(-.40,1.76,.42),
-      shoulderR:new THREE.Vector3(.34,2.35,.32),elbowR:new THREE.Vector3(.49,2.02,.37),wristR:new THREE.Vector3(.40,1.76,.42),
-      hipL:new THREE.Vector3(-.16,1.40,.27),kneeL:new THREE.Vector3(-.20,.84,.30),ankleL:new THREE.Vector3(-.20,.34,.32),
-      hipR:new THREE.Vector3(.16,1.40,.27),kneeR:new THREE.Vector3(.20,.84,.30),ankleR:new THREE.Vector3(.20,.34,.32)
-    };
-    let saved:Record<string,number[]>={};try{saved=JSON.parse(localStorage.getItem(SKELETON_KEY)||'{}');}catch{/* use defaults */}
-    for(const [name,pos] of Object.entries(defaults)){const value=saved[name];jointPositions[name]=Array.isArray(value)&&value.length===3&&value.every(Number.isFinite)?new THREE.Vector3(value[0],value[1],value[2]):pos.clone();}
+    ensureJointPositions();
     for(const [a,b] of links){const geo=new THREE.BufferGeometry().setFromPoints([jointPositions[a],jointPositions[b]]);const line=new THREE.Line(geo,boneMat);line.renderOrder=20;guide.add(line);boneLines.push(line);}
     for(const [name,pos] of Object.entries(jointPositions)){const mesh=new THREE.Mesh(new THREE.SphereGeometry(name==='head'?.095:.065,16,12),name==='pelvis'?selectedMat:jointMat);mesh.position.copy(pos);mesh.renderOrder=21;mesh.userData.joint=name;guide.add(mesh);jointMeshes.set(name,mesh);}
     modelRoot.add(guide);skeletonGuide=guide;

@@ -6,7 +6,7 @@ on:
       matches:
         description: Number of real simulated matches (1–60)
         required: true
-        default: "10"
+        default: "20"
         type: string
   push:
     branches: [main]
@@ -61,7 +61,7 @@ jobs:
         run: npx playwright install --with-deps chromium
       - name: Run real matches in the deployed game
         env:
-          MATCHES: ${{ github.event.inputs.matches || '3' }}
+          MATCHES: ${{ github.event.inputs.matches || '20' }}
           BATCH_STEPS: "240"
           GAME_URL: https://quooch.github.io/Hockey-Manager-Playtest/
         run: node scripts/run-auto-match-batch.mjs

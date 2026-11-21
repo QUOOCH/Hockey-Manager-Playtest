@@ -2608,3 +2608,43 @@ label{display:block;font-size:11px;color:#a8c8e2;margin:12px 0}input{display:blo
  .tactics-rink-vertical .tactics-spot{width:66px;max-width:66px}.tactics-rink-vertical .mini-player-card{width:66px;min-height:82px}
  .goalie-strip{padding:6px;gap:5px}.goalie-strip-title{font-size:8px}
 }
+
+/* Cleaner player collection: portrait, quality frame, name — nothing noisy. */
+.collection-grid{grid-template-columns:repeat(6,minmax(0,1fr));gap:10px}
+.collection-card{width:100%;min-width:0;height:auto;padding:0;border:0;background:transparent}
+.collection-card-frame{position:relative;display:flex;flex-direction:column;height:auto;min-height:0;padding:5px;border:1px solid var(--rarity);border-radius:11px;background:linear-gradient(155deg,#1c2b3b,#091521 72%);box-shadow:0 5px 14px #0005,inset 0 0 0 1px #ffffff12;overflow:hidden}
+.collection-card-frame:before{inset:3px;border:1px solid color-mix(in srgb,var(--rarity) 55%,transparent);border-radius:8px;clip-path:none;opacity:.8}
+.collection-card-frame:after{display:none}
+.collection-card-portrait{position:relative;display:block;flex:0 0 auto;width:100%;height:auto;aspect-ratio:1/1;margin:0;overflow:hidden;border:0;border-radius:7px;background:radial-gradient(ellipse at 50% 25%,#314b60,#0a1521 76%);box-shadow:none}
+.collection-card-portrait:before,.collection-card-portrait:after{display:none}
+.collection-portrait-photo{position:absolute;inset:0;display:block;background-image:var(--portrait-sprite);background-repeat:no-repeat;background-size:500% 100%;background-position:calc(var(--portrait-index,0)*25%) center;transform:none}
+.collection-card-ovr{right:6px;bottom:6px;width:29px;height:29px;border:1px solid var(--rarity);border-radius:7px;background:#07111ddd;font-size:13px;box-shadow:0 2px 8px #0008}
+.collection-card-name{min-height:0;gap:3px;padding:8px 3px 4px;margin:0;border:0;background:transparent;text-align:center}
+.collection-card-name b{font-size:clamp(9px,1vw,12px);letter-spacing:0;line-height:1.15}
+.collection-card-name small{font-size:7px;letter-spacing:1px;color:#8da7b9}
+.collection-card-top,.collection-card-position,.collection-card-stats{display:none!important}
+.rarity-common .collection-card-frame{--rarity:#aab8c5}
+.rarity-rare .collection-card-frame{--rarity:#45b9ed}
+.rarity-epic .collection-card-frame{--rarity:#a77aff}
+.rarity-legendary .collection-card-frame{--rarity:#f0bd58}
+@media(max-width:850px){.collection-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}}
+@media(max-width:520px){.collection-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.collection-card-frame{padding:4px}.collection-card-name{padding:7px 2px 3px}.collection-card-name b{font-size:9px}.collection-card-name small{font-size:6px}.collection-card-ovr{width:27px;height:27px;font-size:12px}}
+
+/* Lineup avatars reuse the same player portrait and rarity language. */
+.tactics-rink-vertical .tactics-spot{width:76px;max-width:76px;min-height:0;padding:0;border:0;background:transparent;box-shadow:none;overflow:visible}
+.lineup-player{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;width:100%;color:#0d2639;text-shadow:0 1px #ffffffaa}
+.lineup-avatar{position:relative;display:block;width:58px;height:58px;overflow:hidden;border:3px solid var(--rarity);border-radius:13px;background:#071521;box-shadow:0 4px 11px #061b2b66,0 0 0 2px #ffffffd9}
+.lineup-avatar .collection-portrait-photo{position:absolute;inset:0;background-image:var(--portrait-sprite);background-repeat:no-repeat;background-size:500% 100%;background-position:calc(var(--portrait-index,0)*25%) center}
+.lineup-avatar>b{position:absolute;right:2px;bottom:2px;min-width:17px;padding:2px 3px;border-radius:4px;background:#07111deF;color:#fff;font-size:9px;line-height:1;text-align:center;box-shadow:0 1px 4px #0008}
+.lineup-player>strong{display:block;max-width:78px;padding:2px 5px;border-radius:5px;background:#f2f8fce8;color:#173044;font-size:8px;line-height:1.1;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;box-shadow:0 1px 4px #1233}
+.lineup-empty{display:grid;place-items:center;width:48px;height:48px;border:1px dashed #527f99;border-radius:13px;background:#e8f4fa99;color:#315d78;font-size:24px}
+.rarity-common .lineup-avatar{--rarity:#aab8c5}
+.rarity-rare .lineup-avatar{--rarity:#45b9ed}
+.rarity-epic .lineup-avatar{--rarity:#a77aff}
+.rarity-legendary .lineup-avatar{--rarity:#f0bd58}
+.goalie-strip .goalie-mini{min-height:0;padding:4px;border:0;background:transparent}
+.goalie-strip .lineup-player{flex-direction:row;gap:7px;justify-content:flex-start}
+.goalie-strip .lineup-avatar{width:43px;height:43px;flex:0 0 43px;border-radius:10px}
+.goalie-strip .lineup-player>strong{max-width:90px;background:transparent;color:#eaf4fa;text-align:left;box-shadow:none}
+.goalie-strip .lineup-player>small{font-size:7px;color:#89a9bd}
+@media(max-width:520px){.tactics-rink-vertical .tactics-spot{width:66px;max-width:66px}.lineup-avatar{width:49px;height:49px;border-width:2px}.lineup-player>strong{max-width:67px;font-size:7px}.lineup-empty{width:42px;height:42px}.goalie-strip .lineup-avatar{width:38px;height:38px;flex-basis:38px}}

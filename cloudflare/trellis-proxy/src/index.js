@@ -83,8 +83,56 @@ export default {
         ok: true,
         service: "PUCK IT! TRELLIS.2 proxy",
         worker: "little-morning-b296",
-        tokenConfigured: Boolean(env.HF_TOKEN)
+        tokenConfigured: Boolean(env.HF_TOKEN),
+        telemetryDatabaseConfigured: Boolean(env.MATCH_LOGS_DB)
       }, 200, origin);
+    }
+
+    if (url.pathname === "/telemetry/status" && request.method === "GET") {
+      return json({
+        ok: true,
+        databaseConfigured: Boolean(env.MATCH_LOGS_DB)
+      }, env.MATCH_LOGS_DB ? 200 : 503, origin);
+    }
+
+    if (url.pathname === "/telemetry/matches" && request.method === "POST") {
+      if (!env.MATCH_LOGS_DB) {
+        return json({ ok: false, error: "MATCH_LOGS_DB binding is not configured." }, 503, origin);
+      }
+      const contentType = request.headers.get("Content-Type") || "";
+      if (!contentType.toLowerCase().includes("application/json")) {
+        return json({ ok: false, error: "Expected application/json." }, 415, origin);
+      }
+      const rawBody = await request.text();
+      if (rawBody.length > 1_500_000) {
+        return json({ ok: false, error: "Match log is too large (1.5 MB limit)." }, 413, origin);
+      }
+      let payload;
+      try {
+        payload = JSON.parse(rawBody);
+      } catch {
+        return json({ ok: false, error: "Invalid JSON match log." }, 400, origin);
+      }
+      const id = typeof payload?.id === "string" ? payload.id.slice(0, 100) : "";
+      const matchData = payload?.match && typeof payload.match === "object" ? payload.match : {};
+      const entries = Array.isArray(payload?.entries) ? payload.entries : null;
+      if (!id || !entries || entries.length > 600) {
+        return json({ ok: false, error: "Match log must include an id and no more than 600 entries." }, 400, origin);
+      }
+      const createdValue = typeof payload.createdAt === "string" ? Date.parse(payload.createdAt) : NaN;
+      const createdAt = Number.isFinite(createdValue) ? new Date(createdValue).toISOString() : new Date().toISOString();
+      const home = typeof matchData.home === "string" ? matchData.home.slice(0, 100) : null;
+      const away = typeof matchData.away === "string" ? matchData.away.slice(0, 100) : null;
+      const score = typeof matchData.score === "string" ? matchData.score.slice(0, 20) : null;
+      const duration = Number.isFinite(Number(matchData.elapsed)) ? Math.max(0, Number(matchData.elapsed)) : 0;
+      try {
+        await env.MATCH_LOGS_DB.prepare(
+          "INSERT INTO match_logs (id, created_at, home_team, away_team, score, duration_seconds, payload) VALUES (?, ?, ?, ?, ?, ?, ?) ON CONFLICT(id) DO NOTHING"
+        ).bind(id, createdAt, home, away, score, duration, JSON.stringify(payload)).run();
+      } catch (error) {
+        return json({ ok: false, error: "Could not store match log.", detail: String(error).slice(0, 300) }, 500, origin);
+      }
+      return json({ ok: true, stored: true, id, entries: entries.length }, 201, origin);
     }
 
     if (!env.HF_TOKEN && url.pathname.startsWith("/gradio_api/")) {

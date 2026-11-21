@@ -64,6 +64,16 @@ try {
       await page.locator('[data-action="new-match"]').click();
     }
     await page.locator('[data-action="start-match"]').waitFor();
+    const telemetryPromise = page.waitForResponse(response => {
+      if (response.url() !== WORKER_ENDPOINT || response.request().method() !== 'POST') return false;
+      try {
+        const payload = response.request().postDataJSON();
+        const id = payload?.id || payload?.matchId;
+        return Boolean(id && !seenMatchIds.has(id));
+      } catch {
+        return false;
+      }
+    }, { timeout: 60000 });
     await page.locator('[data-action="start-match"]').click();
     await page.locator('#match-live-clock').waitFor();
 
@@ -111,6 +121,11 @@ try {
     const telemetry = telemetryResponses[index];
     if (!telemetry.ok()) throw new Error('Telemetry POST failed: HTTP ' + telemetry.status());
     const posted = telemetry.request().postDataJSON();
+    const postedId = posted?.id || posted?.matchId;
+    if (!postedId || seenMatchIds.has(postedId)) {
+      throw new Error('Duplicate or missing telemetry match ID: ' + String(postedId));
+    }
+    seenMatchIds.add(postedId);
     const training = posted?.training || posted?.trainingEpisode || {};
     const matchId = posted?.id || null;
     if (!matchId) throw new Error('Telemetry response #' + (index + 1) + ' has no match ID');
@@ -136,6 +151,7 @@ const report = {
   gameUrl: BASE_URL,
   requestedMatches: MATCHES,
   completedMatches: results.length,
+  uniqueMatchIds: seenMatchIds.size,
   batchSteps: BATCH_STEPS,
   totalWallSeconds: totalSeconds,
   matchesPerMinute: Number((results.length / Math.max(totalSeconds, 0.001) * 60).toFixed(2)),
@@ -143,4 +159,4 @@ const report = {
 };
 fs.writeFileSync('batch-results.json', JSON.stringify(report, null, 2) + '\\n');
 console.log('BATCH_REPORT ' + JSON.stringify(report));
-if (results.length !== MATCHES) process.exitCode = 1;
+if (results.length !== MATCHES || seenMatchIds.size !== MATCHES) process.exitCode = 1;

@@ -104,6 +104,10 @@ const EVENT_REWARDS: Record<string, number> = {
   turnover: -0.1,
 };
 
+// A full six-minute match can produce more than 400 events. Keep a generous
+// bounded history so early decisions still receive their outcome labels.
+const MAX_TRAINING_EVENTS = 1400;
+
 export function createTrainingEpisode(id: string, createdAt = new Date().toISOString()): TrainingEpisode {
   return { schemaVersion: 1, id, createdAt, frameInterval: 0.5, frames: [], events: [], decisions: [], lastFrameAt: -1 };
 }
@@ -161,7 +165,7 @@ export function recordTrainingEvent(episode: TrainingEpisode | null, t: number, 
     if (typeof value === 'number' || typeof value === 'string' || typeof value === 'boolean') compact[key] = value;
   }
   episode.events.push({ t: Number(t.toFixed(2)), kind, side, reward, data: Object.keys(compact).length ? compact : undefined });
-  if (episode.events.length > 400) episode.events.shift();
+  if (episode.events.length > MAX_TRAINING_EVENTS) episode.events.shift();
 }
 
 export function finalizeTrainingEpisode(

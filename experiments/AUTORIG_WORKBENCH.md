@@ -28,3 +28,6 @@ A successful tool test is not a successful player rig. We only move a result int
 The upstream workbench is alpha and its published bake-off still reports many failing meshes. This experiment is designed to measure our exact player rather than assume that any automatic rig will work. No live game files are touched.
 
 The workflow accepts any `.glb` filename placed in `rig-test-input/` (including filenames containing spaces).
+
+
+Upstream test suites are diagnostic and non-blocking in this experiment: a failure in the candidate tool's own tests is recorded as a warning, but does not prevent the two player-specific skinning attempts from running. The rigging outputs are still judged independently and are not accepted without deformation checks.

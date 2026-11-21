@@ -60,11 +60,12 @@ export function mountHero3DStage(host:HTMLElement,options:Hero3DOptions={}):Hero
   try{renderer=new THREE.WebGLRenderer({alpha:true,antialias:true,powerPreference:'low-power'});}catch{options.onError?.('WebGL недоступен на этом устройстве.');return null;}
   const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(32,1,.1,40);
   camera.position.set(0,1.8,7.5);camera.lookAt(0,1.75,0);
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1.5));renderer.setClearColor(0,0);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.18;
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1.5));renderer.setClearColor(0,0);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.32;
   renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.domElement.className='hero-3d-canvas';renderer.domElement.setAttribute('aria-label','Вращаемая 3D-модель хоккеиста');host.appendChild(renderer.domElement);
-  scene.add(new THREE.HemisphereLight(0xc8eaff,0x07182a,2));
-  const key=new THREE.DirectionalLight(0xe8f7ff,3.1);key.position.set(-3.5,5,4);key.castShadow=true;scene.add(key);
-  const fill=new THREE.DirectionalLight(0x299be8,2.2);fill.position.set(4,2.5,-2);scene.add(fill);
+  scene.add(new THREE.HemisphereLight(0xd9edff,0x26364b,2.55));
+  scene.add(new THREE.AmbientLight(0xffffff,.62));
+  const key=new THREE.DirectionalLight(0xf1f8ff,3.45);key.position.set(-3.5,5,4);key.castShadow=true;scene.add(key);
+  const fill=new THREE.DirectionalLight(0x58b8f4,2.55);fill.position.set(4,2.5,-2);scene.add(fill);
   const rim=new THREE.DirectionalLight(0x78dfff,2.8);rim.position.set(0,4,-4);scene.add(rim);
   const pedestal=new THREE.Mesh(new THREE.CylinderGeometry(.92,1.02,.12,48),new THREE.MeshStandardMaterial({color:0x153d5b,metalness:.58,roughness:.32}));pedestal.position.y=.06;scene.add(pedestal);
   const ring=new THREE.Mesh(new THREE.TorusGeometry(.88,.012,8,64),new THREE.MeshBasicMaterial({color:0x65d9ff}));ring.rotation.x=Math.PI/2;ring.position.y=.125;scene.add(ring);

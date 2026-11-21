@@ -4,7 +4,7 @@ import { GLTFLoader, type GLTF } from 'three/addons/loaders/GLTFLoader.js';
 
 export type HeroGearSlot = 'helmet' | 'chest' | 'gloves' | 'stick' | 'skates' | 'jersey' | 'pants';
 export type Hero3DOptions = { modelRoot?: string; onLoad?: () => void; onError?: (message: string) => void; onAnimationInfo?: (message: string) => void };
-export type Hero3DStage = { loadBaseModel: (file?: string) => Promise<void>; setEquipment: (slot: HeroGearSlot, file: string | null) => Promise<void>; setRotation: (radians: number) => void; dispose: () => void };
+export type Hero3DStage = { loadBaseModel: (file?: string) => Promise<void>; setEquipment: (slot: HeroGearSlot, file: string | null) => Promise<void>; setRotation: (radians: number) => void; setSkeletonVisible: (visible: boolean) => void; dispose: () => void };
 const DEFAULT_ROOT = import.meta.env.BASE_URL + 'assets/models/hero/center/';
 const ANCHORS: Record<HeroGearSlot, string> = { helmet:'slot_helmet', chest:'slot_chest', gloves:'slot_gloves', stick:'slot_stick', skates:'slot_skates', jersey:'slot_jersey', pants:'slot_pants' };
 
@@ -71,7 +71,7 @@ export function mountHero3DStage(host:HTMLElement,options:Hero3DOptions={}):Hero
   const ring=new THREE.Mesh(new THREE.TorusGeometry(.88,.012,8,64),new THREE.MeshBasicMaterial({color:0x65d9ff}));ring.rotation.x=Math.PI/2;ring.position.y=.125;scene.add(ring);
   const modelRoot=new THREE.Group();scene.add(modelRoot);const procedural=makeProceduralHockeyPlayer(modelRoot);
   const loader=new GLTFLoader(),root=options.modelRoot||DEFAULT_ROOT,equipment=new Map<HeroGearSlot,THREE.Object3D>();
-  let baseModel:THREE.Object3D|null=null,mixer:THREE.AnimationMixer|null=null,frame=0,disposed=false,dragging=false,lastPointerX=0,rotation=-.28;
+  let baseModel:THREE.Object3D|null=null,mixer:THREE.AnimationMixer|null=null,skeletonGuide:THREE.Group|null=null,frame=0,disposed=false,dragging=false,lastPointerX=0,rotation=-.28;
   const clock=new THREE.Clock();
   modelRoot.rotation.y=rotation;
   const resize=()=>{if(disposed)return;const w=Math.max(1,host.clientWidth),h=Math.max(1,host.clientHeight);camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h,false);};
@@ -116,7 +116,26 @@ export function mountHero3DStage(host:HTMLElement,options:Hero3DOptions={}):Hero
   host.addEventListener('touchcancel',touchEnd,{passive:false});
     const load=(url:string):Promise<GLTF>=>loader.loadAsync(url);
   const loadBaseModel=async(file='base.glb')=>{try{const modelUrl=file.startsWith('blob:')||file.startsWith('http://')||file.startsWith('https://')?file:root+file;const gltf=await load(modelUrl);if(disposed)return;const next=gltf.scene;const bounds=new THREE.Box3().setFromObject(next),size=bounds.getSize(new THREE.Vector3()),center=bounds.getCenter(new THREE.Vector3()),scale=3.25/Math.max(size.y,.01);next.scale.setScalar(scale);next.position.set(-center.x*scale,-bounds.min.y*scale,-center.z*scale);let skinnedMeshes=0;next.traverse(o=>{if(o instanceof THREE.Mesh){o.castShadow=true;o.receiveShadow=true;}if(o instanceof THREE.SkinnedMesh)skinnedMeshes++;});modelRoot.remove(procedural);if(baseModel)modelRoot.remove(baseModel);if(mixer){mixer.stopAllAction();mixer=null;}baseModel=next;modelRoot.add(next);if(gltf.animations.length){mixer=new THREE.AnimationMixer(next);gltf.animations.forEach((clip,index)=>{const action=mixer!.clipAction(clip);if(index===0)action.play();});options.onAnimationInfo?.('Анимации найдены: '+gltf.animations.map(a=>a.name||'без названия').join(', ')+'. Автоматически запущена первая.');}else if(skinnedMeshes){options.onAnimationInfo?.('Скелет найден ('+skinnedMeshes+' skinned mesh), но готовых анимаций в файле нет. Можно подключать motion capture/ретаргетинг.');}else{options.onAnimationInfo?.('В GLB нет ни готовых анимаций, ни скелетных мешей. Для движения рук, ног и клюшки понадобится авто-риггинг модели.');}options.onLoad?.();}catch(e){options.onError?.(e instanceof Error?'Не удалось загрузить модель: '+e.message:'Не удалось загрузить 3D-модель.');}};
+  const setSkeletonVisible=(visible:boolean)=>{
+    if(!visible){if(skeletonGuide){modelRoot.remove(skeletonGuide);skeletonGuide=null;}return;}
+    if(skeletonGuide)return;
+    const guide=new THREE.Group();guide.name='puckit-skeleton-guide';
+    const jointMat=new THREE.MeshBasicMaterial({color:0x65e7ff,depthTest:false});
+    const selectedMat=new THREE.MeshBasicMaterial({color:0xffc857,depthTest:false});
+    const boneMat=new THREE.LineBasicMaterial({color:0x8beaff,transparent:true,opacity:.95,depthTest:false});
+    const p:Record<string,THREE.Vector3>={
+      pelvis:new THREE.Vector3(0,1.43,.34),spine:new THREE.Vector3(0,1.92,.34),chest:new THREE.Vector3(0,2.25,.34),neck:new THREE.Vector3(0,2.57,.34),head:new THREE.Vector3(0,2.91,.34),
+      shoulderL:new THREE.Vector3(-.34,2.35,.32),elbowL:new THREE.Vector3(-.49,2.02,.37),wristL:new THREE.Vector3(-.40,1.76,.42),
+      shoulderR:new THREE.Vector3(.34,2.35,.32),elbowR:new THREE.Vector3(.49,2.02,.37),wristR:new THREE.Vector3(.40,1.76,.42),
+      hipL:new THREE.Vector3(-.16,1.40,.27),kneeL:new THREE.Vector3(-.20,.84,.30),ankleL:new THREE.Vector3(-.20,.34,.32),
+      hipR:new THREE.Vector3(.16,1.40,.27),kneeR:new THREE.Vector3(.20,.84,.30),ankleR:new THREE.Vector3(.20,.34,.32)
+    };
+    const links:[string,string][]=[['pelvis','spine'],['spine','chest'],['chest','neck'],['neck','head'],['chest','shoulderL'],['shoulderL','elbowL'],['elbowL','wristL'],['chest','shoulderR'],['shoulderR','elbowR'],['elbowR','wristR'],['pelvis','hipL'],['hipL','kneeL'],['kneeL','ankleL'],['pelvis','hipR'],['hipR','kneeR'],['kneeR','ankleR']];
+    for(const [a,b] of links){const geo=new THREE.BufferGeometry().setFromPoints([p[a],p[b]]);const line=new THREE.Line(geo,boneMat);line.renderOrder=20;guide.add(line);}
+    for(const [name,pos] of Object.entries(p)){const mesh=new THREE.Mesh(new THREE.SphereGeometry(name==='head'?.095:.065,16,12),name==='pelvis'?selectedMat:jointMat);mesh.position.copy(pos);mesh.renderOrder=21;mesh.userData.joint=name;guide.add(mesh);}
+    modelRoot.add(guide);skeletonGuide=guide;
+  };
   const setEquipment=async(slot:HeroGearSlot,file:string|null)=>{const anchor=modelRoot.getObjectByName(ANCHORS[slot]);if(!anchor){if(file)options.onError?.('Для этой экипировки GLB-модель ещё не подключена.');return;}const previous=equipment.get(slot);if(previous){anchor.remove(previous);equipment.delete(slot);}if(!file)return;try{const gltf=await load(root+'equipment/'+file);if(disposed)return;const part:THREE.Group=gltf.scene;anchor.add(part);equipment.set(slot,part);}catch(e){options.onError?.(e instanceof Error?e.message:'Не удалось загрузить предмет.');}};
   const animate=()=>{if(disposed)return;frame=requestAnimationFrame(animate);const delta=Math.min(clock.getDelta(),.05);mixer?.update(delta);/* Model animation plays when the GLB contains clips; rotation remains user-controlled. */renderer.render(scene,camera);};animate();
-  return{loadBaseModel,setEquipment,setRotation:r=>{rotation=r;modelRoot.rotation.y=r;},dispose:()=>{if(disposed)return;disposed=true;cancelAnimationFrame(frame);observer.disconnect();host.removeEventListener('pointerdown',down);host.removeEventListener('pointermove',move);host.removeEventListener('pointerup',up);host.removeEventListener('pointercancel',up);host.removeEventListener('lostpointercapture',up);host.removeEventListener('touchstart',touchStart);host.removeEventListener('touchmove',touchMove);host.removeEventListener('touchend',touchEnd);host.removeEventListener('touchcancel',touchEnd);mixer?.stopAllAction();scene.traverse(o=>{if(o instanceof THREE.Mesh){o.geometry.dispose();const ms=Array.isArray(o.material)?o.material:[o.material];ms.forEach(m=>m.dispose());}});renderer.dispose();renderer.domElement.remove();}};
+  return{loadBaseModel,setEquipment,setRotation:r=>{rotation=r;modelRoot.rotation.y=r;},setSkeletonVisible,dispose:()=>{if(disposed)return;disposed=true;cancelAnimationFrame(frame);observer.disconnect();host.removeEventListener('pointerdown',down);host.removeEventListener('pointermove',move);host.removeEventListener('pointerup',up);host.removeEventListener('pointercancel',up);host.removeEventListener('lostpointercapture',up);host.removeEventListener('touchstart',touchStart);host.removeEventListener('touchmove',touchMove);host.removeEventListener('touchend',touchEnd);host.removeEventListener('touchcancel',touchEnd);mixer?.stopAllAction();scene.traverse(o=>{if(o instanceof THREE.Mesh){o.geometry.dispose();const ms=Array.isArray(o.material)?o.material:[o.material];ms.forEach(m=>m.dispose());}});renderer.dispose();renderer.domElement.remove();}};
 }

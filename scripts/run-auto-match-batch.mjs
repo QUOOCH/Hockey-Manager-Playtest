@@ -65,16 +65,13 @@ try {
       { timeout: 60000 }
     );
     try {
-      await page.waitForFunction(() =>
-        document.querySelector('#match-live-clock')?.textContent?.trim() === '00:00',
-        null, { timeout: 90000 }
-      );
+      await page.locator('[data-action="new-match"]').waitFor({ state: 'visible', timeout: 90000 });
     } catch (error) {
       const diagnostics = await page.evaluate(() => ({
         url: location.href,
         clock: document.querySelector('#match-live-clock')?.textContent?.trim() || null,
+        finalButton: document.querySelector('[data-action="new-match"]')?.textContent?.trim() || null,
         fastForwardLabel: document.querySelector('[data-action="fast-forward-match"]')?.textContent?.trim() || null,
-        startButton: document.querySelector('[data-action="start-match"]')?.textContent?.trim() || null,
         queueLength: (() => { try { return JSON.parse(localStorage.getItem('puckit-match-log-queue-v1') || '[]').length; } catch { return -1; } })(),
         visibleText: document.body.innerText.slice(-1800)
       }));

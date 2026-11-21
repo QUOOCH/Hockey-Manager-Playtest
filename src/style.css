@@ -2676,3 +2676,19 @@ label{display:block;font-size:11px;color:#a8c8e2;margin:12px 0}input{display:blo
 .puck-home-mode-buttons i{font-size:7px;font-style:normal;color:#a8bdca;white-space:nowrap;}
 .puck-home-mode-buttons em{font-size:15px;color:#e5c779;font-style:normal;}
 @media(max-width:370px){.puck-career-hero{min-height:145px}.puck-home-mode-buttons{gap:6px}.puck-home-mode-buttons>button{grid-template-columns:27px minmax(0,1fr) 9px;gap:5px;padding:7px;min-height:62px}.puck-home-mode-buttons .puck-mode-icon{width:27px;height:27px;font-size:16px}.puck-home-mode-buttons b{font-size:11px}.puck-home-mode-buttons i{font-size:6px}}
+
+
+/* NHL roster: four forward lines, three defensive pairs. */
+.line-tabs:not(.defense-pair-tabs){grid-template-columns:repeat(4,minmax(0,1fr))}
+.defense-pair-tabs{grid-template-columns:repeat(3,minmax(0,1fr));margin-top:5px}
+.defense-pair-tabs button{border-color:#b8c7d833;background:linear-gradient(145deg,#172d40,#0c1d2b)}
+.defense-pair-tabs button.active{border-color:#d6b66c;background:linear-gradient(145deg,#514326,#1b2b38);color:#fff}
+.match-active-lines{margin-top:9px;padding:10px}
+.match-energy-columns{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.match-energy-columns>div>small{display:block;margin-bottom:6px;color:#8daec3;font-size:8px;font-weight:900;letter-spacing:.8px}
+.match-skater-energy{display:grid;grid-template-columns:minmax(0,1fr) 64px 28px;align-items:center;gap:6px;margin:5px 0}
+.match-skater-energy>span{overflow:hidden;color:#e8f2f8;font-size:8px;text-overflow:ellipsis;white-space:nowrap}
+.match-skater-energy>i{display:block;height:5px;overflow:hidden;border-radius:8px;background:#ffffff1a}
+.match-skater-energy>i>b{display:block;height:100%;border-radius:8px;background:linear-gradient(90deg,#48c88b,#d9c35b 72%,#d96858)}
+.match-skater-energy>strong{color:#d9e8ef;font-size:8px;text-align:right;font-variant-numeric:tabular-nums}
+@media(max-width:520px){.line-tabs:not(.defense-pair-tabs){gap:4px}.line-tabs:not(.defense-pair-tabs) button{padding:7px 2px}.line-tabs:not(.defense-pair-tabs) button b{font-size:8px}.defense-pair-tabs button{padding:7px 2px}.match-energy-columns{gap:7px}.match-skater-energy{grid-template-columns:minmax(0,1fr) 38px 24px;gap:4px}.match-skater-energy>span{font-size:7px}.match-skater-energy>strong{font-size:7px}}

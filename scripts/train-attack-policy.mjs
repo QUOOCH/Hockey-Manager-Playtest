@@ -38,7 +38,8 @@ function extractMatches(root) {
       action: sample.action,
       reward: clamp(sample.reward, -2, 2),
     }));
-    if (clean.length) matches.push({ id, createdAt: String(row?.createdAt ?? row?.created_at ?? payload?.createdAt ?? ''), samples: clean });
+    const decisions = Array.isArray(training?.decisions) ? training.decisions : [];
+    if (clean.length) matches.push({ id, createdAt: String(row?.createdAt ?? row?.created_at ?? payload?.createdAt ?? ''), samples: clean, decisions });
   }
   return matches;
 }
@@ -128,6 +129,33 @@ const validationSamples = validationMatches.flatMap((match) => match.samples);
 const classCounts = [0, 0, 0];
 for (const sample of allSamples) classCounts[sample.action]++;
 
+const shadowRows = matches.flatMap((match) => match.decisions
+  .filter((decision) => ACTIONS.includes(decision?.action) &&
+    ACTIONS.includes(decision?.modelSuggestion?.action) &&
+    Number.isFinite(decision?.outcomeReward))
+  .map((decision) => ({
+    baselineAction: decision.action,
+    modelAction: decision.modelSuggestion.action,
+    confidence: Number.isFinite(decision.modelSuggestion.confidence) ? decision.modelSuggestion.confidence : null,
+    baselineOutcomeReward: decision.outcomeReward,
+  })));
+const shadowAgreement = shadowRows.filter((row) => row.baselineAction === row.modelAction);
+const shadowDisagreement = shadowRows.filter((row) => row.baselineAction !== row.modelAction);
+const shadowActionCounts = { hold: 0, pass: 0, shoot: 0 };
+for (const row of shadowRows) shadowActionCounts[row.modelAction]++;
+const average = (rows, key) => rows.length
+  ? Number((rows.reduce((sum, row) => sum + row[key], 0) / rows.length).toFixed(4))
+  : null;
+const shadowAnalysis = {
+  decisionsWithSuggestion: shadowRows.length,
+  agreementRate: shadowRows.length ? Number((shadowAgreement.length / shadowRows.length).toFixed(4)) : null,
+  modelActionCounts: shadowActionCounts,
+  averageConfidence: average(shadowRows.filter((row) => row.confidence !== null), 'confidence'),
+  baselineRewardWhenModelAgreed: average(shadowAgreement, 'baselineOutcomeReward'),
+  baselineRewardWhenModelDisagreed: average(shadowDisagreement, 'baselineOutcomeReward'),
+  interpretation: 'Outcome rewards belong to the action actually executed by the baseline AI; disagreement rows are descriptive only and do not measure the unplayed model action.'
+};
+
 const report = {
   status: 'insufficient-data',
   generatedAt: new Date().toISOString(),
@@ -138,6 +166,7 @@ const report = {
   scoredSampleCount: scoredSamples.length,
   actionCounts: { hold: classCounts[0], pass: classCounts[1], shoot: classCounts[2] },
   thresholds: { minMatches: MIN_MATCHES, minSamples: MIN_SAMPLES, minScoredSamples: MIN_SCORED },
+  shadowAnalysis,
   validation: null,
   reason: '',
 };

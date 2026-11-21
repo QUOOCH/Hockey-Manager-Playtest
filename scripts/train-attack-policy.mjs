@@ -38,7 +38,7 @@ function extractMatches(root) {
       action: sample.action,
       reward: clamp(sample.reward, -2, 2),
     }));
-    if (clean.length) matches.push({ id, samples: clean });
+    if (clean.length) matches.push({ id, createdAt: String(row?.createdAt ?? row?.created_at ?? payload?.createdAt ?? ''), samples: clean });
   }
   return matches;
 }
@@ -113,7 +113,11 @@ try {
 const matches = extractMatches(root);
 const allSamples = matches.flatMap((match) => match.samples);
 const scoredSamples = allSamples.filter((sample) => Math.abs(sample.reward) > 0.0001);
-const sortedMatches = [...matches].sort((a, b) => a.id.localeCompare(b.id));
+const sortedMatches = [...matches].sort((a, b) => {
+  const ta = Date.parse(a.createdAt) || 0;
+  const tb = Date.parse(b.createdAt) || 0;
+  return ta - tb || a.id.localeCompare(b.id);
+});
 const splitAt = Math.max(1, Math.floor(sortedMatches.length * 0.8));
 const trainingMatches = sortedMatches.slice(0, splitAt);
 const validationMatches = sortedMatches.slice(splitAt);

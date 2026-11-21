@@ -143,7 +143,7 @@ export function mountHero3DStage(host:HTMLElement,options:Hero3DOptions={}):Hero
     for(const name of Object.keys(parents)){const bone=new THREE.Bone();bone.name='PUCKIT_'+name;bone.userData.jointName=name;const parentName=parents[name];if(parentName){const parent=jointBones.get(parentName)!;bone.position.copy(localJoints[name]).sub(localJoints[parentName]);parent.add(bone);}else{bone.position.copy(localJoints[name]);next.add(bone);}jointBones.set(name,bone);bones.push(bone);}
     next.updateMatrixWorld(true);
     const skeleton=new THREE.Skeleton(bones);skeleton.calculateInverses();
-    const segmentData=links.map(([a,b])=>{const start=localJoints[a],end=localJoints[b],delta=end.clone().sub(start);return{bone:bones.findIndex(x=>x.userData.jointName===b),ax:start.x,ay:start.y,az:start.z,dx:delta.x,dy:delta.y,dz:delta.z,lenSq:Math.max(delta.lengthSq(),1e-8)};});
+    const segmentData=links.map(([a,b])=>{const start=localJoints[a],end=localJoints[b],delta=end.clone().sub(start);return{bone:bones.findIndex(x=>x.userData.jointName===a),ax:start.x,ay:start.y,az:start.z,dx:delta.x,dy:delta.y,dz:delta.z,lenSq:Math.max(delta.lengthSq(),1e-8)};});
     for(const source of meshes){
       const relative=new THREE.Matrix4().copy(next.matrixWorld).invert().multiply(source.matrixWorld);
       const geometry=source.geometry.clone();geometry.applyMatrix4(relative);

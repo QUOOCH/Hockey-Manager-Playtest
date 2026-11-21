@@ -591,7 +591,7 @@ if(r.phase==='play'){
    const shoot=shootingLane&&Math.random()<shotChance;
    if(shoot){
     r.phase='shot';r.shotElapsed=0;r.shotSide=attacking;r.shotFrom={x:r.puckX,y:r.puckY};pushLiveDebug('shot-decision','ИИ решил бросать',{side:attacking,goalDistance:+goalDistance.toFixed(1),centrality:+centrality.toFixed(2)});
-    const aimSpread=goalDistance<125?78:104,aimX=200+(Math.random()-.5)*aimSpread*2,wide=aimX<153||aimX>247;r.shotTo={x:aimX,y:wide?goalY+(r.shotSide==='home'?1:-1)*(24+Math.random()*58):goalY};
+    const aimSpread=goalDistance<125?78:104,aimX=200+(Math.random()-.5)*aimSpread*2,wide=aimX<153||aimX>247;r.shotTo={x:aimX,y:wide?goalY+(r.shotSide==='home'?-1:1)*(24+Math.random()*58):goalY};
    }else{
     let best=-1,bestScore=-Infinity;
     for(let j=0;j<5;j++){if(j===r.carrier)continue;const candidate=r.players[(attacking==='home'?0:5)+j],nearestDef=Math.min(...Array.from({length:5},(_,k)=>Math.hypot(candidate.x-r.players[base+k].x,candidate.y-r.players[base+k].y))),laneClear=Math.min(...Array.from({length:5},(_,k)=>{const d=r.players[base+k],sx=cp.x,sy=cp.y,ex=candidate.x,ey=candidate.y,dx=ex-sx,dy=ey-sy,u=Math.max(0,Math.min(1,((d.x-sx)*dx+(d.y-sy)*dy)/Math.max(1,dx*dx+dy*dy)));return Math.hypot(d.x-(sx+u*dx),d.y-(sy+u*dy));})),forward=(attacking==='home'?cp.y-candidate.y:candidate.y-cp.y),score=Math.min(115,nearestDef)+Math.min(55,laneClear)*.7+forward*.12-Math.hypot(candidate.x-cp.x,candidate.y-cp.y)*.12+(Math.random()*5);if(score>bestScore){bestScore=score;best=j;}}

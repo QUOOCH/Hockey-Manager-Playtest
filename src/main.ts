@@ -534,7 +534,7 @@ if(r.phase==='play'){
   else{
    const goalY=attacking==='home'?62:558,goalDistance=Math.abs(cp.y-goalY),centrality=1-Math.min(1,Math.abs(cp.x-200)/155);
    const shootingLane=centrality>.38;
-   const shotChance=goalDistance<125?(shootingLane?.76:.52):goalDistance<205?(shootingLane?.48:.27):goalDistance<275?.10:.025;
+   const shotChance=goalDistance<125?(shootingLane ? .76 : .52):goalDistance<205?(shootingLane ? .48 : .27):goalDistance<275?.10:.025;
    const shoot=shootingLane&&Math.random()<shotChance;
    if(shoot){
     r.phase='shot';r.shotElapsed=0;r.shotSide=attacking;r.shotFrom={x:r.puckX,y:r.puckY};

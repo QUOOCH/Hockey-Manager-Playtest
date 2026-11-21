@@ -513,7 +513,7 @@ const attacking=r.owner,carrierIndex=(attacking==='home'?0:5)+r.carrier,carrierP
 r.breakoutTimer=Math.max(0,r.breakoutTimer-dt);
 const defending=attacking==='home'?'away':'home',defBase=defending==='home'?0:5;
 let pressureIdx=0,pressureDistance=Infinity;
-for(let j=0;j<3;j++){const d=Math.hypot(r.players[defBase+j].x-carrierPos.x,r.players[defBase+j].y-carrierPos.y);if(d<pressureDistance){pressureDistance=d;pressureIdx=j;}}
+for(let j=0;j<5;j++){const d=Math.hypot(r.players[defBase+j].x-carrierPos.x,r.players[defBase+j].y-carrierPos.y);if(d<pressureDistance){pressureDistance=d;pressureIdx=j;}}
 for(let i=0;i<10;i++){
  const side=i<5?'home':'away',idx=i%5,attack=side===attacking,p=r.players[i],velocity=r.velocities[i];
  const energyPlayer=activeSkaters(side)[idx],energyLevel=energyPlayer?(r.energy[side+':'+energyPlayer.id]??100):100;
@@ -546,22 +546,16 @@ for(let i=0;i<10;i++){
   const lineY=ownGoalY+(ownGoalY<300?142:-142);
   const inDefensiveZone=side==='home'?carrierPos.y<310:carrierPos.y>310;
   if(inDefensiveZone&&idx===pressureIdx){
-   // Only one defender pressures the puck; stop short and angle the lane.
-   const dx=carrierPos.x-200,dy=carrierPos.y-lineY,d=Math.max(1,Math.hypot(dx,dy));
-   tx=carrierPos.x-dx/d*34;
-   ty=carrierPos.y-dy/d*34;
-  }else if(idx===0){
-   // Center protects the slot.
-   tx=200;ty=lineY;
-  }else if(idx===1){
-   // Wingers guard the left and right passing lanes.
-   tx=105;ty=lineY+(ownGoalY<300?18:-18);
-  }else if(idx===2){
-   tx=295;ty=lineY+(ownGoalY<300?18:-18);
+   // The closest skater actively closes the carrier and attacks the puck.
+   const dx=carrierPos.x-p.x,dy=carrierPos.y-p.y,d=Math.max(1,Math.hypot(dx,dy));
+   tx=carrierPos.x-dx/d*17;
+   ty=carrierPos.y-dy/d*17;
   }else{
-   // Defensemen stay between the puck and their own net.
-   tx=idx===3?158:242;
-   ty=lineY+(ownGoalY<300?54:-54);
+   // Everyone else shifts toward the puck while keeping a compact, staggered box.
+   const lane=idx===0?0:idx===1?-1:idx===2?1:idx===3?-.55:.55;
+   tx=Math.max(82,Math.min(318,carrierPos.x+lane*(idx>=3?74:112)));
+   const depth=idx>=3?76:idx===0?34:52;
+   ty=lineY+(ownGoalY<300?depth:-depth);
   }
  }
  tx=Math.max(52,Math.min(348,tx));ty=Math.max(82,Math.min(538,ty));
@@ -582,7 +576,7 @@ if(r.phase==='play'){
   const attackRoster=liveLines(attacking),defenseRoster=liveLines(defending);
   const carrierCard=effectiveCard(attacking,attackRoster[(match.shift-1)%Math.max(1,attackRoster.length)]?.[['center','leftWing','rightWing','defense1','defense2'][r.carrier] as 'center'|'leftWing'|'rightWing'|'defense1'|'defense2']);
   const tacklerCard=effectiveCard(defending,defenseRoster[(match.shift-1)%Math.max(1,defenseRoster.length)]?.[['center','leftWing','rightWing','defense1','defense2'][tackler] as 'center'|'leftWing'|'rightWing'|'defense1'|'defense2']);
-  const stealChance=tackleDistance<58?Math.max(.14,Math.min(.48,.18+((tacklerCard?.agility??50)-(carrierCard?.agility??50))*.004)):0;
+  const stealChance=tackleDistance<48?Math.max(.28,Math.min(.68,.42+((tacklerCard?.agility??50)-(carrierCard?.agility??50))*.006)):tackleDistance<68?.12:0;
   if(stealChance>0&&Math.random()<stealChance){r.owner=defending;r.carrier=tackler;r.breakoutTimer=1.8;r.actionTimer=.85+Math.random()*.45;pushLiveDebug('turnover','Перехват шайбы',{from:attacking,to:defending,tackler,distance:+tackleDistance.toFixed(1)});}
   else{
    const goalY=attacking==='home'?62:558,goalDistance=Math.abs(cp.y-goalY),centrality=1-Math.min(1,Math.abs(cp.x-200)/155);
@@ -605,8 +599,11 @@ if(r.phase==='play'){
   }
  }
 }else if(r.phase==='pass'){
- r.passElapsed+=dt;const t=Math.min(1,r.passElapsed/Math.max(.01,r.passDuration));r.puckX=r.passFrom.x+(r.passTo.x-r.passFrom.x)*t;r.puckY=r.passFrom.y+(r.passTo.y-r.passFrom.y)*t;
- if(t>=1){r.carrier=r.passTarget;r.phase='play';r.actionTimer=.35+Math.random()*.45;r.puckX=r.passTo.x;r.puckY=r.passTo.y;pushLiveDebug('pass-complete','Передача дошла',{side:r.owner,to:r.passTarget});}
+ const defending=r.owner==='home'?'away':'home',base=defending==='home'?0:5,dx=r.passTo.x-r.passFrom.x,dy=r.passTo.y-r.passFrom.y,len2=Math.max(1,dx*dx+dy*dy);let interceptor=-1,interceptDistance=Infinity;
+ for(let j=0;j<5;j++){const p=r.players[base+j],u=Math.max(0,Math.min(1,((p.x-r.passFrom.x)*dx+(p.y-r.passFrom.y)*dy)/len2)),d=Math.hypot(p.x-(r.passFrom.x+u*dx),p.y-(r.passFrom.y+u*dy));if(d<interceptDistance){interceptDistance=d;interceptor=j;}}
+ if(interceptDistance<19&&Math.random()<Math.min(.22,dt*3.2)){r.owner=defending;r.carrier=interceptor;r.phase='play';r.puckX=r.players[base+interceptor].x;r.puckY=r.players[base+interceptor].y;r.actionTimer=.45;pushLiveDebug('pass-interception','Защитник перехватил передачу',{to:defending,interceptor,distance:+interceptDistance.toFixed(1)});}
+ else{r.passElapsed+=dt;const t=Math.min(1,r.passElapsed/Math.max(.01,r.passDuration));r.puckX=r.passFrom.x+(r.passTo.x-r.passFrom.x)*t;r.puckY=r.passFrom.y+(r.passTo.y-r.passFrom.y)*t;
+ if(t>=1){r.carrier=r.passTarget;r.phase='play';r.actionTimer=.35+Math.random()*.45;r.puckX=r.passTo.x;r.puckY=r.passTo.y;pushLiveDebug('pass-complete','Передача дошла',{side:r.owner,to:r.passTarget});}}
 }
 }
 else if(r.phase==='shot'){r.shotElapsed+=dt;const t=Math.min(1,r.shotElapsed/.34);r.puckX=r.shotFrom.x+(r.shotTo.x-r.shotFrom.x)*t;r.puckY=r.shotFrom.y+(r.shotTo.y-r.shotFrom.y)*t;if(t>=1){const atk=r.shotSide==='home'?matchHome:opponent,def=r.shotSide==='home'?opponent:matchHome;const defending=r.shotSide==='home'?'away':'home',defBase=defending==='home'?0:5;let blockerIndex=-1,blockDistance=Infinity;const sx=r.shotFrom.x,sy=r.shotFrom.y,ex=r.shotTo.x,ey=r.shotTo.y,segX=ex-sx,segY=ey-sy,segLen=segX*segX+segY*segY;for(let j=0;j<5;j++){const bp=r.players[defBase+j],u=Math.max(0,Math.min(1,((bp.x-sx)*segX+(bp.y-sy)*segY)/Math.max(1,segLen))),d=Math.hypot(bp.x-(sx+u*segX),bp.y-(sy+u*segY));if(d<blockDistance){blockDistance=d;blockerIndex=j;}}const blockRoster=liveLines(defending)[(match.shift-1)%Math.max(1,liveLines(defending).length)],blockCard=effectiveCard(defending,blockRoster?.[['center','leftWing','rightWing','defense1','defense2'][blockerIndex] as 'center'|'leftWing'|'rightWing'|'defense1'|'defense2']),blockChance=blockDistance<23?Math.max(.16,Math.min(.58,.18+(blockCard?.strength??50)*.004)):0,blocked=blockChance>0&&Math.random()<blockChance;if(blocked){const bp=r.players[defBase+blockerIndex];r.shotTo={x:bp.x,y:bp.y};}const rawGoalie=r.shotSide==='home'?(match.awayUseGoalie2?opponent.goalie2:opponent.goalie1):(match.homeUseGoalie2?matchHome!.goalie2:matchHome!.goalie1);if(r.shotSide==='home'){if(match.awayUseGoalie2)match.awayGoalie2Stamina=Math.max(0,match.awayGoalie2Stamina-.012*match.awayGoalie2Max);else match.awayGoalie1Stamina=Math.max(0,match.awayGoalie1Stamina-.012*match.awayGoalie1Max);}else{if(match.homeUseGoalie2)match.homeGoalie2Stamina=Math.max(0,match.homeGoalie2Stamina-.012*match.homeGoalie2Max);else match.homeGoalie1Stamina=Math.max(0,match.homeGoalie1Stamina-.012*match.homeGoalie1Max);}const goalie=effectiveGoalie(r.shotSide==='home'?'away':'home',rawGoalie);const stamina=r.shotSide==='home'?(match.awayUseGoalie2?match.awayGoalie2Stamina/match.awayGoalie2Max:match.awayGoalie1Stamina/match.awayGoalie1Max):(match.homeUseGoalie2?match.homeGoalie2Stamina/match.homeGoalie2Max:match.homeGoalie1Stamina/match.homeGoalie1Max);const ap=activeSkaters(r.shotSide).reduce((sum,p)=>{const effective=effectiveCard(r.shotSide,p)!;return sum+(effective.speed+effective.agility+effective.strength+effective.stamina)/4;},0)/Math.max(1,activeSkaters(r.shotSide).length);const gp=goalie?goaliePower(goalie,1):65;const goalieSkill=goalie?((goalie.reaction*1.5+goalie.agility+goalie.strength*.5+goalie.stamina*.7)/3.7):60;const onTarget=r.shotTo.x>=153&&r.shotTo.x<=247;const goalieCenterX=200+Math.max(-26,Math.min(26,(r.shotFrom.x-200)*.24));const goalieReach=Math.min(54,28+(goalie?.agility??50)*.13+(goalie?.reaction??50)*.14);const hitsGoalie=onTarget&&Math.abs(r.shotTo.x-goalieCenterX)<=goalieReach;const saveChance=Math.max(.28,Math.min(.70,.43+(goalieSkill-65)*.006-(1-stamina)*.14));const saved=!blocked&&hitsGoalie&&Math.random()<saveChance;const goalieDeflection=!blocked&&hitsGoalie&&!saved;const goal=onTarget&&!hitsGoalie&&!blocked;pushLiveDebug('shot-resolution',blocked?'Бросок заблокирован':!onTarget?'Промах мимо створа':saved?'Вратарь поймал шайбу':goalieDeflection?'Вратарь отбил шайбу':'Шайба прошла в створ',{side:r.shotSide,target:{x:+r.shotTo.x.toFixed(1),y:+r.shotTo.y.toFixed(1)},onTarget,goalieCenterX:+goalieCenterX.toFixed(1),goalieReach:+goalieReach.toFixed(1),hitsGoalie,goaliePower:+gp.toFixed(1),goalieSkill:+goalieSkill.toFixed(1),goalieAgility:goalie?.agility??50,goalieReaction:goalie?.reaction??50,stamina:+stamina.toFixed(2),saveChance:+saveChance.toFixed(2),saved,goalieDeflection,goal});recordLiveEvent(r.shotSide,goal,true,r.carrier%3,saved,r.shotTo.x,r.shotTo.y,blocked,blockerIndex,goalieDeflection);if(!onTarget){r.puckX=Math.max(28,Math.min(372,r.shotTo.x));r.puckY=r.shotSide==='home'?82+Math.random()*34:504+Math.random()*34;}else if(saved){r.puckX=200+(Math.random()-.5)*76;r.puckY=r.shotSide==='home'?104+Math.random()*24:492-Math.random()*24;}else if(goalieDeflection){r.puckX=goalieCenterX+(Math.random()-.5)*92;r.puckY=r.shotSide==='home'?112+Math.random()*28:488-Math.random()*28;}else if(blocked){r.puckX=r.shotTo.x;r.puckY=r.shotTo.y;r.breakoutTimer=2.4;}if(goal){r.phase='stoppage';r.stoppageReason='goal';r.faceoffSpot={x:200,y:310};pushLiveDebug('goal','Гол: остановка и вбрасывание в центре',{side:r.shotSide,score:match.homeScore+':'+match.awayScore});}else if(saved){r.phase='stoppage';r.stoppageReason='goalie-save';const defendingSide=r.shotSide==='home'?'away':'home';const dotY=defendingSide==='away'?135:485;const dotX=r.shotTo.x<200?85:315;r.faceoffSpot={x:dotX,y:dotY};pushLiveDebug('goalie-save','Вратарь зафиксировал шайбу: вбрасывание в своей зоне',{defendingSide,spot:r.faceoffSpot,shotSide:r.shotSide});}else{r.phase='rebound';r.owner=r.shotSide==='home'?'away':'home';r.stoppageReason='';r.faceoffSpot=null;pushLiveDebug(blocked?'blocked-shot':goalieDeflection?'goalie-deflection':'missed-shot',blocked?'Бросок заблокирован — игра продолжается':goalieDeflection?'Вратарь отбил шайбу — подбор':'Бросок мимо — подбор',{shotSide:r.shotSide,shotTo:r.shotTo,goalieDeflection});}r.shotElapsed=0;}}

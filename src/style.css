@@ -2707,3 +2707,9 @@ label{display:block;font-size:11px;color:#a8c8e2;margin:12px 0}input{display:blo
 .match-skater-energy>i>b{background:linear-gradient(90deg,#d96858 0%,#d9c35b 55%,#48c88b 100%)}
 
 .match-debug-panel{margin-top:10px;padding:10px}.match-debug-tools{display:flex;gap:8px;margin:8px 0}.match-debug-list{max-height:260px;overflow:auto;display:grid;gap:6px;margin-top:8px}.match-debug-entry{padding:7px 9px;border:1px solid rgba(120,160,190,.22);border-radius:8px;background:rgba(8,20,34,.45);display:grid;gap:4px;font-size:11px}.match-debug-entry b{color:#7ed9c4;text-transform:uppercase}.match-debug-entry span{color:var(--muted,#a9bdcc)}.match-debug-entry code{white-space:pre-wrap;overflow-wrap:anywhere;color:#b8d5e8;font-size:9px;max-height:70px;overflow:auto}
+
+/* Match scale calibration: skater silhouettes now map to human-sized rink units. */
+.rink-goal-cage{filter:drop-shadow(0 1.8px 1.5px #142b3c70)}
+.rink-goal-cage path{vector-effect:non-scaling-stroke}
+.live-simulation .ice-player{filter:drop-shadow(0 1.8px 1.8px #15344a70)}
+.live-simulation .ice-player.puck-carrier{filter:drop-shadow(0 0 4px #fff) drop-shadow(0 2px 2px #15344a88)}

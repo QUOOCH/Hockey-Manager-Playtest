@@ -114,14 +114,19 @@ jobs:
             echo "name=$MODEL_NAME" >> "$GITHUB_OUTPUT"
             echo "path=$RUNNER_TEMP/puckit-input/player.glb" >> "$GITHUB_OUTPUT"
             echo "available=true" >> "$GITHUB_OUTPUT"
-          elif [[ -f "$GITHUB_WORKSPACE/rig-test-input/puck-it-player.glb" ]]; then
-            cp "$GITHUB_WORKSPACE/rig-test-input/puck-it-player.glb" "$RUNNER_TEMP/puckit-input/player.glb"
-            echo "name=PuckItPlayer" >> "$GITHUB_OUTPUT"
-            echo "path=$RUNNER_TEMP/puckit-input/player.glb" >> "$GITHUB_OUTPUT"
-            echo "available=true" >> "$GITHUB_OUTPUT"
           else
-            echo "available=false" >> "$GITHUB_OUTPUT"
-            echo "No player GLB supplied. Tool tests passed; player-specific rigging is skipped."
+            shopt -s nullglob
+            model_files=("$GITHUB_WORKSPACE"/rig-test-input/*.glb)
+            if (( ${#model_files[@]} > 0 )); then
+              cp "${model_files[0]}" "$RUNNER_TEMP/puckit-input/player.glb"
+              echo "name=PuckItPlayer" >> "$GITHUB_OUTPUT"
+              echo "path=$RUNNER_TEMP/puckit-input/player.glb" >> "$GITHUB_OUTPUT"
+              echo "available=true" >> "$GITHUB_OUTPUT"
+              echo "Using uploaded model: $(basename "${model_files[0]}")"
+            else
+              echo "available=false" >> "$GITHUB_OUTPUT"
+              echo "No player GLB supplied. Tool tests passed; player-specific rigging is skipped."
+            fi
           fi
           if [[ -f "$RUNNER_TEMP/puckit-input/player.glb" ]]; then
             python3 - "$RUNNER_TEMP/puckit-input/player.glb" <<'PY'

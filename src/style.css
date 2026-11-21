@@ -2263,3 +2263,43 @@ label{display:block;font-size:11px;color:#a8c8e2;margin:12px 0}input{display:blo
 .player-detail-art .collection-card-portrait{flex:0 0 auto;width:100%;height:auto;aspect-ratio:1/1;min-height:0;margin:0;overflow:hidden}
 .player-detail-art .collection-portrait-photo{background-size:500% 100%;background-position:calc(var(--portrait-index,0)*25%) center;transform:none}
 @media(max-width:520px){.player-detail-art .collection-card{width:min(82%,280px)}}
+
+
+/* Tactical lineup: premium top-down rink */
+.tactics-intro{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center}
+.tactics-intro p{margin:7px 0 0;color:#9bb6d0;font-size:12px;line-height:1.55}
+.tactics-count{grid-column:2;grid-row:1;text-align:right;font-weight:800;color:#8fdcff}
+.tactics-count b{font-size:27px;color:#f5fbff}.tactics-count small{font-size:11px;color:#7e9db8}
+.tactics-actions{grid-column:1/-1;display:flex;gap:8px;flex-wrap:wrap}
+.tactics-actions button{margin:0;flex:1;min-width:135px}
+.tactics-line{padding:14px 12px 12px;overflow:hidden}
+.tactics-line .line-heading{margin-bottom:12px}
+.tactics-line .line-heading small{font-size:9px;color:#82b5d8;letter-spacing:1px}
+.tactics-rink{height:264px;position:relative;overflow:hidden;border:2px solid #d5e8f4;border-radius:48px;background:linear-gradient(180deg,#d9edf5 0%,#b8d7e8 48%,#dceef6 100%);box-shadow:inset 0 0 0 5px #ffffff80,inset 0 0 35px #39749a33,0 10px 24px #0003}
+.tactics-rink:before{content:"";position:absolute;inset:8px;border:1px solid #e85d6b;border-radius:39px;opacity:.72}
+.tactics-rink:after{content:"";position:absolute;left:50%;top:8px;bottom:8px;width:2px;background:#d95361;opacity:.72}
+.rink-center-line{position:absolute;left:50%;top:0;bottom:0;width:1px;background:#e45d69;z-index:0}
+.rink-center-circle{position:absolute;width:112px;height:112px;left:50%;top:50%;transform:translate(-50%,-50%);border:2px solid #4d9bc4;border-radius:50%;opacity:.75}
+.rink-blue-line{position:absolute;top:0;bottom:0;width:2px;background:#438fc2;opacity:.7}
+.rink-blue-line.left{left:24%}.rink-blue-line.right{right:24%}
+.rink-goal{position:absolute;top:50%;width:18px;height:58px;border:2px solid #d95461;transform:translateY(-50%);background:#ffffff55}
+.rink-goal.left{left:8px;border-left:0;border-radius:0 12px 12px 0}.rink-goal.right{right:8px;border-right:0;border-radius:12px 0 0 12px}
+.tactics-spot{position:absolute;z-index:2;width:27%;max-width:176px;min-height:57px;padding:7px 5px;border-radius:9px;border:1px solid #6e9cb5;background:linear-gradient(145deg,#102d49f2,#071b30f2);color:#f4f9ff;box-shadow:0 5px 13px #08223c55;transform:translate(-50%,-50%);transition:box-shadow .18s,border-color .18s,transform .18s}
+.tactics-spot:active{transform:translate(-50%,-50%) scale(.97)}
+.tactics-spot.filled{border-color:#65c7f5;background:linear-gradient(145deg,#174e73f5,#0a2945f5);box-shadow:0 0 0 2px #8bdcff25,0 5px 15px #08223c66}
+.tactics-spot small{font-size:7px;letter-spacing:.7px;color:#8ebbd7}
+.tactics-spot b{font-size:9px;line-height:1.25;margin:4px 0;white-space:normal}
+.tactics-spot span{font-size:7px;color:#80d7ff}
+.spot-left{left:31%;top:29%}.spot-center{left:50%;top:23%}.spot-right{left:69%;top:29%}
+.spot-def-left{left:39%;top:72%}.spot-def-right{left:61%;top:72%}
+.tactics-goalies .roster-slot{min-height:62px}
+@media(max-width:520px){
+ .tactics-rink{height:238px;border-radius:39px}
+ .tactics-rink:before{border-radius:31px}
+ .rink-center-circle{width:88px;height:88px}
+ .tactics-spot{width:29%;min-height:53px;padding:6px 3px}
+ .tactics-spot b{font-size:8px}
+ .tactics-spot small,.tactics-spot span{font-size:6px}
+ .spot-left{left:31%;top:29%}.spot-center{left:50%;top:22%}.spot-right{left:69%;top:29%}
+ .spot-def-left{left:39%;top:72%}.spot-def-right{left:61%;top:72%}
+}

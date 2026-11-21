@@ -46,6 +46,7 @@ await page.addInitScript(({ team, hero }) => {
 }, { team: seedTeam, hero });
 
 const results = [];
+const pendingUploads = [];
 const batchStarted = Date.now();
 try {
   for (let index = 0; index < MATCHES; index++) {
@@ -83,25 +84,37 @@ try {
       console.error('MATCH_DIAGNOSTICS ' + JSON.stringify(diagnostics));
       throw error;
     }
-    const telemetry = await telemetryPromise;
-    if (!telemetry.ok()) throw new Error('Telemetry POST failed: HTTP ' + telemetry.status());
-    const posted = telemetry.request().postDataJSON();
-    const training = posted?.training || posted?.trainingEpisode || {};
-    const row = {
+    const score =
+      (await page.locator('#home-live-score').textContent()) + ':' +
+      (await page.locator('#away-live-score').textContent());
+    results.push({
       index: index + 1,
-      matchId: posted?.id || null,
-      score: posted?.match?.score || (
-        (await page.locator('#home-live-score').textContent()) + ':' +
-        (await page.locator('#away-live-score').textContent())
-      ),
+      matchId: null,
+      score,
       wallSeconds: Number(((Date.now() - started) / 1000).toFixed(3)),
-      telemetryStatus: telemetry.status(),
-      frameCount: training.frameCount ?? null,
-      eventCount: training.eventCount ?? null,
-      decisionCount: training.decisionCount ?? null,
-      attackSampleCount: training.attackSampleCount ?? null
-    };
-    results.push(row);
+      telemetryStatus: null,
+      frameCount: null,
+      eventCount: null,
+      decisionCount: null,
+      attackSampleCount: null
+    });
+    pendingUploads.push(telemetryPromise.then(telemetry => {
+      if (!telemetry.ok()) throw new Error('Telemetry POST failed: HTTP ' + telemetry.status());
+      const posted = telemetry.request().postDataJSON();
+      return { telemetry, posted, training: posted?.training || posted?.trainingEpisode || {} };
+    }).catch(error => ({ error })));
+  }
+  const uploads = await Promise.all(pendingUploads);
+  for (let index = 0; index < uploads.length; index++) {
+    const upload = uploads[index];
+    if (upload.error) throw upload.error;
+    const row = results[index];
+    row.matchId = upload.posted?.id || null;
+    row.telemetryStatus = upload.telemetry.status();
+    row.frameCount = upload.training.frameCount ?? null;
+    row.eventCount = upload.training.eventCount ?? null;
+    row.decisionCount = upload.training.decisionCount ?? null;
+    row.attackSampleCount = upload.training.attackSampleCount ?? null;
     console.log(JSON.stringify(row));
   }
 } finally {

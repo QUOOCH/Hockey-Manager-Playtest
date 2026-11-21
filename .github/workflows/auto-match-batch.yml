@@ -13,6 +13,7 @@ on:
     paths:
       - ".github/workflows/auto-match-batch.yml"
       - "scripts/run-auto-match-batch.mjs"
+      - "src/main.ts"
 
 permissions:
   contents: read

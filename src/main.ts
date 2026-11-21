@@ -1,5 +1,6 @@
 import './style.css';
 import { createTrainingEpisode, finalizeTrainingEpisode, recordTrainingEvent, recordTrainingFrame, type TrainingEpisode } from './ai/training';
+import { decideAttackAction } from './ai/decision';
 import { CARD_PLAYER_SPRITE } from './card-art';
 import { mountHero3DStage, type Hero3DStage } from './visual3d';
 import {Team,PlayerCard,MatchState,MatchDifficulty,Rarity,createTeam,autoFillRoster,teamPower,goaliePower,generateAiTeam,createMatchState,playMatchShift,awardHomeMatch,applyEquipment,equipmentCatalog} from './game';
@@ -613,20 +614,19 @@ if(r.phase==='play'){
    const goalY=attacking==='home'?62:558,goalDistance=Math.abs(cp.y-goalY),centrality=1-Math.min(1,Math.abs(cp.x-200)/155);
    const shootingLane=centrality>.38;
    const shotChance=goalDistance<105?(shootingLane ? .43 : .28):goalDistance<175?(shootingLane ? .38 : .24):goalDistance<255?.19:goalDistance<340?.07:.02;
-   const shoot=shootingLane&&Math.random()<shotChance;
-   if(shoot){
-    r.phase='shot';r.shotElapsed=0;r.shotSide=attacking;r.shotFrom={x:r.puckX,y:r.puckY};pushLiveDebug('shot-decision','ИИ решил бросать',{side:attacking,goalDistance:+goalDistance.toFixed(1),centrality:+centrality.toFixed(2)});
+   let best=-1,bestScore=-Infinity;
+   for(let j=0;j<5;j++){if(j===r.carrier)continue;const candidate=r.players[(attacking==='home'?0:5)+j],nearestDef=Math.min(...Array.from({length:5},(_,k)=>Math.hypot(candidate.x-r.players[base+k].x,candidate.y-r.players[base+k].y))),laneClear=Math.min(...Array.from({length:5},(_,k)=>{const d=r.players[base+k],sx=cp.x,sy=cp.y,ex=candidate.x,ey=candidate.y,dx=ex-sx,dy=ey-sy,u=Math.max(0,Math.min(1,((d.x-sx)*dx+(d.y-sy)*dy)/Math.max(1,dx*dx+dy*dy)));return Math.hypot(d.x-(sx+u*dx),d.y-(sy+u*dy));})),forward=(attacking==='home'?cp.y-candidate.y:candidate.y-cp.y),score=Math.min(115,nearestDef)+Math.min(55,laneClear)*.7+forward*.12-Math.hypot(candidate.x-cp.x,candidate.y-cp.y)*.12+(Math.random()*5);if(score>bestScore){bestScore=score;best=j;}}
+   const passChance=goalDistance<125?.42:goalDistance<230?.68:.80;
+   const shotRoll=Math.random(),passRoll=Math.random(),fallbackShotRoll=Math.random();
+   const decision=decideAttackAction({goalDistance,centrality,shootingLane,shotProbability:shotChance,shotRoll,passAvailable:best>=0,passProbability:passChance,passRoll,fallbackShotRoll});
+   pushLiveDebug('ai-decision','Тактическое решение атакующего ИИ',{side:attacking,action:decision.action,goalDistance:+goalDistance.toFixed(1),centrality:+centrality.toFixed(2),shotProbability:shotChance,shotRoll:+shotRoll.toFixed(3),passProbability:passChance,passRoll:+passRoll.toFixed(3),passTarget:best,passScore:Number.isFinite(bestScore)?+bestScore.toFixed(1):-1,fallbackShotRoll:+fallbackShotRoll.toFixed(3)});
+   if(decision.action==='shoot'){
+    r.phase='shot';r.shotElapsed=0;r.shotSide=attacking;r.shotFrom={x:r.puckX,y:r.puckY};
+    if(decision.reason==='primary-shot'){pushLiveDebug('shot-decision','ИИ решил бросать',{side:attacking,goalDistance:+goalDistance.toFixed(1),centrality:+centrality.toFixed(2)});}
     const aimSpread=goalDistance<125?78:104,aimX=200+(Math.random()-.5)*aimSpread*2,wide=aimX<153||aimX>247;r.shotTo={x:aimX,y:wide?goalY+(r.shotSide==='home'?-1:1)*(24+Math.random()*58):goalY};
-   }else{
-    let best=-1,bestScore=-Infinity;
-    for(let j=0;j<5;j++){if(j===r.carrier)continue;const candidate=r.players[(attacking==='home'?0:5)+j],nearestDef=Math.min(...Array.from({length:5},(_,k)=>Math.hypot(candidate.x-r.players[base+k].x,candidate.y-r.players[base+k].y))),laneClear=Math.min(...Array.from({length:5},(_,k)=>{const d=r.players[base+k],sx=cp.x,sy=cp.y,ex=candidate.x,ey=candidate.y,dx=ex-sx,dy=ey-sy,u=Math.max(0,Math.min(1,((d.x-sx)*dx+(d.y-sy)*dy)/Math.max(1,dx*dx+dy*dy)));return Math.hypot(d.x-(sx+u*dx),d.y-(sy+u*dy));})),forward=(attacking==='home'?cp.y-candidate.y:candidate.y-cp.y),score=Math.min(115,nearestDef)+Math.min(55,laneClear)*.7+forward*.12-Math.hypot(candidate.x-cp.x,candidate.y-cp.y)*.12+(Math.random()*5);if(score>bestScore){bestScore=score;best=j;}}
-    const passChance=goalDistance<125?.42:goalDistance<230?.68:.80;const passRoll=Math.random(),shouldPass=best>=0&&passRoll<passChance;
-    if(shouldPass){
-     const target=r.players[(attacking==='home'?0:5)+best];r.phase='pass';r.passFrom={x:r.puckX,y:r.puckY};r.passTo={x:target.x,y:target.y};r.passTarget=best;r.passElapsed=0;pushLiveDebug('pass-decision','ИИ выбрал передачу',{side:attacking,from:r.carrier,to:best,goalDistance:+goalDistance.toFixed(1),target:{x:+target.x.toFixed(1),y:+target.y.toFixed(1)}});r.passDuration=Math.max(.22,Math.min(.42,Math.hypot(target.x-cp.x,target.y-cp.y)/430));
-    }else if(goalDistance<300&&Math.random()<.30){
-     r.phase='shot';r.shotElapsed=0;r.shotSide=attacking;r.shotFrom={x:r.puckX,y:r.puckY};r.shotTo={x:200+(Math.random()-.5)*150,y:goalY};
-    }else{r.actionTimer=.7+Math.random()*.65;r.breakoutTimer=Math.max(r.breakoutTimer,.5);}
-   }
+   }else if(decision.action==='pass'){
+    const target=r.players[(attacking==='home'?0:5)+best];r.phase='pass';r.passFrom={x:r.puckX,y:r.puckY};r.passTo={x:target.x,y:target.y};r.passTarget=best;r.passElapsed=0;pushLiveDebug('pass-decision','ИИ выбрал передачу',{side:attacking,from:r.carrier,to:best,goalDistance:+goalDistance.toFixed(1),target:{x:+target.x.toFixed(1),y:+target.y.toFixed(1)}});r.passDuration=Math.max(.22,Math.min(.42,Math.hypot(target.x-cp.x,target.y-cp.y)/430));
+   }else{r.actionTimer=.7+Math.random()*.65;r.breakoutTimer=Math.max(r.breakoutTimer,.5);}
   }
  }
 }else if(r.phase==='pass'){

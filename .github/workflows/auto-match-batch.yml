@@ -13,14 +13,13 @@ on:
     paths:
       - ".github/workflows/auto-match-batch.yml"
       - "scripts/run-auto-match-batch.mjs"
-      - "src/main.ts"
 
 permissions:
   contents: read
   actions: read
 
 concurrency:
-  group: puck-it-auto-match-batch-v3
+  group: puck-it-auto-match-batch-v4
   cancel-in-progress: false
 
 jobs:

@@ -24,6 +24,11 @@ export type TrainingDecision = {
   action: 'shoot' | 'pass' | 'hold';
   reason: string;
   observation: Record<string, number | string | boolean>;
+  modelSuggestion?: {
+    action: 'shoot' | 'pass' | 'hold';
+    confidence: number;
+    probabilities: { hold: number; pass: number; shoot: number };
+  } | null;
 };
 
 type ScoredDecision = TrainingDecision & {

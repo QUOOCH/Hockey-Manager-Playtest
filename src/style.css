@@ -2544,3 +2544,43 @@ label{display:block;font-size:11px;color:#a8c8e2;margin:12px 0}input{display:blo
 .collection-card-stats b{font-size:6px}
 @media(max-width:850px){.collection-grid{grid-template-columns:repeat(6,minmax(0,1fr));gap:6px}.collection-card-frame{height:195px;min-height:195px}.collection-card-portrait{height:76px}}
 @media(max-width:600px){.collection-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}.collection-card-frame{height:190px;min-height:190px;padding:3px}.collection-card-portrait{height:72px;min-height:72px}.collection-card-name b{font-size:6px}.collection-card-stats span{padding:2px 1px}.collection-card-rating{top:82px;right:4px}}
+
+
+/* Vertical tactical rink and compact collectible-style roster cards */
+.tactics-rink-vertical{width:min(100%,390px);height:510px;margin:0 auto;border-radius:48px;background:linear-gradient(90deg,#d9edf5 0%,#b8d7e8 48%,#dceef6 100%)}
+.tactics-rink-vertical:after{left:8px;right:8px;top:50%;bottom:auto;width:auto;height:2px}
+.tactics-rink-vertical .rink-center-line{left:0;right:0;top:50%;bottom:auto;width:auto;height:1px}
+.tactics-rink-vertical .rink-center-circle{width:112px;height:112px}
+.tactics-rink-vertical .rink-blue-line{top:24%;bottom:auto;left:0;right:0;width:auto;height:2px}
+.tactics-rink-vertical .rink-blue-line.left{top:24%}
+.tactics-rink-vertical .rink-blue-line.right{top:auto;bottom:24%}
+.tactics-rink-vertical .rink-goal{top:8px;left:50%;right:auto;width:58px;height:18px;transform:translateX(-50%);border:2px solid #d95461;border-top:0;border-radius:0 0 12px 12px}
+.tactics-rink-vertical .rink-goal.right{top:auto;bottom:8px;left:50%;right:auto;border:2px solid #d95461;border-bottom:0;border-radius:12px 12px 0 0}
+.tactics-rink-vertical .tactics-spot{width:76px;max-width:76px;min-height:0;padding:0;border:0;background:transparent;box-shadow:none;border-radius:8px;transform:translate(-50%,-50%)}
+.tactics-rink-vertical .tactics-spot.filled{background:transparent;box-shadow:none}
+.tactics-rink-vertical .tactics-spot:active{transform:translate(-50%,-50%) scale(.96)}
+.mini-player-card{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;width:76px;min-height:94px;padding:5px 3px;border:1px solid #d8e9f4;border-radius:8px;background:linear-gradient(155deg,#173b58,#071b30);box-shadow:0 4px 12px #06203970;color:#f5fbff;overflow:hidden}
+.mini-player-card:before{content:"";position:absolute;inset:3px;border:1px solid #ffffff20;border-radius:5px;pointer-events:none}
+.mini-card-position{font-size:7px;font-style:normal;font-weight:900;letter-spacing:.8px;color:#8fdcff}
+.mini-card-rating{position:absolute;right:5px;top:4px;font-size:12px;color:#f4d18a}
+.mini-card-avatar{display:grid;place-items:center;width:34px;height:34px;margin-top:3px;border-radius:50%;background:radial-gradient(circle at 35% 25%,#4c718b,#102c45 70%);font-size:19px}
+.mini-player-card strong{display:block;width:100%;font-size:8px;line-height:1.15;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mini-player-card small{font-size:6px;color:#a6c1d5;letter-spacing:.3px}
+.tactics-rink-vertical .spot-left{left:29%;top:34%}
+.tactics-rink-vertical .spot-center{left:50%;top:25%}
+.tactics-rink-vertical .spot-right{left:71%;top:34%}
+.tactics-rink-vertical .spot-def-left{left:36%;top:72%}
+.tactics-rink-vertical .spot-def-right{left:64%;top:72%}
+.tactics-goalies .roster-slots{grid-template-columns:repeat(2,minmax(0,1fr));justify-items:center}
+.tactics-goalies .goalie-mini{width:100%;max-width:150px;min-height:0;padding:0;border:0;background:transparent}
+.tactics-goalies .goalie-mini .mini-player-card{width:100%;max-width:120px}
+@media(max-width:520px){
+ .tactics-rink-vertical{width:min(100%,340px);height:470px;border-radius:40px}
+ .tactics-rink-vertical:before{border-radius:32px}
+ .tactics-rink-vertical .tactics-spot{width:70px;max-width:70px}
+ .tactics-rink-vertical .mini-player-card{width:70px;min-height:88px}
+ .tactics-rink-vertical .spot-left{left:27%}
+ .tactics-rink-vertical .spot-right{left:73%}
+ .tactics-rink-vertical .spot-def-left{left:35%}
+ .tactics-rink-vertical .spot-def-right{left:65%}
+}

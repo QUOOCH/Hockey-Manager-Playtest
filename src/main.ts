@@ -77,19 +77,24 @@ function playerCard(p:PlayerCard,small=false){return '<article class="player-car
 function tile(icon:string,title:string,sub:string,to:Screen,c:string){return '<button class="menu-tile" data-screen="'+to+'" style="--tile:'+c+'"><span>'+icon+'</span><b>'+title+'</b><small>'+sub+'</small></button>';}
 function office(){
  const power=teamPower(team).toFixed(1);
+ const nextXp=hero?100+(hero.level-1)*50:100;
+ const xp=hero?Math.max(0,Math.min(100,hero.xp/nextXp*100)):0;
  const filled=team.lines.reduce((n,l)=>n+[l.center,l.leftWing,l.rightWing,l.defense1,l.defense2].filter(Boolean).length,0)+(team.goalie1?1:0)+(team.goalie2?1:0);
- return '<div class="main-menu-shell hub-shell">'+
- '<header class="hub-topbar"><button class="hub-profile" data-screen="heroRoom"><span class="hub-profile-crest">'+esc(team.club.logo)+'</span><span><small>КАПИТАН · УРОВЕНЬ '+(hero?.level||1)+'</small><b>'+esc(hero?.name||team.club.displayName)+'</b><i>'+esc(team.club.displayName)+'</i></span><strong>↗</strong></button><div class="hub-top-resources"><div><small>МОЩЬ КЛУБА</small><b>⚡ '+power+'</b></div><div><small>БЮДЖЕТ</small><b>₽ '+money(team.economy.dollars)+'</b></div><div class="hub-gold"><small>ЗОЛОТО</small><b>✦ '+team.economy.goldPucks+'</b></div></div></header>'+
- '<section class="hub-city-map"><img class="hub-city-art" src="club-city.svg" alt="Изометрический хоккейный город клуба"/><div class="hub-city-vignette"></div><div class="hub-city-title"><small>PUCK IT! · СЕЗОН 01</small><b>ГОРОД КЛУБА</b><span>РАЗВИВАЙ СВОЮ ХОККЕЙНУЮ ИМПЕРИЮ</span></div>'+
- '<button class="hub-city-building training" data-screen="team"><span class="hub-building-pin">✚</span><span class="hub-building-label"><b>ТРЕНИРОВОЧНАЯ БАЗА</b><small>СОСТАВ И ТАКТИКА</small></span></button>'+
- '<button class="hub-city-building academy" data-screen="cards"><span class="hub-building-pin">★</span><span class="hub-building-label"><b>АКАДЕМИЯ</b><small>КОЛЛЕКЦИЯ ИГРОКОВ</small></span></button>'+
- '<button class="hub-city-building arena" data-screen="stadium"><span class="hub-building-pin">⌂</span><span class="hub-building-label"><b>ДОМАШНЯЯ АРЕНА</b><small>PUCK IT! ICE DOME</small></span></button>'+
- '<button class="hub-city-building office" data-screen="managerOffice"><span class="hub-building-pin">▤</span><span class="hub-building-label"><b>ОФИС КЛУБА</b><small>КОНТРАКТЫ И УПРАВЛЕНИЕ</small></span></button>'+
- '<button class="hub-city-building hall" data-screen="club"><span class="hub-building-pin">✦</span><span class="hub-building-label"><b>КЛУБНЫЙ ЦЕНТР</b><small>РАЗВИТИЕ КОМАНДЫ</small></span></button>'+
- '<div class="hub-city-status"><span><i></i> КЛУБ АКТИВЕН</span><b>'+filled+' / 22 ИГРОКОВ В СОСТАВЕ</b></div>'+
- '<div class="hub-next-match"><span><small>СЛЕДУЮЩЕЕ СОБЫТИЕ</small><b>ВРЕМЯ ВЫХОДИТЬ НА ЛЁД</b></span><button data-screen="match">ИГРАТЬ МАТЧ <i>↗</i></button></div></section>'+
- '<nav class="hub-bottom-nav"><button class="active" data-screen="office"><span>⌂</span><b>ГОРОД</b></button><button data-screen="team"><span>♟</span><b>СОСТАВ</b></button><button data-screen="cards"><span>▧</span><b>КОЛЛЕКЦИЯ</b></button><button data-screen="match"><span>🏒</span><b>МАТЧ</b></button><button data-screen="settings"><span>•••</span><b>ЕЩЁ</b></button></nav>'+
- '<footer class="hub-city-footer"><span>HOCKEY: PUCK IT!</span><span>BUILD YOUR CLUB · OWN THE ICE</span></footer></div>';
+ const rosterName=(p:PlayerCard|null|undefined)=>p?esc(p.name):'Свободное место';
+ return '<div class="main-menu-shell hub-shell puck-home-shell">'+
+ '<header class="puck-home-top">'+
+ '<button class="puck-home-crest" data-screen="heroRoom" aria-label="Профиль капитана"><span>'+esc(team.club.logo)+'</span><small>PUCK IT!</small></button>'+
+ '<div class="puck-home-brand"><small>КЛУБ · КАПИТАН</small><b>'+esc(hero?.name||team.club.displayName)+'</b><span>'+esc(team.club.displayName)+' · УРОВЕНЬ '+(hero?.level||1)+'</span></div>'+
+ '<div class="puck-home-wallet"><span>💵 <b>'+money(team.economy.dollars)+'</b></span><span>🟡 <b>'+team.economy.goldPucks+'</b></span><button data-screen="settings" aria-label="Настройки">⚙</button></div></header>'+
+ '<section class="puck-home-progress"><div class="puck-home-progress-label"><span>ПРОГРЕСС КАПИТАНА</span><b>⚡ '+power+' МОЩЬ</b></div><div class="puck-home-progress-track"><i style="width:'+xp.toFixed(1)+'%"></i></div><div class="puck-home-progress-foot"><span>LVL '+(hero?.level||1)+'</span><span>'+(hero?.xp||0)+' / '+nextXp+' XP</span><span>'+filled+'/22 В СОСТАВЕ</span></div></section>'+
+ '<section class="puck-home-season"><div><small>ТЕКУЩИЙ СЕЗОН</small><b>SEASON <em>01</em></b></div><span class="puck-season-clock">◷ <b>04 ДНЯ</b> <i>12 ЧАСОВ</i></span><span class="puck-season-reward">✦ <b>4%</b></span></section>'+
+ '<nav class="puck-home-shortcuts">'+
+ '<button data-screen="team"><i>♟</i><b>СОСТАВ</b></button><button data-screen="cards"><i>✦</i><b>КОЛЛЕКЦИЯ</b></button><button data-screen="standings"><i>▤</i><b>РЕЙТИНГ</b></button><button data-screen="managerOffice"><i>📋</i><b>КОНТРАКТЫ</b></button><button data-screen="settings"><i>⚙</i><b>ЕЩЁ</b></button></nav>'+
+ '<section class="puck-home-activity"><div class="puck-home-activity-label"><span><small>ЕЖЕДНЕВНЫЙ ПЛАН</small><b>ВРЕМЯ РАБОТАТЬ</b></span><span class="puck-home-timer">◷ 17:15:09</span></div><button class="puck-home-training" data-screen="team"><span><small>ТРЕНИРОВКА</small><b>Улучши состав и тактику</b><i>▰ ▰ ▰</i></span><strong>🏒</strong><em>↗</em></button></section>'+
+ '<button class="puck-home-match" data-screen="match"><span class="puck-match-copy"><small>СЛЕДУЮЩИЙ МАТЧ</small><b>ВЫХОДИ<br/>НА <em>ЛЁД!</em></b><i>Проверь готовность команды</i><strong>ИГРАТЬ МАТЧ <u>↗</u></strong></span><span class="puck-match-athlete" aria-hidden="true"><i></i><b>PUCK<br/>IT!</b><em>✦</em></span><span class="puck-match-ribbon">MATCH DAY</span></button>'+
+ '<section class="puck-home-feature-grid"><button class="puck-home-feature puck-feature-cup" data-screen="playoff"><span class="puck-feature-art">🏆</span><small>ТУРНИР</small><b>КУБОК</b><i>Борись за трофей ↗</i></button><button class="puck-home-feature puck-feature-rank" data-screen="standings"><span class="puck-feature-art">🏒</span><small>СОРЕВНОВАНИЕ</small><b>МАТЧ НА РЕЙТИНГ</b><i>Поднимайся выше ↗</i></button></section>'+
+ '<nav class="puck-home-bottom"><button class="active" data-screen="office"><i>⌂</i><b>ГЛАВНАЯ</b></button><button data-screen="team"><i>♟</i><b>СОСТАВ</b></button><button data-screen="cards"><i>▣</i><b>КАРТЫ</b></button><button data-screen="standings"><i>⚑</i><b>ЛИГА</b></button><button data-screen="managerOffice"><i>▤</i><b>КЛУБ</b></button></nav>'+
+ '</div>';
 }
 function slotButton(p:PlayerCard|null,s:SlotRef,label:string){return '<button class="roster-slot '+(p?'filled':'')+'" data-slot="'+encodeURIComponent(JSON.stringify(s))+'"><small>'+label+'</small><b>'+(p?esc(p.name):'＋ Выбрать игрока')+'</b><span>'+(p?rarity(p.rarity):'Пустой слот')+'</span></button>';}
 function managerOfficePage(){

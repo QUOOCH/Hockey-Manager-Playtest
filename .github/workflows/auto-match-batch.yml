@@ -61,7 +61,7 @@ jobs:
       - name: Run real matches in the deployed game
         env:
           MATCHES: ${{ github.event.inputs.matches || '3' }}
-          BATCH_STEPS: "120"
+          BATCH_STEPS: "240"
           GAME_URL: https://quooch.github.io/Hockey-Manager-Playtest/
         run: node scripts/run-auto-match-batch.mjs
       - name: Publish batch results

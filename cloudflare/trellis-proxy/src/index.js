@@ -95,6 +95,35 @@ export default {
       }, env.MATCH_LOGS_DB ? 200 : 503, origin);
     }
 
+    if (url.pathname === "/telemetry/matches" && request.method === "GET") {
+      if (!env.MATCH_LOGS_DB) {
+        return json({ ok: false, error: "MATCH_LOGS_DB binding is not configured." }, 503, origin);
+      }
+      const requestedLimit = Number(url.searchParams.get("limit") || 3);
+      const limit = Number.isFinite(requestedLimit) ? Math.max(1, Math.min(10, Math.floor(requestedLimit))) : 3;
+      try {
+        const result = await env.MATCH_LOGS_DB.prepare(
+          "SELECT id, created_at, home_team, away_team, score, duration_seconds, payload FROM match_logs ORDER BY created_at DESC LIMIT ?"
+        ).bind(limit).all();
+        const matches = (result.results || []).map(row => {
+          let payload = null;
+          try { payload = JSON.parse(row.payload); } catch { /* retain metadata if an old row is malformed */ }
+          return {
+            id: row.id,
+            createdAt: row.created_at,
+            home: row.home_team,
+            away: row.away_team,
+            score: row.score,
+            durationSeconds: row.duration_seconds,
+            payload
+          };
+        });
+        return json({ ok: true, count: matches.length, matches }, 200, origin);
+      } catch (error) {
+        return json({ ok: false, error: "Could not read match logs.", detail: String(error).slice(0, 300) }, 500, origin);
+      }
+    }
+
     if (url.pathname === "/telemetry/matches" && request.method === "POST") {
       if (!env.MATCH_LOGS_DB) {
         return json({ ok: false, error: "MATCH_LOGS_DB binding is not configured." }, 503, origin);

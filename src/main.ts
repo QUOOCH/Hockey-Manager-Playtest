@@ -547,7 +547,7 @@ function heroRoomPage(){
  <section class="locker-room-3d-shell"><div class="locker-room-3d-topline"><span>HOME LOCKER ROOM</span><span>SEASON 01 · EST. 2026</span></div><div id="locker-room-3d" class="locker-room-3d-stage"><div class="locker-room-loading"><i></i><b>ГОТОВИМ РАЗДЕВАЛКУ</b><small>ЗАГРУЖАЕМ 3D-ПРОСТРАНСТВО</small></div></div><div class="locker-room-3d-caption"><span><b>PUCK IT!</b><small>PLAYER HOME BASE</small></span><span id="locker-room-status">Потяни персонажа, чтобы вращать</span></div><div class="locker-room-3d-hint">ФРОНТАЛЬНЫЙ ВИД · ВЫБИРАЙ ЭКИПИРОВКУ НИЖЕ</div></section>
  <section class="panel player-customization">
  <div class="player-customization-heading"><span><small>GEAR WORKSHOP · 01</small><b>ВЫБЕРИ СВОЮ КЛЮШКУ</b><em>Поза и хват остаются неизменными</em></span><strong>01 / 06</strong></div>
- <div id="player-art-preview" class="player-art-preview" data-stick-style="graphite" role="img" aria-label="Хоккеист PUCK IT! — вид спереди, с выбранной клюшкой"><span class="gear-stick-overlay" aria-hidden="true"></span></div>
+ <div id="player-art-preview" class="player-art-preview" data-stick-style="graphite" role="img" aria-label="Хоккеист PUCK IT! — вид спереди, с выбранной клюшкой" style="--player-art:url(${import.meta.env.BASE_URL}player-customization/puckit-player-front.webp)"><span class="gear-stick-overlay" aria-hidden="true"></span></div>
  <div class="gear-slot-strip"><span class="active">КЛЮШКА</span><span>КОНЬКИ</span><span>ФОРМА</span><span>ШЛЕМ</span><span>ПЕРЧАТКИ</span></div>
  <div class="gear-option-grid">
  <button type="button" class="gear-option" data-stick-style="graphite"><i class="gear-swatch graphite"></i><span><b>GRAPHITE</b><small>Тёмный карбон</small></span><strong>01</strong></button>

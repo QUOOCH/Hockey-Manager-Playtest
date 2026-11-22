@@ -84,7 +84,7 @@ export function mountLockerRoomStage(host: HTMLElement, onStatus?: (message: str
   addBox(scene, darkMetal, 0, 5.28, -1.9, 13.7, .12, 7.2, false);
   // Floor inlays and a soft central presentation zone.
   for (let z = -8; z <= 4; z += 1) addBox(scene, mat(0x466176, .62, .2), 0, .006, z, 13.7, .012, .012, false);
-  for (let x = -6; x <= 6; x += 1) addBox(scene, mat(0x466176, .62, .2), x, .006, -2, .012, .012, false);
+  for (let x = -6; x <= 6; x += 1) addBox(scene, mat(0x466176, .62, .2), x, .006, -2, .012, .012, 13.7, false);
   const floorGlow = new THREE.Mesh(new THREE.CircleGeometry(2.35, 64), new THREE.MeshBasicMaterial({ color: 0x28618a, transparent: true, opacity: .13, depthWrite: false }));
   floorGlow.rotation.x = -Math.PI / 2; floorGlow.position.set(0, .012, -.2); scene.add(floorGlow);
 

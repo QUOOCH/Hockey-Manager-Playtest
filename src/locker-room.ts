@@ -14,8 +14,8 @@ export function mountLockerRoomStage(host: HTMLElement, onStatus?: (message: str
   }
 
   const scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x07111d);
-  scene.fog = new THREE.Fog(0x172b3b, 18, 34);
+  scene.background = new THREE.Color(0x182b3a);
+  scene.fog = new THREE.Fog(0x304b5e, 22, 42);
   const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 60);
   camera.position.set(0, 3.15, 9.4);
   camera.lookAt(0, 1.65, 0);
@@ -25,25 +25,25 @@ export function mountLockerRoomStage(host: HTMLElement, onStatus?: (message: str
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.32;
+  renderer.toneMappingExposure = 1.62;
   renderer.domElement.className = 'locker-room-canvas';
   renderer.domElement.setAttribute('aria-label', 'Интерактивная трёхмерная хоккейная раздевалка');
   host.appendChild(renderer.domElement);
 
   const mat = (color: number, roughness = .65, metalness = 0) => new THREE.MeshStandardMaterial({ color, roughness, metalness });
-  const wall = mat(0x30495b, .82);
-  const sideWall = mat(0x263e50, .82);
-  const floorMat = mat(0x2a4050, .34, .22);
+  const wall = mat(0x526d7e, .82);
+  const sideWall = mat(0x405b6d, .82);
+  const floorMat = mat(0x435c6d, .38, .16);
   const darkMetal = mat(0x101a24, .38, .72);
-  const lockerMetal = mat(0x526c7c, .38, .62);
-  const lockerFace = mat(0x3b5668, .46, .48);
+  const lockerMetal = mat(0x7893a2, .4, .48);
+  const lockerFace = mat(0x587487, .48, .34);
   const silver = mat(0xa6c0cc, .25, .82);
   const purple = mat(0x7148d6, .3, .45);
   const purpleGlow = new THREE.MeshBasicMaterial({ color: 0x9c6dff });
   const wood = mat(0x8c6547, .52, .08);
   const rubber = mat(0x090f17, .9);
   const white = mat(0xdce9ee, .34, .18);
-  const wallPanel = mat(0x38566a, .72, .2);
+  const wallPanel = mat(0x58788b, .72, .16);
   const trimMetal = mat(0x7895a8, .3, .82);
   const iceGlow = new THREE.MeshBasicMaterial({ color: 0x75d8ff, transparent: true, opacity: .72 });
   const purpleEdge = new THREE.MeshBasicMaterial({ color: 0x9b75ff, transparent: true, opacity: .82 });
@@ -65,18 +65,18 @@ export function mountLockerRoomStage(host: HTMLElement, onStatus?: (message: str
     return mesh;
   };
 
-  scene.add(new THREE.HemisphereLight(0xe4f4ff, 0x405366, 2.15));
-  const key = new THREE.DirectionalLight(0xf0f7ff, 3.0);
+  scene.add(new THREE.HemisphereLight(0xf1f8ff, 0x657b89, 3.25));
+  const key = new THREE.DirectionalLight(0xffffff, 4.4);
   key.position.set(-4, 8, 5);
   key.castShadow = true;
   key.shadow.mapSize.set(1024, 1024);
   key.shadow.camera.left = -8; key.shadow.camera.right = 8; key.shadow.camera.top = 9; key.shadow.camera.bottom = -5;
   scene.add(key);
-  const cold = new THREE.PointLight(0x83d8ff, 34, 15, 2);
+  const cold = new THREE.PointLight(0x9be5ff, 48, 18, 2);
   cold.position.set(-3.8, 4.2, 1.5); scene.add(cold);
-  const violet = new THREE.PointLight(0x9b75ff, 25, 13, 2);
+  const violet = new THREE.PointLight(0xa88aff, 32, 16, 2);
   violet.position.set(3.5, 3.4, -1.5); scene.add(violet);
-  const heroLight = new THREE.SpotLight(0xf4f9ff, 58, 17, Math.PI / 4.5, .55, 1.2);
+  const heroLight = new THREE.SpotLight(0xffffff, 82, 20, Math.PI / 3.8, .48, 1.0);
   heroLight.position.set(0, 7.5, 3.4); heroLight.target.position.set(0, 1.2, 0); scene.add(heroLight, heroLight.target);
 
   // A real enclosed room: floor, back wall, side returns and ceiling beams.
@@ -106,7 +106,7 @@ export function mountLockerRoomStage(host: HTMLElement, onStatus?: (message: str
   // Floor inlays and a soft central presentation zone.
   for (let z = -8; z <= 4; z += 1) addBox(scene, mat(0x466176, .62, .2), 0, .006, z, 13.7, .012, .012, false);
   for (let x = -6; x <= 6; x += 1) addBox(scene, mat(0x466176, .62, .2), x, .006, -2, .012, .012, 13.7, false);
-  const floorGlow = new THREE.Mesh(new THREE.CircleGeometry(2.35, 64), new THREE.MeshBasicMaterial({ color: 0x28618a, transparent: true, opacity: .13, depthWrite: false }));
+  const floorGlow = new THREE.Mesh(new THREE.CircleGeometry(2.65, 64), new THREE.MeshBasicMaterial({ color: 0x4aa8d8, transparent: true, opacity: .22, depthWrite: false }));
   floorGlow.rotation.x = -Math.PI / 2; floorGlow.position.set(0, .012, -.2); scene.add(floorGlow);
   // Fine floor inlays and a restrained presentation-ring graphic around the player.
   for (const x of [-6.25, 6.25]) addBox(scene, trimMetal, x, .012, -2.1, .018, .012, 11.6, false);
@@ -262,7 +262,7 @@ export function mountLockerRoomStage(host: HTMLElement, onStatus?: (message: str
     heroPivot.rotation.y += (targetRotation - heroPivot.rotation.y) * .16;
     // Slow breathing light keeps the display alive without distracting from the player.
     const pulse = .5 + .5 * Math.sin(t * .8);
-    floorGlow.material.opacity = .105 + pulse * .045;
+    floorGlow.material.opacity = .19 + pulse * .06;
     ring.scale.setScalar(1 + pulse * .012);
     pedestalGlow.intensity = 6.2 + pulse * 1.5;
     renderer.render(scene, camera);

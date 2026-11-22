@@ -95,6 +95,23 @@ export function mountLockerRoomStage(host: HTMLElement, onStatus?: (message: str
     addBox(scene, darkMetal, 0, 5.18, z, 13.4, .18, .16, false);
     addBox(scene, trimMetal, 0, 5.075, z + .09, 13.2, .018, .025, false);
   }
+  // Large recessed ceiling luminaires: visible fixtures, not just ambient point lights.
+  const ceilingDiffuser = new THREE.MeshStandardMaterial({
+    color: 0xe9f7ff, emissive: 0x9edfff, emissiveIntensity: 1.35,
+    roughness: .28, metalness: .08
+  });
+  const ceilingFrame = mat(0x243b4c, .38, .68);
+  for (const x of [-3.35, 0, 3.35]) {
+    addBox(scene, ceilingFrame, x, 5.17, -1.85, 2.45, .075, 1.18, false);
+    addBox(scene, ceilingDiffuser, x, 5.125, -1.85, 2.28, .025, 1.02, false);
+    const downlight = new THREE.PointLight(0xd8f2ff, 8, 7, 2);
+    downlight.position.set(x, 4.95, -1.7);
+    scene.add(downlight);
+  }
+  // A warm practical strip over the benches balances the colder player-display lighting.
+  addBox(scene, ceilingFrame, 0, 5.16, -3.55, 5.4, .06, .34, false);
+  addBox(scene, new THREE.MeshBasicMaterial({ color: 0xffe6bd }), 0, 5.12, -3.55, 5.15, .018, .2, false);
+
   // Vertical acoustic wall fins catch the cold and violet light on both sides.
   for (let i = 0; i < 9; i++) {
     const z = -4.65 + i * .78;
@@ -133,7 +150,14 @@ export function mountLockerRoomStage(host: HTMLElement, onStatus?: (message: str
     addBox(scene, trimMetal, x + .39, 3.42, z + .325, .025, .025, .018, false);
     addBox(scene, purple, x, 2.48, z + .33, .72, .025, .018, false);
     addBox(scene, silver, x + .27, 1.73, z + .35, .035, .2, .035, false);
-    addBox(scene, darkMetal, x, .48, z + .33, .48, .24, .025, false);
+    // Recessed lower boot bay, framed door edges and a real latch assembly.
+    addBox(scene, darkMetal, x, .48, z + .345, .52, .31, .035, false);
+    addBox(scene, lockerMetal, x, .48, z + .368, .45, .23, .018, false);
+    addBox(scene, darkMetal, x - .365, 1.8, z + .345, .018, 3.12, .035, false);
+    addBox(scene, darkMetal, x + .365, 1.8, z + .345, .018, 3.12, .035, false);
+    addBox(scene, silver, x + .29, 1.78, z + .38, .045, .28, .045, false);
+    addBox(scene, purpleGlow, x + .29, 1.98, z + .382, .035, .035, .012, false);
+    addBox(scene, darkMetal, x, .79, z + .37, .58, .035, .025, false);
     const plate = addBox(scene, darkMetal, x, 3.35, z + .34, .42, .22, .025, false);
     const canvas = document.createElement('canvas'); canvas.width = 256; canvas.height = 128;
     const ctx = canvas.getContext('2d');
@@ -199,6 +223,27 @@ export function mountLockerRoomStage(host: HTMLElement, onStatus?: (message: str
     crest.position.set(x, 3.58, -4.72); scene.add(crest);
     addBox(scene, silver, x, 3.25, -4.72, .16, .025, .012, false);
   }
+  // Side-wall equipment racks: recognizable hockey sticks staged as real room props.
+  const stickShaft = mat(0x202c38, .34, .42);
+  const stickTape = mat(0xdce7ed, .72, .04);
+  const bladeMat = mat(0x111923, .5, .18);
+  for (const side of [-1, 1]) {
+    const rackX = side * 6.63;
+    addBox(scene, darkMetal, rackX, 2.28, -1.7, .07, .12, 2.15, false);
+    addBox(scene, trimMetal, rackX - side * .045, 2.28, -1.7, .025, .025, 2.0, false);
+    for (let i = 0; i < 3; i++) {
+      const z = -2.35 + i * .65;
+      addBox(scene, silver, rackX - side * .09, 2.28, z, .16, .055, .055, false);
+      const shaft = addCylinder(scene, stickShaft, rackX - side * .15, 1.53, z, .035, 1.42, 12);
+      shaft.rotation.z = side * -.08;
+      const grip = addCylinder(scene, stickTape, rackX - side * .15, 2.14, z, .038, .22, 12);
+      grip.rotation.z = side * -.08;
+      const blade = addBox(scene, bladeMat, rackX - side * .15, .78, z - .12, .075, .11, .31, false);
+      blade.rotation.y = side * .12;
+      addBox(scene, stickTape, rackX - side * .15, .83, z - .12, .08, .025, .19, false);
+    }
+  }
+
   // Display pedestal, subtle metal rings and violet underglow.
   addCylinder(scene, darkMetal, 0, .12, .05, 1.05, .24, 64);
   addCylinder(scene, lockerMetal, 0, .26, .05, .96, .08, 64);

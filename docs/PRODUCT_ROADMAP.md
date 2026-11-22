@@ -95,3 +95,10 @@
 - [ ] Create a fixed-pose modular artwork proof-of-concept on the experimental branch; keep the main branch untouched.
 
 - 2026-11-23 first visual proof: produced three fixed-pose stick appearance studies (graphite, PUCK IT violet, ice white) from the approved master reference. This confirms the target is a fixed-pose visual swap; current output is an offline design proof only, not yet wired into the locker-room UI. Next: turn the cleaned master + aligned equipment variants into repository assets and a real selector; validate glove overlap and exact hand contact before calling the stick swap production-ready.
+
+
+### Fixed-pose equipment selector — first implementation
+- Added a repository-hosted 4-frame WebP strip based on the canonical player artwork: master reference plus graphite, PUCK IT! violet, and ice-white stick variants.
+- Added the first locker-room gear workshop UI with three selectable stick finishes and persisted selection in local storage.
+- Kept the character art and all other equipment visually fixed; the first pass changes only the displayed equipment-strip frame.
+- This is a visual prototype selector, not yet a true independent transparent equipment layer. Validate crop alignment, phone rendering, and interaction before expanding to skates, jersey, helmet, and gloves.

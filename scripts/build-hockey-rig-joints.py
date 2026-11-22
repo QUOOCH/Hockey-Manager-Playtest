@@ -88,7 +88,7 @@ def main():
     result = build(measured)
     result["source_model"] = record.get("source")
     result["first_pass_name"] = record.get("name")
-    Path(sys.argv[2]).write_text(json.dumps(result, indent=2) + "\\n", encoding="utf-8")
+    Path(sys.argv[2]).write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
     print(json.dumps({"overridden_bones": sorted(result["joints"]), "pelvis_center_x": measured["hip"][0]}))
 
 if __name__ == "__main__":

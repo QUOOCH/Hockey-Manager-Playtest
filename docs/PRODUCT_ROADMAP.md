@@ -29,7 +29,10 @@
 - [x] Add a first environmental polish pass: ceiling ribs, acoustic wall fins, detailed locker doors, floor presentation rings, and shaped jersey displays with subtle pulsing light.
 - [x] Improve room readability with brighter ambient fill, stronger neutral key light, brighter player spotlight, lighter architectural materials, and a more visible ice-blue presentation glow.
 - [ ] Add a premium second pass for materials, finer player-facing details, and richer environmental storytelling.
-- [ ] Rebuild the room's visual hierarchy with more substantial locker-bank architecture, a brighter premium ceiling light system, and clearer player-centred staging.
+- [x] Add visible recessed ceiling light panels with dedicated downlights and a warmer bench-side practical strip.
+- [x] Add dimensional locker-door framing, latch details, and recessed lower boot bays.
+- [x] Add side-wall hockey-stick racks as environmental equipment props.
+- [ ] Rebuild the room's visual hierarchy with more substantial locker-bank architecture and clearer player-centred staging.
 - [ ] Add player details and equipment presentation around the character.
 - [ ] Build equipment customization with swappable helmet, visor, jersey, gloves, pants, skates, and stick assets; do not fake swaps by only changing UI labels.
 - [ ] Preserve the selected premium stylized visual direction for cards and surrounding UI; keep match gameplay visuals distinct where appropriate.

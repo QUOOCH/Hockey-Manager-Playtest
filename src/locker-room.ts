@@ -43,6 +43,10 @@ export function mountLockerRoomStage(host: HTMLElement, onStatus?: (message: str
   const wood = mat(0x8c6547, .52, .08);
   const rubber = mat(0x090f17, .9);
   const white = mat(0xdce9ee, .34, .18);
+  const wallPanel = mat(0x20384a, .72, .24);
+  const trimMetal = mat(0x7895a8, .3, .82);
+  const iceGlow = new THREE.MeshBasicMaterial({ color: 0x75d8ff, transparent: true, opacity: .72 });
+  const purpleEdge = new THREE.MeshBasicMaterial({ color: 0x9b75ff, transparent: true, opacity: .82 });
 
   const addBox = (parent: THREE.Object3D, material: THREE.Material, x: number, y: number, z: number, w: number, h: number, d: number, cast = true) => {
     const mesh = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), material);
@@ -82,11 +86,39 @@ export function mountLockerRoomStage(host: HTMLElement, onStatus?: (message: str
   addBox(scene, sideWall, 6.9, 2.65, -1.7, .35, 5.6, 7.2, false);
   addBox(scene, mat(0x0b1722, .8), 0, 5.48, -1.9, 13.8, .18, 7.2, false);
   addBox(scene, darkMetal, 0, 5.28, -1.9, 13.7, .12, 7.2, false);
+  // Architectural ceiling ribs and recessed light coves give the room a real arena-club scale.
+  for (const x of [-5.8, -3.0, 0, 3.0, 5.8]) {
+    addBox(scene, wallPanel, x, 5.12, -1.9, .16, .22, 7.0, false);
+    addBox(scene, trimMetal, x, 4.99, -1.9, .025, .025, 6.85, false);
+  }
+  for (const z of [-4.7, -2.0, .7]) {
+    addBox(scene, darkMetal, 0, 5.18, z, 13.4, .18, .16, false);
+    addBox(scene, trimMetal, 0, 5.075, z + .09, 13.2, .018, .025, false);
+  }
+  // Vertical acoustic wall fins catch the cold and violet light on both sides.
+  for (let i = 0; i < 9; i++) {
+    const z = -4.65 + i * .78;
+    addBox(scene, wallPanel, -6.68, 2.65, z, .08, 4.9, .16, false);
+    addBox(scene, trimMetal, -6.62, 2.65, z, .025, 4.65, .025, false);
+    addBox(scene, wallPanel, 6.68, 2.65, z, .08, 4.9, .16, false);
+    addBox(scene, trimMetal, 6.62, 2.65, z, .025, 4.65, .025, false);
+  }
   // Floor inlays and a soft central presentation zone.
   for (let z = -8; z <= 4; z += 1) addBox(scene, mat(0x466176, .62, .2), 0, .006, z, 13.7, .012, .012, false);
   for (let x = -6; x <= 6; x += 1) addBox(scene, mat(0x466176, .62, .2), x, .006, -2, .012, .012, 13.7, false);
   const floorGlow = new THREE.Mesh(new THREE.CircleGeometry(2.35, 64), new THREE.MeshBasicMaterial({ color: 0x28618a, transparent: true, opacity: .13, depthWrite: false }));
   floorGlow.rotation.x = -Math.PI / 2; floorGlow.position.set(0, .012, -.2); scene.add(floorGlow);
+  // Fine floor inlays and a restrained presentation-ring graphic around the player.
+  for (const x of [-6.25, 6.25]) addBox(scene, trimMetal, x, .012, -2.1, .018, .012, 11.6, false);
+  for (const z of [-7.8, 3.8]) addBox(scene, trimMetal, 0, .012, z, 12.5, .012, .018, false);
+  const floorRing = new THREE.Mesh(new THREE.RingGeometry(1.48, 1.51, 96), iceGlow);
+  floorRing.rotation.x = -Math.PI / 2; floorRing.position.set(0, .018, .05); scene.add(floorRing);
+  const innerFloorRing = new THREE.Mesh(new THREE.RingGeometry(1.72, 1.735, 96), purpleEdge);
+  innerFloorRing.rotation.x = -Math.PI / 2; innerFloorRing.position.set(0, .017, .05); scene.add(innerFloorRing);
+  for (const x of [-2.7, 2.7]) {
+    const floorMarker = new THREE.Mesh(new THREE.CircleGeometry(.055, 24), iceGlow);
+    floorMarker.rotation.x = -Math.PI / 2; floorMarker.position.set(x, .02, .05); scene.add(floorMarker);
+  }
 
   // Locker banks with individual doors, ventilation slots, name plates and handles.
   const buildLocker = (x: number, index: number, z = -4.78) => {
@@ -96,6 +128,9 @@ export function mountLockerRoomStage(host: HTMLElement, onStatus?: (message: str
     addBox(scene, silver, x - .31, 1.8, z + .315, .012, 3.25, .012, false);
     for (let n = 0; n < 5; n++) addBox(scene, silver, x - .19 + n * .075, 3.12, z + .326, .045, .018, .012, false);
     for (let n = 0; n < 4; n++) addBox(scene, darkMetal, x - .2 + n * .12, 2.82, z + .326, .065, .018, .012, false);
+    for (let n = 0; n < 7; n++) addBox(scene, silver, x - .18 + n * .06, 2.98, z + .329, .035, .012, .01, false);
+    addBox(scene, trimMetal, x - .39, 3.42, z + .325, .025, .025, .018, false);
+    addBox(scene, trimMetal, x + .39, 3.42, z + .325, .025, .025, .018, false);
     addBox(scene, purple, x, 2.48, z + .33, .72, .025, .018, false);
     addBox(scene, silver, x + .27, 1.73, z + .35, .035, .2, .035, false);
     addBox(scene, darkMetal, x, .48, z + .33, .48, .24, .025, false);
@@ -113,6 +148,9 @@ export function mountLockerRoomStage(host: HTMLElement, onStatus?: (message: str
     void plate;
   };
   for (let i = 0; i < 6; i++) { buildLocker(-4.65 + i * .98, i + 1); buildLocker(4.65 - i * .98, i + 7); }
+  // Continuous locker-bank caps and a thin violet reveal line tie the individual units together.
+  addBox(scene, darkMetal, 0, 3.63, -4.78, 12.0, .13, .58, false);
+  addBox(scene, purple, 0, 3.55, -4.43, 11.75, .018, .025, false);
 
   // Long timber benches, dark steel legs and rubber floor mats.
   for (const z of [-2.7, -1.7]) {
@@ -123,6 +161,7 @@ export function mountLockerRoomStage(host: HTMLElement, onStatus?: (message: str
       addBox(scene, silver, x, .12, z, .32, .06, .3);
     }
     addBox(scene, rubber, 0, .012, z, 5.8, .018, .8, false);
+    addBox(scene, trimMetal, 0, .57, z + .27, 5.15, .025, .025, false);
   }
 
   // Back-wall crest and light strips, using real 3D signage rather than a flat backdrop.
@@ -148,8 +187,17 @@ export function mountLockerRoomStage(host: HTMLElement, onStatus?: (message: str
   for (let i = 0; i < 3; i++) {
     const x = -4.9 + i * 1.05;
     addBox(scene, darkMetal, x, 4.0, -4.96, .7, .035, .12);
-    addBox(scene, jerseyColors[i] === 0xeff4f7 ? white : mat(jerseyColors[i], .62), x, 3.55, -4.83, .55, .78, .12);
-    addBox(scene, purple, x, 3.55, -4.75, .52, .035, .018, false);
+    const jerseyShape = new THREE.Shape();
+    jerseyShape.moveTo(-.22, .39); jerseyShape.lineTo(-.42, .27); jerseyShape.lineTo(-.34, .08);
+    jerseyShape.lineTo(-.25, .15); jerseyShape.lineTo(-.25, -.39); jerseyShape.lineTo(.25, -.39);
+    jerseyShape.lineTo(.25, .15); jerseyShape.lineTo(.34, .08); jerseyShape.lineTo(.42, .27);
+    jerseyShape.lineTo(.22, .39); jerseyShape.lineTo(.12, .31); jerseyShape.lineTo(-.12, .31); jerseyShape.closePath();
+    const jersey = new THREE.Mesh(new THREE.ShapeGeometry(jerseyShape), jerseyColors[i] === 0xeff4f7 ? white : mat(jerseyColors[i], .62));
+    jersey.position.set(x, 3.55, -4.75); jersey.castShadow = true; scene.add(jersey);
+    addBox(scene, purple, x, 3.55, -4.735, .035, .48, .012, false);
+    const crest = new THREE.Mesh(new THREE.CircleGeometry(.075, 6), purpleGlow);
+    crest.position.set(x, 3.58, -4.72); scene.add(crest);
+    addBox(scene, silver, x, 3.25, -4.72, .16, .025, .012, false);
   }
   // Display pedestal, subtle metal rings and violet underglow.
   addCylinder(scene, darkMetal, 0, .12, .05, 1.05, .24, 64);
@@ -210,7 +258,13 @@ export function mountLockerRoomStage(host: HTMLElement, onStatus?: (message: str
   const animate = () => {
     if (disposed) return;
     frame = requestAnimationFrame(animate);
+    const t = performance.now() * .001;
     heroPivot.rotation.y += (targetRotation - heroPivot.rotation.y) * .16;
+    // Slow breathing light keeps the display alive without distracting from the player.
+    const pulse = .5 + .5 * Math.sin(t * .8);
+    floorGlow.material.opacity = .105 + pulse * .045;
+    ring.scale.setScalar(1 + pulse * .012);
+    pedestalGlow.intensity = 6.2 + pulse * 1.5;
     renderer.render(scene, camera);
   };
   resize(); animate();

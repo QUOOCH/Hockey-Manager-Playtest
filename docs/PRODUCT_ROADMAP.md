@@ -24,9 +24,12 @@
 - [ ] Create and test the base graphite visor first, then mirror/premium variants.
 
 ## Player room and presentation
-- [ ] Build a polished, atmospheric player room (not a generic menu panel).
-- [ ] Display the 3D player as the visual centrepiece, with drag/touch rotation.
+- [x] Build the first working 3D locker room with an enclosed room, locker banks, benches, club signage, pedestal, and responsive Three.js player viewer.
+- [x] Display the 3D player as the visual centrepiece, with drag/touch rotation; smoke-tested by the project owner on iPhone Safari.
+- [x] Add a first environmental polish pass: ceiling ribs, acoustic wall fins, detailed locker doors, floor presentation rings, and shaped jersey displays with subtle pulsing light.
+- [ ] Add a premium second pass for materials, finer player-facing details, and richer environmental storytelling.
 - [ ] Add player details and equipment presentation around the character.
+- [ ] Build equipment customization with swappable helmet, visor, jersey, gloves, pants, skates, and stick assets; do not fake swaps by only changing UI labels.
 - [ ] Preserve the selected premium stylized visual direction for cards and surrounding UI; keep match gameplay visuals distinct where appropriate.
 
 ## Match presentation and gameplay

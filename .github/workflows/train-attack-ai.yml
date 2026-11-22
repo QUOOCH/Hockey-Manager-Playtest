@@ -1,0 +1,56 @@
+name: Train attack AI candidate
+
+# Re-evaluate the candidate against the expanded 100-match archive after each workflow update.
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "scripts/train-attack-policy.mjs"
+      - ".github/workflows/train-attack-ai.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: train-attack-ai
+  cancel-in-progress: true
+
+jobs:
+  train:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Fetch recent match episodes
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --silent --show-error --retry 3 --retry-delay 2 \
+            "https://little-morning-b296.bratskiymax0.workers.dev/telemetry/matches?limit=100" \
+            -o latest-matches.json
+          python - <<'PY'
+          import json
+          with open("latest-matches.json", encoding="utf-8") as f:
+              data = json.load(f)
+          if not data.get("ok"):
+              raise SystemExit("Match-log API did not confirm success")
+          print(f"Fetched {data.get('count', 0)} archived match(es)")
+          PY
+      - name: Train and evaluate candidate
+        run: node scripts/train-attack-policy.mjs latest-matches.json attack-policy-candidate.json training-report.json
+      - name: Publish candidate and training report
+        uses: actions/upload-artifact@v4
+        with:
+          name: puck-it-attack-ai-candidate
+          path: |
+            training-report.json
+            attack-policy-candidate.json
+          if-no-files-found: warn
+          retention-days: 14

@@ -1,0 +1,12 @@
+name = "little-morning-b296"
+main = "src/index.js"
+compatibility_date = "2026-11-19"
+workers_dev = true
+
+[observability]
+enabled = true
+
+[[d1_databases]]
+binding = "MATCH_LOGS_DB"
+database_name = "puck-it-match-logs"
+database_id = "2e921879-ffc7-4fba-8bdb-ad56fce4edf1"

@@ -164,7 +164,7 @@ jobs:
           MODEL_NAME: ${{ steps.model.outputs.name }}
         run: |
           mkdir -p "$RUNNER_TEMP/puckit-results/autorig"
-          blender -b --python autorig/steps/m2m_rig.py -- --in "$MODEL_PATH" --name "${MODEL_NAME}_autorig" --out "$RUNNER_TEMP/puckit-results/autorig" --template human --people m2m --height 3.25 --facing -y --triangles 90000 --skin autorig --format glb,fbx
+          blender -b --python autorig/steps/m2m_rig.py -- --in "$MODEL_PATH" --name "${MODEL_NAME}_autorig" --out "$RUNNER_TEMP/puckit-results/autorig" --template human --people m2m --height 1.9 --facing=-y --triangles 90000 --skin autorig --format glb,fbx
 
       - name: Rig player with Mesh2Motion skinning
         if: steps.model.outputs.available == 'true'
@@ -175,7 +175,7 @@ jobs:
           MODEL_NAME: ${{ steps.model.outputs.name }}
         run: |
           mkdir -p "$RUNNER_TEMP/puckit-results/mesh2motion"
-          blender -b --python autorig/steps/m2m_rig.py -- --in "$MODEL_PATH" --name "${MODEL_NAME}_mesh2motion" --out "$RUNNER_TEMP/puckit-results/mesh2motion" --template human --people m2m --height 3.25 --facing -y --triangles 90000 --skin m2m --format glb,fbx
+          blender -b --python autorig/steps/m2m_rig.py -- --in "$MODEL_PATH" --name "${MODEL_NAME}_mesh2motion" --out "$RUNNER_TEMP/puckit-results/mesh2motion" --template human --people m2m --height 1.9 --facing=-y --triangles 90000 --skin m2m --format glb,fbx
 
       - name: Publish rig test summary
         if: always()

@@ -53,3 +53,12 @@
   - Mesh2Motion: 3,027 combined tears, 1,457 bend tears, 1.37% bleed, 4.56% head metric, 91.0 stand folds.
 - Current best of these tests is the hockey-specific Autorig pass by a small margin, but it still fails strict QA. Next step is to inspect previews and improve mesh preparation / joint placement / skin weights before selecting a rig.
 - Artifact: https://github.com/QUOOCH/Hockey-Manager-Playtest/actions/runs/45027472510/artifacts/14756846666
+
+
+## Follow-up after artifact inspection — 2026-11-22
+- [x] Downloaded and inspected the contents of artifact 14756846666.
+- [x] Confirmed the selected hockey-specific Autorig output contains one skinned mesh (44,825 vertices), 66 bones, and no unskinned meshes.
+- [ ] Visually inspect the GLB preview in a compatible 3D viewer before judging silhouette or animation quality.
+- [ ] Investigate why 31 bones have no skin weights and whether those are intentional helper/leaf bones.
+- [ ] Focus deformation repair on the remaining 182 combined tears, 388 bend tears, and 233.2 stand-fold score in the hockey-specific Autorig result.
+- [ ] Compare the repaired rig against the baseline using the same audit thresholds; do not integrate until visual review and deformation QA pass.

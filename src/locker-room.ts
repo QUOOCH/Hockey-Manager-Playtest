@@ -15,7 +15,7 @@ export function mountLockerRoomStage(host: HTMLElement, onStatus?: (message: str
 
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(0x07111d);
-  scene.fog = new THREE.Fog(0x07111d, 12, 27);
+  scene.fog = new THREE.Fog(0x172b3b, 18, 34);
   const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 60);
   camera.position.set(0, 3.15, 9.4);
   camera.lookAt(0, 1.65, 0);
@@ -25,25 +25,25 @@ export function mountLockerRoomStage(host: HTMLElement, onStatus?: (message: str
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.12;
+  renderer.toneMappingExposure = 1.32;
   renderer.domElement.className = 'locker-room-canvas';
   renderer.domElement.setAttribute('aria-label', 'Интерактивная трёхмерная хоккейная раздевалка');
   host.appendChild(renderer.domElement);
 
   const mat = (color: number, roughness = .65, metalness = 0) => new THREE.MeshStandardMaterial({ color, roughness, metalness });
-  const wall = mat(0x182b3a, .86);
-  const sideWall = mat(0x101f2d, .82);
-  const floorMat = mat(0x172b3b, .28, .32);
+  const wall = mat(0x30495b, .82);
+  const sideWall = mat(0x263e50, .82);
+  const floorMat = mat(0x2a4050, .34, .22);
   const darkMetal = mat(0x101a24, .38, .72);
-  const lockerMetal = mat(0x334a5a, .34, .78);
-  const lockerFace = mat(0x263b4a, .42, .62);
+  const lockerMetal = mat(0x526c7c, .38, .62);
+  const lockerFace = mat(0x3b5668, .46, .48);
   const silver = mat(0xa6c0cc, .25, .82);
   const purple = mat(0x7148d6, .3, .45);
   const purpleGlow = new THREE.MeshBasicMaterial({ color: 0x9c6dff });
   const wood = mat(0x8c6547, .52, .08);
   const rubber = mat(0x090f17, .9);
   const white = mat(0xdce9ee, .34, .18);
-  const wallPanel = mat(0x20384a, .72, .24);
+  const wallPanel = mat(0x38566a, .72, .2);
   const trimMetal = mat(0x7895a8, .3, .82);
   const iceGlow = new THREE.MeshBasicMaterial({ color: 0x75d8ff, transparent: true, opacity: .72 });
   const purpleEdge = new THREE.MeshBasicMaterial({ color: 0x9b75ff, transparent: true, opacity: .82 });
@@ -65,18 +65,18 @@ export function mountLockerRoomStage(host: HTMLElement, onStatus?: (message: str
     return mesh;
   };
 
-  scene.add(new THREE.HemisphereLight(0xb9d8ee, 0x101522, 1.45));
-  const key = new THREE.DirectionalLight(0xe4f3ff, 2.25);
+  scene.add(new THREE.HemisphereLight(0xe4f4ff, 0x405366, 2.15));
+  const key = new THREE.DirectionalLight(0xf0f7ff, 3.0);
   key.position.set(-4, 8, 5);
   key.castShadow = true;
   key.shadow.mapSize.set(1024, 1024);
   key.shadow.camera.left = -8; key.shadow.camera.right = 8; key.shadow.camera.top = 9; key.shadow.camera.bottom = -5;
   scene.add(key);
-  const cold = new THREE.PointLight(0x65caff, 22, 12, 2);
+  const cold = new THREE.PointLight(0x83d8ff, 34, 15, 2);
   cold.position.set(-3.8, 4.2, 1.5); scene.add(cold);
-  const violet = new THREE.PointLight(0x8b55ff, 18, 11, 2);
+  const violet = new THREE.PointLight(0x9b75ff, 25, 13, 2);
   violet.position.set(3.5, 3.4, -1.5); scene.add(violet);
-  const heroLight = new THREE.SpotLight(0xe9f5ff, 42, 14, Math.PI / 5, .45, 1.5);
+  const heroLight = new THREE.SpotLight(0xf4f9ff, 58, 17, Math.PI / 4.5, .55, 1.2);
   heroLight.position.set(0, 7.5, 3.4); heroLight.target.position.set(0, 1.2, 0); scene.add(heroLight, heroLight.target);
 
   // A real enclosed room: floor, back wall, side returns and ceiling beams.
@@ -84,8 +84,8 @@ export function mountLockerRoomStage(host: HTMLElement, onStatus?: (message: str
   addBox(scene, wall, 0, 2.65, -5.2, 14, 5.6, .35, false);
   addBox(scene, sideWall, -6.9, 2.65, -1.7, .35, 5.6, 7.2, false);
   addBox(scene, sideWall, 6.9, 2.65, -1.7, .35, 5.6, 7.2, false);
-  addBox(scene, mat(0x0b1722, .8), 0, 5.48, -1.9, 13.8, .18, 7.2, false);
-  addBox(scene, darkMetal, 0, 5.28, -1.9, 13.7, .12, 7.2, false);
+  addBox(scene, mat(0x23394a, .8), 0, 5.48, -1.9, 13.8, .18, 7.2, false);
+  addBox(scene, mat(0x263c4d, .48, .55), 0, 5.28, -1.9, 13.7, .12, 7.2, false);
   // Architectural ceiling ribs and recessed light coves give the room a real arena-club scale.
   for (const x of [-5.8, -3.0, 0, 3.0, 5.8]) {
     addBox(scene, wallPanel, x, 5.12, -1.9, .16, .22, 7.0, false);
@@ -149,7 +149,7 @@ export function mountLockerRoomStage(host: HTMLElement, onStatus?: (message: str
   };
   for (let i = 0; i < 6; i++) { buildLocker(-4.65 + i * .98, i + 1); buildLocker(4.65 - i * .98, i + 7); }
   // Continuous locker-bank caps and a thin violet reveal line tie the individual units together.
-  addBox(scene, darkMetal, 0, 3.63, -4.78, 12.0, .13, .58, false);
+  addBox(scene, mat(0x243b4d, .42, .58), 0, 3.63, -4.78, 12.0, .13, .58, false);
   addBox(scene, purple, 0, 3.55, -4.43, 11.75, .018, .025, false);
 
   // Long timber benches, dark steel legs and rubber floor mats.

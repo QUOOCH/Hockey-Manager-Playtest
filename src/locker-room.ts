@@ -163,7 +163,7 @@ export function mountLockerRoomStage(host: HTMLElement, onStatus?: (message: str
   const heroRoot = new THREE.Group(); heroPivot.add(heroRoot);
   const loader = new GLTFLoader();
   let disposed = false;
-  const modelUrl = new URL(import.meta.env.BASE_URL + 'rig-test-input/puck-it-player%202.glb', window.location.href).toString();
+  const modelUrl = new URL(import.meta.env.BASE_URL + 'rig-test-input/puck-it-player 2.glb', window.location.href).toString();
   void loader.loadAsync(modelUrl).then((gltf) => {
     if (disposed) return;
     const model = gltf.scene;

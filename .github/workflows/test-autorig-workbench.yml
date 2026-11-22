@@ -7,6 +7,7 @@ on:
       - '.github/workflows/test-autorig-workbench.yml'
       - 'rig-test-input/**'
       - 'experiments/**'
+      - 'scripts/prepare-player-rig-input.py'
   pull_request:
     branches: [main]
     paths:
@@ -78,7 +79,7 @@ jobs:
           sudo apt-get install -y -qq libxi6 libxxf86vm1 libxfixes3 libxrender1 libgl1 libxkbcommon0 libsm6 libegl1 libgles2 libegl-mesa0 libgl1-mesa-dri
 
       - name: Install test dependencies
-        run: python3 -m pip install --quiet numpy jsonschema Pillow
+        run: python3 -m pip install --quiet numpy jsonschema Pillow scipy
 
       - name: Configure Blender
         run: |
@@ -143,12 +144,22 @@ jobs:
           PY
           fi
 
+      - name: Inspect and clean disconnected flat base geometry
+        id: preprocess
+        if: steps.model.outputs.available == 'true'
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/puckit-prepared"
+          python3 scripts/prepare-player-rig-input.py "${{ steps.model.outputs.path }}" "$RUNNER_TEMP/puckit-prepared/player-clean.glb" --report "$RUNNER_TEMP/puckit-prepared/geometry-report.json"
+          echo "path=$RUNNER_TEMP/puckit-prepared/player-clean.glb" >> "$GITHUB_OUTPUT"
+          cat "$RUNNER_TEMP/puckit-prepared/geometry-report.json" >> "$GITHUB_STEP_SUMMARY"
+
       - name: Rig player with Autorig skinning
         if: steps.model.outputs.available == 'true'
         continue-on-error: true
         working-directory: ${{ runner.temp }}/autorig-workbench
         env:
-          MODEL_PATH: ${{ steps.model.outputs.path }}
+          MODEL_PATH: ${{ steps.preprocess.outputs.path }}
           MODEL_NAME: ${{ steps.model.outputs.name }}
         run: |
           mkdir -p "$RUNNER_TEMP/puckit-results/autorig"

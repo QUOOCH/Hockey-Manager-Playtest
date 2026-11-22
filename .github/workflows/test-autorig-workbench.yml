@@ -121,11 +121,13 @@ jobs:
             shopt -s nullglob
             model_files=("$GITHUB_WORKSPACE"/rig-test-input/*.glb)
             if (( ${#model_files[@]} > 0 )); then
-              cp "${model_files[0]}" "$RUNNER_TEMP/puckit-input/player.glb"
+              selected_model="$GITHUB_WORKSPACE/rig-test-input/puck-it-player 2.glb"
+              if [[ ! -f "$selected_model" ]]; then selected_model="${model_files[0]}"; fi
+              cp "$selected_model" "$RUNNER_TEMP/puckit-input/player.glb"
               echo "name=PuckItPlayer" >> "$GITHUB_OUTPUT"
               echo "path=$RUNNER_TEMP/puckit-input/player.glb" >> "$GITHUB_OUTPUT"
               echo "available=true" >> "$GITHUB_OUTPUT"
-              echo "Using uploaded model: $(basename "${model_files[0]}")"
+              echo "Using uploaded model: $(basename "$selected_model")"
             else
               echo "available=false" >> "$GITHUB_OUTPUT"
               echo "No player GLB supplied. Tool tests passed; player-specific rigging is skipped."

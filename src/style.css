@@ -2713,3 +2713,22 @@ label{display:block;font-size:11px;color:#a8c8e2;margin:12px 0}input{display:blo
 .rink-goal-cage path{vector-effect:non-scaling-stroke}
 .live-simulation .ice-player{filter:drop-shadow(0 1.8px 1.8px #15344a70)}
 .live-simulation .ice-player.puck-carrier{filter:drop-shadow(0 0 4px #fff) drop-shadow(0 2px 2px #15344a88)}
+
+
+/* Premium 3D locker room — mobile-first, full scene rather than a flat illustration. */
+.locker-room-3d-shell{position:relative;overflow:hidden;border:1px solid #6f91a755;border-radius:18px;background:#07111d;box-shadow:0 22px 48px #0008,inset 0 0 0 1px #ffffff08}
+.locker-room-3d-topline{position:absolute;z-index:2;top:0;left:0;right:0;display:flex;justify-content:space-between;gap:8px;padding:13px 14px;background:linear-gradient(180deg,#07111de8,transparent);color:#c3d6e2;font-size:8px;font-weight:900;letter-spacing:1.6px;pointer-events:none}
+.locker-room-3d-stage{position:relative;width:100%;height:min(70vh,680px);min-height:470px;overflow:hidden;touch-action:pan-y;background:radial-gradient(ellipse at 50% 45%,#29445b 0%,#102334 52%,#07111d 100%)}
+.locker-room-canvas{display:block;width:100%;height:100%;touch-action:pan-y}
+.locker-room-loading{position:absolute;inset:0;display:grid;align-content:center;justify-items:center;gap:10px;color:#dcebf4;background:radial-gradient(ellipse at center,#1d3850,#07111d 72%);font-size:11px;letter-spacing:1.4px}
+.locker-room-loading i{width:30px;height:30px;border:2px solid #ffffff24;border-top-color:#a47aff;border-radius:50%;animation:lockerSpin .8s linear infinite}
+.locker-room-loading small{color:#8eacbf;font-size:8px;letter-spacing:1.8px}
+@keyframes lockerSpin{to{transform:rotate(360deg)}}
+.locker-room-3d-caption{position:absolute;z-index:2;left:12px;right:12px;bottom:32px;display:flex;justify-content:space-between;align-items:end;gap:12px;pointer-events:none;text-shadow:0 2px 8px #000}
+.locker-room-3d-caption>span:first-child{display:grid;gap:3px}
+.locker-room-3d-caption b{font-size:17px;letter-spacing:2px;color:#f4f7fb}
+.locker-room-3d-caption small{font-size:7px;letter-spacing:1.5px;color:#9fc3d7}
+.locker-room-3d-caption #locker-room-status{max-width:58%;color:#c3d4df;font-size:9px;text-align:right}
+.locker-room-3d-hint{position:absolute;z-index:2;bottom:0;left:0;right:0;padding:9px 12px;text-align:center;background:linear-gradient(0deg,#06101ce8,transparent);color:#a7c7d9;font-size:8px;font-weight:900;letter-spacing:1.8px;pointer-events:none}
+.locker-room-next{margin-top:12px}
+@media(max-width:420px){.locker-room-3d-stage{height:66vh;min-height:440px}.locker-room-3d-topline{font-size:7px;padding:11px}.locker-room-3d-caption b{font-size:15px}.locker-room-3d-caption #locker-room-status{font-size:8px}}

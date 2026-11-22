@@ -2,7 +2,7 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
-export type LockerRoomStage = { dispose: () => void };
+export type LockerRoomStage = { dispose: () => void; setBrightness: (value: number) => void };
 
 export function mountLockerRoomStage(host: HTMLElement, onStatus?: (message: string) => void): LockerRoomStage | null {
   let renderer: THREE.WebGLRenderer;
@@ -25,7 +25,7 @@ export function mountLockerRoomStage(host: HTMLElement, onStatus?: (message: str
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.02;
+  renderer.toneMappingExposure = .86;
   renderer.domElement.className = 'locker-room-canvas';
   renderer.domElement.setAttribute('aria-label', 'Интерактивная трёхмерная хоккейная раздевалка');
   host.appendChild(renderer.domElement);
@@ -65,19 +65,20 @@ export function mountLockerRoomStage(host: HTMLElement, onStatus?: (message: str
     return mesh;
   };
 
-  scene.add(new THREE.HemisphereLight(0xe4eff7, 0x526878, 1.55));
+  const adjustableLights: THREE.Light[] = [];
+  const hemisphere = new THREE.HemisphereLight(0xe4eff7, 0x526878, 1.55); scene.add(hemisphere); adjustableLights.push(hemisphere);
   const key = new THREE.DirectionalLight(0xf3f6fa, 2.15);
   key.position.set(-4, 8, 5);
   key.castShadow = true;
   key.shadow.mapSize.set(1024, 1024);
   key.shadow.camera.left = -8; key.shadow.camera.right = 8; key.shadow.camera.top = 9; key.shadow.camera.bottom = -5;
-  scene.add(key);
+  scene.add(key); adjustableLights.push(key);
   const cold = new THREE.PointLight(0x9be5ff, 14, 15, 2);
-  cold.position.set(-3.8, 4.2, 1.5); scene.add(cold);
+  cold.position.set(-3.8, 4.2, 1.5); scene.add(cold); adjustableLights.push(cold);
   const violet = new THREE.PointLight(0xa88aff, 9, 13, 2);
-  violet.position.set(3.5, 3.4, -1.5); scene.add(violet);
+  violet.position.set(3.5, 3.4, -1.5); scene.add(violet); adjustableLights.push(violet);
   const heroLight = new THREE.SpotLight(0xeaf2fa, 22, 16, Math.PI / 4.2, .62, 1.0);
-  heroLight.position.set(0, 7.5, 3.4); heroLight.target.position.set(0, 1.2, 0); scene.add(heroLight, heroLight.target);
+  heroLight.position.set(0, 7.5, 3.4); heroLight.target.position.set(0, 1.2, 0); scene.add(heroLight, heroLight.target); adjustableLights.push(heroLight);
 
   // A real enclosed room: floor, back wall, side returns and ceiling beams.
   addBox(scene, floorMat, 0, -.16, -2.5, 14, .3, 14, false);
@@ -106,7 +107,7 @@ export function mountLockerRoomStage(host: HTMLElement, onStatus?: (message: str
     addBox(scene, ceilingDiffuser, x, 5.125, -1.85, 2.28, .025, 1.02, false);
     const downlight = new THREE.PointLight(0xd8f2ff, 2.2, 5.5, 2);
     downlight.position.set(x, 4.95, -1.7);
-    scene.add(downlight);
+    scene.add(downlight); adjustableLights.push(downlight);
   }
   // A warm practical strip over the benches balances the colder player-display lighting.
   addBox(scene, ceilingFrame, 0, 5.16, -3.55, 5.4, .06, .34, false);
@@ -203,7 +204,7 @@ export function mountLockerRoomStage(host: HTMLElement, onStatus?: (message: str
   for (const x of [-4.7, -2.4, 0, 2.4, 4.7]) {
     const strip = new THREE.Mesh(new THREE.BoxGeometry(1.45, .035, .07), new THREE.MeshBasicMaterial({ color: 0xbfeaff }));
     strip.position.set(x, 5.08, -3.1); scene.add(strip);
-    const glow = new THREE.PointLight(0x8ddcff, 1.1, 2.8, 2); glow.position.set(x, 4.95, -2.8); scene.add(glow);
+    const glow = new THREE.PointLight(0x8ddcff, 1.1, 2.8, 2); glow.position.set(x, 4.95, -2.8); scene.add(glow); adjustableLights.push(glow);
   }
 
   // Gear wall: hanging jerseys and a stick rack add depth to the room.
@@ -249,11 +250,21 @@ export function mountLockerRoomStage(host: HTMLElement, onStatus?: (message: str
   addCylinder(scene, lockerMetal, 0, .26, .05, .96, .08, 64);
   const ring = new THREE.Mesh(new THREE.TorusGeometry(1.01, .018, 10, 80), purpleGlow);
   ring.rotation.x = Math.PI / 2; ring.position.set(0, .31, .05); scene.add(ring);
-  const pedestalGlow = new THREE.PointLight(0x8754ff, 3.2, 3.2, 2); pedestalGlow.position.set(0, .5, .05); scene.add(pedestalGlow);
+  const pedestalGlow = new THREE.PointLight(0x8754ff, 3.2, 3.2, 2); pedestalGlow.position.set(0, .5, .05); scene.add(pedestalGlow); adjustableLights.push(pedestalGlow);
 
   // The hero stays in one pose. Only the complete character group rotates on drag.
   const heroPivot = new THREE.Group(); heroPivot.position.set(0, .32, .05); scene.add(heroPivot);
   const heroRoot = new THREE.Group(); heroPivot.add(heroRoot);
+  const baseLightIntensities = adjustableLights.map((light) => light.intensity);
+  let brightnessLevel = 35;
+  const applyBrightness = (value: number) => {
+    brightnessLevel = Math.max(0, Math.min(100, Number.isFinite(value) ? value : 35));
+    const factor = .35 + (brightnessLevel / 100) * .85;
+    adjustableLights.forEach((light, index) => { light.intensity = baseLightIntensities[index] * factor; });
+    renderer.toneMappingExposure = .68 + (brightnessLevel / 100) * .48;
+  };
+  applyBrightness(brightnessLevel);
+
   const loader = new GLTFLoader();
   let disposed = false;
   const modelUrl = new URL(import.meta.env.BASE_URL + 'rig-test-input/puck-it-player 2.glb', window.location.href).toString();
@@ -315,6 +326,7 @@ export function mountLockerRoomStage(host: HTMLElement, onStatus?: (message: str
   resize(); animate();
 
   return {
+    setBrightness: applyBrightness,
     dispose: () => {
       disposed = true; cancelAnimationFrame(frame); observer.disconnect();
       renderer.domElement.removeEventListener('pointerdown', pointerDown);

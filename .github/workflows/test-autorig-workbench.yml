@@ -14,6 +14,7 @@ on:
       - '.github/workflows/test-autorig-workbench.yml'
       - 'rig-test-input/**'
       - 'experiments/**'
+      - 'scripts/prepare-player-rig-input.py'
   workflow_dispatch:
     inputs:
       model_url:
@@ -170,7 +171,7 @@ jobs:
         continue-on-error: true
         working-directory: ${{ runner.temp }}/autorig-workbench
         env:
-          MODEL_PATH: ${{ steps.model.outputs.path }}
+          MODEL_PATH: ${{ steps.preprocess.outputs.path }}
           MODEL_NAME: ${{ steps.model.outputs.name }}
         run: |
           mkdir -p "$RUNNER_TEMP/puckit-results/mesh2motion"

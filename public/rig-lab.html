@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>PUCK IT! · Rig Lab</title>
+<style>
+:root{color-scheme:dark;font-family:Inter,system-ui,-apple-system,sans-serif;background:#071522;color:#eaf7ff}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% 0,#17364b,#071522 65%);min-height:100vh}
+header{padding:18px 16px 10px;max-width:1100px;margin:auto}small{color:#8bb4c9;letter-spacing:2px;font-weight:700}h1{font-size:22px;margin:6px 0}p{color:#a9c2d0;font-size:13px;line-height:1.5;margin:6px 0}
+main{max-width:1100px;margin:auto;padding:8px 14px 28px;display:grid;grid-template-columns:minmax(0,1.4fr) minmax(280px,.8fr);gap:12px}
+.panel{background:#102638cc;border:1px solid #31546a;border-radius:14px;padding:13px;min-width:0}
+#stage{height:min(68vh,620px);min-height:360px;background:radial-gradient(ellipse at 50% 45%,#29485b,#081724 72%);border-radius:10px;overflow:hidden;position:relative}
+#stage canvas{width:100%;height:100%;display:block;touch-action:none}.hint{font-size:12px;color:#8fb4c7}
+input,select,button{font:inherit}button,.file{border:1px solid #47738a;background:#18384d;color:#eaf7ff;border-radius:9px;padding:11px 12px;font-weight:750;font-size:12px;letter-spacing:.3px;cursor:pointer}
+button:active{transform:scale(.985)}button.primary,.file{background:#17617b;border-color:#51b8d7}.row{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}.row>*{flex:1}
+.file{display:block;text-align:center}input[type=file]{display:none}
+label{display:block;font-size:12px;color:#9ebdce;margin:14px 0 6px}select{width:100%;background:#081b29;color:white;border:1px solid #42657a;border-radius:8px;padding:12px}
+.axis{display:grid;grid-template-columns:24px 1fr 54px;gap:8px;align-items:center;margin:10px 0;font-size:12px;color:#b9d1df}
+input[type=range]{width:100%;accent-color:#66d5f4}.val{text-align:right;font-variant-numeric:tabular-nums;color:#eaf7ff}
+#status{padding:10px;background:#0a1e2d;border-radius:8px;color:#9fdcf0;font-size:12px;margin-top:10px;overflow-wrap:anywhere}
+.pill{display:inline-block;border:1px solid #315c72;border-radius:99px;padding:5px 8px;color:#9fdcf0;font-size:11px;margin:3px 4px 3px 0}
+@media(max-width:760px){main{grid-template-columns:1fr}#stage{height:52vh;min-height:330px}header{padding-top:14px}}
+</style>
+</head>
+<body>
+<header><small>HOCKEY: PUCK IT! · EXPERIMENTAL WORKBENCH</small><h1>RIG LAB — проверка скелета</h1><p>Загрузи белую модель после авториггинга. Выбирай кость и вращай её ползунками. Исходный файл не изменяется.</p></header>
+<main>
+<section class="panel"><div id="stage" aria-label="3D просмотрщик модели"></div><div class="row"><label class="file">ЗАГРУЗИТЬ GLB<input id="file" type="file" accept=".glb,.gltf,model/gltf-binary,model/gltf+json"></label><button id="skeleton">ПОКАЗАТЬ СКЕЛЕТ</button><button id="reset">СБРОСИТЬ ПОЗУ</button></div><p class="hint">Вращение: один палец. Масштаб: щипок двумя пальцами. Перемещение: два пальца.</p><div id="status">Загрузи GLB-файл с устройcтва. Модель останется локально в браузере.</div></section>
+<section class="panel"><small>JOINT CONTROL</small><h2 style="font-size:17px;margin:7px 0">Управление костями</h2><label for="bone">ВЫБРАТЬ КОСТЬ</label><select id="bone" disabled><option>Сначала загрузи модель</option></select><div id="boneInfo" class="hint" style="margin-top:8px">Скелет ещё не загружен</div>
+<div class="axis"><b>X</b><input id="x" type="range" min="-180" max="180" value="0"><span class="val" id="xv">0°</span></div>
+<div class="axis"><b>Y</b><input id="y" type="range" min="-180" max="180" value="0"><span class="val" id="yv">0°</span></div>
+<div class="axis"><b>Z</b><input id="z" type="range" min="-180" max="180" value="0"><span class="val" id="zv">0°</span></div>
+<div class="row"><button id="zero">ОБНУЛИТЬ КОСТЬ</button><button id="pose">ВЕРНУТЬСЯ К ИСХОДНОЙ ПОЗЕ</button></div>
+<small>БЫСТРЫЕ ПРОВЕРКИ</small><div class="row"><button data-preset="arm">ПОДНЯТЬ РУКУ</button><button data-preset="elbow">СОГНУТЬ ЛОКОТЬ</button></div><div class="row"><button data-preset="leg">ПОДНЯТЬ НОГУ</button><button data-preset="torso">НАКЛОНИТЬ КОРПУС</button></div>
+<p class="hint">Ползунки задают локальный поворот выбранной кости относительно исходной позы. Это диагностический стенд: пока не экспортирует исправленную модель и не записывает изменения в игру.</p>
+<div id="stats"><span class="pill">GLB local preview</span></div></section>
+</main>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script>
+<script type="module">
+import * as THREE from 'three';
+import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+const stage=document.querySelector('#stage'),status=document.querySelector('#status'),boneSelect=document.querySelector('#bone');
+const scene=new THREE.Scene();scene.background=new THREE.Color(0x0a1b29);
+const camera=new THREE.PerspectiveCamera(38,1,.01,100);camera.position.set(2.8,2.1,4.2);
+const renderer=new THREE.WebGLRenderer({antialias:true,alpha:false});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.15;stage.appendChild(renderer.domElement);
+const controls=new OrbitControls(camera,renderer.domElement);controls.enableDamping=true;controls.target.set(0,1,0);
+scene.add(new THREE.HemisphereLight(0xc9eaff,0x263344,2));
+const key=new THREE.DirectionalLight(0xffffff,3);key.position.set(3,5,4);scene.add(key);
+const fill=new THREE.DirectionalLight(0x78cfff,1.5);fill.position.set(-4,2,-3);scene.add(fill);
+const grid=new THREE.GridHelper(8,16,0x31566b,0x1b3445);grid.position.y=-.02;scene.add(grid);
+let model=null,helper=null,bones=[],selected=null,initial=new Map(),showSkeleton=false;
+function resize(){const w=stage.clientWidth,h=stage.clientHeight;camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h,false)}new ResizeObserver(resize).observe(stage);resize();
+function frame(){requestAnimationFrame(frame);controls.update();renderer.render(scene,camera)}frame();
+function setStatus(s){status.textContent=s}
+function boneName(b){return b.name||'Bone '+bones.indexOf(b)}
+function selectBone(b){selected=b;boneSelect.value=String(bones.indexOf(b));const e=initial.get(b);['x','y','z'].forEach((a,i)=>{const deg=THREE.MathUtils.radToDeg(e[i]);document.querySelector('#'+a).value=Math.round(deg);document.querySelector('#'+a+'v').textContent=Math.round(deg)+'°'});document.querySelector('#boneInfo').textContent='Кость: '+boneName(b)+' · дочерних элементов: '+b.children.length}
+function refreshBone(){if(!selected)return;const base=initial.get(selected);const v=['x','y','z'].map(a=>THREE.MathUtils.degToRad(Number(document.querySelector('#'+a).value)));selected.rotation.set(base[0]+v[0],base[1]+v[1],base[2]+v[2],selected.rotation.order);['x','y','z'].forEach(a=>document.querySelector('#'+a+'v').textContent=document.querySelector('#'+a).value+'°')}
+['x','y','z'].forEach(a=>document.querySelector('#'+a).addEventListener('input',refreshBone));
+boneSelect.addEventListener('change',()=>{if(bones[Number(boneSelect.value)])selectBone(bones[Number(boneSelect.value)])});
+function resetAll(){for(const b of bones){const e=initial.get(b);b.rotation.set(e[0],e[1],e[2],b.rotation.order)}if(selected)selectBone(selected);setStatus('Исходная поза восстановлена.')}
+function load(url,name){new GLTFLoader().load(url,g=>{if(model)scene.remove(model);if(helper){scene.remove(helper);helper=null}model=g.scene;scene.add(model);bones=[];initial.clear();model.traverse(o=>{if(o.isBone){bones.push(o);initial.set(o,[o.rotation.x,o.rotation.y,o.rotation.z])}});bones.sort((a,b)=>boneName(a).localeCompare(boneName(b)));boneSelect.innerHTML='';bones.forEach((b,i)=>{const op=document.createElement('option');op.value=i;op.textContent=boneName(b);boneSelect.append(op)});boneSelect.disabled=!bones.length;selected=bones[0]||null;if(selected)selectBone(selected);const box=new THREE.Box3().setFromObject(model),size=box.getSize(new THREE.Vector3()),center=box.getCenter(new THREE.Vector3());model.position.sub(center);const max=Math.max(size.x,size.y,size.z)||2;camera.position.set(max*1.5,max*.85,max*2);controls.target.set(0,0,0);controls.update();document.querySelector('#stats').innerHTML='<span class="pill">'+bones.length+' костей</span><span class="pill">'+model.children.length+' корневых объектов</span><span class="pill">'+name.replace(/[<>]/g,'')+'</span>';document.querySelector('#boneInfo').textContent=bones.length?'Выбери кость в списке.':'В файле не найдено костей (skinned rig).';setStatus('Модель загружена. '+bones.length+' костей обнаружено.'+(bones.length?' Можно двигать суставы.':' Скелет отсутствует.'));},undefined,e=>setStatus('Ошибка загрузки GLB: '+e.message))}
+document.querySelector('#file').addEventListener('change',e=>{const f=e.target.files[0];if(f){const u=URL.createObjectURL(f);load(u,f.name)}});
+document.querySelector('#skeleton').addEventListener('click',()=>{if(!model)return;if(helper){scene.remove(helper);helper=null;showSkeleton=false;document.querySelector('#skeleton').textContent='ПОКАЗАТЬ СКЕЛЕТ'}else{helper=new THREE.SkeletonHelper(model);helper.material.color.set(0x48d9ff);scene.add(helper);showSkeleton=true;document.querySelector('#skeleton').textContent='СКРЫТЬ СКЕЛЕТ'}});
+document.querySelector('#reset').addEventListener('click',resetAll);
+document.querySelector('#zero').addEventListener('click',()=>{if(!selected)return;selected.rotation.set(...initial.get(selected));selectBone(selected)});
+document.querySelector('#pose').addEventListener('click',()=>{if(selected)selectBone(selected)});
+document.querySelectorAll('[data-preset]').forEach(btn=>btn.addEventListener('click',()=>{const key=btn.dataset.preset,terms=key==='arm'?/upperarm|arm|shoulder/i:key==='elbow'?/forearm|lowerarm|elbow/i:key==='leg'?/thigh|upleg|leg/i:/spine|chest/i;const b=bones.find(x=>terms.test(boneName(x)));if(!b){setStatus('Не нашёл подходящую кость по имени. Выбери её вручную в списке.');return}selectBone(b);const axis=key==='arm'?'z':key==='elbow'?'x':key==='leg'?'x':'x';const amount=key==='arm'?75:key==='elbow'?85:key==='leg'?45:25;document.querySelector('#'+axis).value=amount;refreshBone();setStatus('Тестовая поза применена к '+boneName(b)+'. Осмотри плечо/локоть/бедро на предмет разрывов и заломов.')}));
+setStatus('Готов к загрузке. Выбери GLB после авториггинга.');
+</script>
+</body></html>

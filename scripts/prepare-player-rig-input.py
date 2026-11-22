@@ -96,7 +96,21 @@ def main():
     remove_face=candidates[face_labels]
     keep_faces=faces[~remove_face]
     if not np.any(remove_face):
-        raise ValueError("No confident flat-base components found; refusing to alter the model")
+        # A player model does not need a separate floor/base island. Preserve the
+        # original GLB byte-for-byte and let rigging continue without cleanup.
+        report={
+          "source_vertices":int(len(pos)),"source_triangles":int(len(faces)),
+          "connected_components":int(count),"removed_components":[],
+          "removed_component_vertices":0,"removed_triangles":0,
+          "output_vertices":int(len(pos)),"output_triangles":int(len(faces)),
+          "floor_band":floor_band,"floor_y":global_floor,
+          "removed_bounds":[],
+          "decision":"no confident flat-base island found; original model retained unchanged"
+        }
+        Path(args.report).write_text(json.dumps(report,indent=2))
+        Path(args.output).write_bytes(Path(args.source).read_bytes())
+        print(json.dumps(report))
+        return
     used=np.unique(keep_faces.reshape(-1))
     remap=np.full(len(pos),-1,dtype=np.int64); remap[used]=np.arange(len(used),dtype=np.int64)
     new_faces=remap[keep_faces].astype("<u4").reshape(-1)

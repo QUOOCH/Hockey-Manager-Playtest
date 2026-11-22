@@ -102,3 +102,5 @@
 - Added the first locker-room gear workshop UI with three selectable stick finishes and persisted selection in local storage.
 - Kept the character art and all other equipment visually fixed; the first pass changes only the displayed equipment-strip frame.
 - This is a visual prototype selector, not yet a true independent transparent equipment layer. Validate crop alignment, phone rendering, and interaction before expanding to skates, jersey, helmet, and gloves.
+
+- Preview build passed on Vercel (READY) from commit 747067ba7fdc84c4e1be31944c1b28ec929cdc0e. Manual visual/touch QA on iPhone remains pending; do not merge to main yet.

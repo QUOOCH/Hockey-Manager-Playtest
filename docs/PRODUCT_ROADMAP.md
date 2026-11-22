@@ -62,3 +62,13 @@
 - [ ] Investigate why 31 bones have no skin weights and whether those are intentional helper/leaf bones.
 - [ ] Focus deformation repair on the remaining 182 combined tears, 388 bend tears, and 233.2 stand-fold score in the hockey-specific Autorig result.
 - [ ] Compare the repaired rig against the baseline using the same audit thresholds; do not integrate until visual review and deformation QA pass.
+
+
+## Rig Lab — manual deformation inspection — 2026-11-22
+- [x] Add a standalone browser-based GLB rig inspection page at `public/rig-lab.html` on `experiment/autorig-workbench`.
+- [x] Support local GLB upload, orbit/touch camera, skeleton overlay, bone selection, per-axis local rotation sliders, and pose reset.
+- [ ] Open the page on iPhone, load the white hockey_autorig GLB, and test shoulder, elbow, hip, knee, and spine bends.
+- [ ] Record which bone names map to the visible joints and note any mesh tearing, collapsing, or twisting.
+- [ ] Use the findings to guide the next skin-weight / rig repair iteration.
+- Note: the lab is diagnostic only; it does not modify the source GLB, export a repaired model, or change the game runtime.
+- Access path after GitHub Pages deploys the experimental branch: `/rig-lab.html`.

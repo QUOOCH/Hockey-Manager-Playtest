@@ -2732,3 +2732,14 @@ label{display:block;font-size:11px;color:#a8c8e2;margin:12px 0}input{display:blo
 .locker-room-3d-hint{position:absolute;z-index:2;bottom:0;left:0;right:0;padding:9px 12px;text-align:center;background:linear-gradient(0deg,#06101ce8,transparent);color:#a7c7d9;font-size:8px;font-weight:900;letter-spacing:1.8px;pointer-events:none}
 .locker-room-next{margin-top:12px}
 @media(max-width:420px){.locker-room-3d-stage{height:66vh;min-height:440px}.locker-room-3d-topline{font-size:7px;padding:11px}.locker-room-3d-caption b{font-size:15px}.locker-room-3d-caption #locker-room-status{font-size:8px}}
+
+
+/* Player-room lighting control */
+.locker-light-control{margin-top:10px;padding:13px 15px;background:linear-gradient(145deg,#172b3b,#0c1a28);border:1px solid #6f91a744}
+.locker-light-heading{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.locker-light-heading>span{display:grid;gap:4px}
+.locker-light-heading b{font-size:10px;letter-spacing:1.2px;color:#e5edf3}
+.locker-light-heading small{font-size:9px;color:#8faabd}
+.locker-light-heading output{min-width:48px;padding:5px 8px;border:1px solid #9a7aff55;border-radius:8px;background:#7652b522;color:#cbbaff;font-size:12px;font-weight:900;text-align:center;font-variant-numeric:tabular-nums}
+.locker-room-brightness{display:block;width:100%;margin:16px 0 7px;accent-color:#9b7aff;cursor:pointer;touch-action:pan-y}
+.locker-light-scale{display:flex;justify-content:space-between;color:#809bad;font-size:8px;letter-spacing:.5px}

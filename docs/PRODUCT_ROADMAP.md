@@ -82,3 +82,14 @@
 - Note: the lab is diagnostic only; it does not modify the source GLB, export a repaired model, or change the game runtime.
 - Preview URL (without touching GitHub Pages or the live game): `https://raw.githack.com/QUOOCH/Hockey-Manager-Playtest/experiment/autorig-workbench/public/rig-lab.html`.
 - The preview URL is a CDN route and still needs a real iPhone Safari smoke test; the live `main` branch and current game deployment remain untouched.
+
+
+## Stylized player artwork and modular equipment — 2026-11-23
+- Design decision: prioritize the approved Purple Ice Guardian master reference artwork over the current autorigged GLB's visual style. The player may be presented as a fixed-pose 2D / 2.5D illustration; full 360-degree rotation is not a requirement for the first version.
+- Preserve the exact approved character identity, proportions, face, silhouette, lighting, and grip pose. Do not redesign the player between equipment selections.
+- Equipment must be genuinely swappable as independent visual assets, not merely labels or UI colour changes.
+- First prototype: layered full-body character artwork with fixed canvas coordinates and transparent equipment overlays / replacement masks.
+- Initial independently swappable items: hockey stick, left/right skates, helmet, jersey, gloves, pants. Keep the existing two-hand stick grip and stick angle identical across stick variants; only the stick design/material changes.
+- Build order: (1) inspect and segment the master reference into a stable character base and equipment regions; (2) prototype stick replacement first because its grip/position is a clear alignment test; (3) prototype skate replacement; (4) add jersey and remaining gear; (5) add in-room selection UI and persist choices.
+- Technical fallback: if clean layered extraction from the reference is unreliable, create a matched set of redraws using the master image as a strict identity/pose/style anchor. Do not substitute unrelated generated characters or approximate the grip pose.
+- [ ] Create a fixed-pose modular artwork proof-of-concept on the experimental branch; keep the main branch untouched.

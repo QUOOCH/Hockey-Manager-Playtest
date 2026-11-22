@@ -123,7 +123,12 @@ jobs:
             shopt -s nullglob
             model_files=("$GITHUB_WORKSPACE"/rig-test-input/*.glb)
             if (( ${#model_files[@]} > 0 )); then
-              selected_model="$GITHUB_WORKSPACE/rig-test-input/puck-it-player 2.glb"
+              # Prefer the current Purple Ice Guardian player model. The older
+              # puck-it-player file remains a fallback for reproducible comparisons.
+              selected_model="$GITHUB_WORKSPACE/rig-test-input/Meshy_AI_Purple_Ice_Guardian_1122090427_generate.glb"
+              if [[ ! -f "$selected_model" ]]; then
+                selected_model="$GITHUB_WORKSPACE/rig-test-input/puck-it-player 2.glb"
+              fi
               if [[ ! -f "$selected_model" ]]; then selected_model="${model_files[0]}"; fi
               cp "$selected_model" "$RUNNER_TEMP/puckit-input/player.glb"
               echo "name=PuckItPlayer" >> "$GITHUB_OUTPUT"

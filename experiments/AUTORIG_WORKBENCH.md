@@ -31,3 +31,10 @@ The workflow accepts any `.glb` filename placed in `rig-test-input/` (including 
 
 
 Upstream test suites are diagnostic and non-blocking in this experiment: a failure in the candidate tool's own tests is recorded as a warning, but does not prevent the two player-specific skinning attempts from running. The rigging outputs are still judged independently and are not accepted without deformation checks.
+
+
+## Hockey-specific first rig pass
+
+The workflow now keeps a baseline Autorig result, reads its measured humanoid landmarks, then runs a second Autorig pass with a conservative hockey joint layout. Paired shoulders, elbows, wrists, hips, knees and ankles are mirrored around the measured pelvis centre, with depth and height averaged between sides. The source GLB is not modified, and the original baseline remains available beside the hockey-specific result for direct audit comparison.
+
+This is a controlled first correction, not a claim that the rig is production-ready: the audit and bend checks still decide whether the result is usable.

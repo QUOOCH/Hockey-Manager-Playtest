@@ -157,7 +157,25 @@ jobs:
           echo "path=$RUNNER_TEMP/puckit-prepared/player-clean.glb" >> "$GITHUB_OUTPUT"
           cat "$RUNNER_TEMP/puckit-prepared/geometry-report.json" >> "$GITHUB_STEP_SUMMARY"
 
-      - name: Rig player with Autorig skinning
+      - name: Rig baseline with Autorig skinning
+        if: steps.model.outputs.available == 'true'
+        continue-on-error: true
+        working-directory: ${{ runner.temp }}/autorig-workbench
+        env:
+          MODEL_PATH: ${{ steps.preprocess.outputs.path }}
+          MODEL_NAME: ${{ steps.model.outputs.name }}
+        run: |
+          set -o pipefail
+          mkdir -p "$RUNNER_TEMP/puckit-results/autorig-baseline"
+          blender -b --python autorig/steps/m2m_rig.py -- --in "$MODEL_PATH" --name "${MODEL_NAME}_autorig_baseline" --out "$RUNNER_TEMP/puckit-results/autorig-baseline" --template human --people m2m --height 1.9 --facing=-y --triangles 90000 --skin autorig --format glb,fbx 2>&1 | tee "$RUNNER_TEMP/puckit-results/autorig-baseline/first-pass.log"
+
+      - name: Build hockey-specific joint layout
+        if: steps.model.outputs.available == 'true'
+        run: |
+          python3 scripts/build-hockey-rig-joints.py "$RUNNER_TEMP/puckit-results/autorig-baseline/first-pass.log" "$RUNNER_TEMP/puckit-results/hockey-joints.json"
+          cat "$RUNNER_TEMP/puckit-results/hockey-joints.json" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Rig hockey player with mirrored joint layout
         if: steps.model.outputs.available == 'true'
         continue-on-error: true
         working-directory: ${{ runner.temp }}/autorig-workbench
@@ -166,7 +184,7 @@ jobs:
           MODEL_NAME: ${{ steps.model.outputs.name }}
         run: |
           mkdir -p "$RUNNER_TEMP/puckit-results/autorig"
-          blender -b --python autorig/steps/m2m_rig.py -- --in "$MODEL_PATH" --name "${MODEL_NAME}_autorig" --out "$RUNNER_TEMP/puckit-results/autorig" --template human --people m2m --height 1.9 --facing=-y --triangles 90000 --skin autorig --format glb,fbx
+          blender -b --python autorig/steps/m2m_rig.py -- --in "$MODEL_PATH" --name "${MODEL_NAME}_hockey_autorig" --out "$RUNNER_TEMP/puckit-results/autorig" --template human --people m2m --height 1.9 --facing=-y --triangles 90000 --skin autorig --joints "$RUNNER_TEMP/puckit-results/hockey-joints.json" --format glb,fbx
 
       - name: Rig player with Mesh2Motion skinning
         if: steps.model.outputs.available == 'true'

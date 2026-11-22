@@ -8,6 +8,7 @@ on:
       - 'rig-test-input/**'
       - 'experiments/**'
       - 'scripts/prepare-player-rig-input.py'
+      - 'scripts/build-hockey-rig-joints.py'
   pull_request:
     branches: [main]
     paths:
@@ -15,6 +16,7 @@ on:
       - 'rig-test-input/**'
       - 'experiments/**'
       - 'scripts/prepare-player-rig-input.py'
+      - 'scripts/build-hockey-rig-joints.py'
   workflow_dispatch:
     inputs:
       model_url:

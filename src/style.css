@@ -2753,7 +2753,13 @@ label{display:block;font-size:11px;color:#a8c8e2;margin:12px 0}input{display:blo
 .player-customization-heading b{font-size:13px;letter-spacing:1px;color:#f2f5fb}
 .player-customization-heading em{font-size:9px;font-style:normal;color:#91a9bb}
 .player-customization-heading>strong{font-size:10px;color:#b9a6ff;letter-spacing:1px;white-space:nowrap}
-.player-art-preview{width:min(100%,420px);aspect-ratio:1/1;margin:0 auto 12px;border-radius:14px;border:1px solid #a7bdd02b;background-color:#879099;background-image:var(--player-strip);background-size:400% 100%;background-position:var(--player-strip-position,33.333%) center;background-repeat:no-repeat;box-shadow:0 14px 32px #0005,inset 0 0 0 1px #ffffff18;transition:background-position .18s ease}
+.player-art-preview{position:relative;isolation:isolate;width:min(100%,330px);aspect-ratio:717/1536;margin:0 auto 12px;overflow:hidden;border-radius:14px;border:1px solid #a7bdd02b;background-color:#101522;background-image:url('../player-customization/puckit-player-front.webp'),radial-gradient(ellipse at 50% 42%,#44336f 0%,#171c31 58%,#0b111c 100%);background-size:contain,cover;background-position:center;background-repeat:no-repeat;box-shadow:0 14px 32px #0005,inset 0 0 0 1px #ffffff18}
+.gear-stick-overlay{position:absolute;z-index:2;right:13%;top:32%;height:52%;width:7px;border-radius:5px;transform:rotate(-17deg);transform-origin:50% 100%;background:linear-gradient(90deg,#090d16,#9aa6b8 38%,#252d3b 68%,#080b12);box-shadow:0 1px 5px #000b;transition:background .18s ease,filter .18s ease}
+.gear-stick-overlay:after{content:"";position:absolute;left:-9px;bottom:-5px;width:25px;height:9px;border-radius:2px 2px 8px 3px;transform:rotate(-18deg);background:linear-gradient(180deg,#333d4e,#090d16);box-shadow:0 1px 3px #000b}
+.player-art-preview[data-stick-style="violet"] .gear-stick-overlay{background:linear-gradient(90deg,#28104f,#d0aaff 38%,#813ee0 68%,#210c42);filter:drop-shadow(0 0 4px #a36aff88)}
+.player-art-preview[data-stick-style="violet"] .gear-stick-overlay:after{background:linear-gradient(180deg,#bb83ff,#5422a1)}
+.player-art-preview[data-stick-style="ice"] .gear-stick-overlay{background:linear-gradient(90deg,#61798d,#fff 38%,#b7d7e9 68%,#526c83);filter:drop-shadow(0 0 4px #d8f6ff88)}
+.player-art-preview[data-stick-style="ice"] .gear-stick-overlay:after{background:linear-gradient(180deg,#f4fdff,#8caabd)}
 .gear-slot-strip{display:flex;gap:6px;overflow-x:auto;padding:2px 0 10px;scrollbar-width:none}
 .gear-slot-strip::-webkit-scrollbar{display:none}
 .gear-slot-strip span{flex:0 0 auto;padding:7px 9px;border-radius:7px;background:#ffffff08;border:1px solid #ffffff12;color:#70899c;font-size:8px;font-weight:900;letter-spacing:.8px}

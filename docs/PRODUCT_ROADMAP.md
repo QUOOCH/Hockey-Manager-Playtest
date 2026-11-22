@@ -32,6 +32,7 @@
 - [x] Add visible recessed ceiling light panels with dedicated downlights and a warmer bench-side practical strip.
 - [x] Add dimensional locker-door framing, latch details, and recessed lower boot bays.
 - [x] Add side-wall hockey-stick racks as environmental equipment props.
+- [x] Add an in-room brightness slider with a saved per-device setting for ambient, directional, spot, and practical lights.
 - [ ] Rebuild the room's visual hierarchy with more substantial locker-bank architecture and clearer player-centred staging.
 - [ ] Add player details and equipment presentation around the character.
 - [ ] Build equipment customization with swappable helmet, visor, jersey, gloves, pants, skates, and stick assets; do not fake swaps by only changing UI labels.

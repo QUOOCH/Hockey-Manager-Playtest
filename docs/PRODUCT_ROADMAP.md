@@ -27,7 +27,7 @@
 - [x] Build the first working 3D locker room with an enclosed room, locker banks, benches, club signage, pedestal, and responsive Three.js player viewer.
 - [x] Display the 3D player as the visual centrepiece, with drag/touch rotation; smoke-tested by the project owner on iPhone Safari.
 - [x] Add a first environmental polish pass: ceiling ribs, acoustic wall fins, detailed locker doors, floor presentation rings, and shaped jersey displays with subtle pulsing light.
-- [x] Improve room readability with brighter ambient fill, stronger neutral key light, brighter player spotlight, lighter architectural materials, and a more visible ice-blue presentation glow.
+- [x] Balance room lighting after visual review: reduce exposure and direct/ambient light so locker surfaces retain their blue-grey finish and the player's face is not blown out.
 - [ ] Add a premium second pass for materials, finer player-facing details, and richer environmental storytelling.
 - [x] Add visible recessed ceiling light panels with dedicated downlights and a warmer bench-side practical strip.
 - [x] Add dimensional locker-door framing, latch details, and recessed lower boot bays.

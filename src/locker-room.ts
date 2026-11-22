@@ -25,7 +25,7 @@ export function mountLockerRoomStage(host: HTMLElement, onStatus?: (message: str
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.62;
+  renderer.toneMappingExposure = 1.02;
   renderer.domElement.className = 'locker-room-canvas';
   renderer.domElement.setAttribute('aria-label', 'Интерактивная трёхмерная хоккейная раздевалка');
   host.appendChild(renderer.domElement);
@@ -65,18 +65,18 @@ export function mountLockerRoomStage(host: HTMLElement, onStatus?: (message: str
     return mesh;
   };
 
-  scene.add(new THREE.HemisphereLight(0xf1f8ff, 0x657b89, 3.25));
-  const key = new THREE.DirectionalLight(0xffffff, 4.4);
+  scene.add(new THREE.HemisphereLight(0xe4eff7, 0x526878, 1.55));
+  const key = new THREE.DirectionalLight(0xf3f6fa, 2.15);
   key.position.set(-4, 8, 5);
   key.castShadow = true;
   key.shadow.mapSize.set(1024, 1024);
   key.shadow.camera.left = -8; key.shadow.camera.right = 8; key.shadow.camera.top = 9; key.shadow.camera.bottom = -5;
   scene.add(key);
-  const cold = new THREE.PointLight(0x9be5ff, 48, 18, 2);
+  const cold = new THREE.PointLight(0x9be5ff, 14, 15, 2);
   cold.position.set(-3.8, 4.2, 1.5); scene.add(cold);
-  const violet = new THREE.PointLight(0xa88aff, 32, 16, 2);
+  const violet = new THREE.PointLight(0xa88aff, 9, 13, 2);
   violet.position.set(3.5, 3.4, -1.5); scene.add(violet);
-  const heroLight = new THREE.SpotLight(0xffffff, 82, 20, Math.PI / 3.8, .48, 1.0);
+  const heroLight = new THREE.SpotLight(0xeaf2fa, 22, 16, Math.PI / 4.2, .62, 1.0);
   heroLight.position.set(0, 7.5, 3.4); heroLight.target.position.set(0, 1.2, 0); scene.add(heroLight, heroLight.target);
 
   // A real enclosed room: floor, back wall, side returns and ceiling beams.
@@ -97,14 +97,14 @@ export function mountLockerRoomStage(host: HTMLElement, onStatus?: (message: str
   }
   // Large recessed ceiling luminaires: visible fixtures, not just ambient point lights.
   const ceilingDiffuser = new THREE.MeshStandardMaterial({
-    color: 0xe9f7ff, emissive: 0x9edfff, emissiveIntensity: 1.35,
+    color: 0xe9f7ff, emissive: 0x9edfff, emissiveIntensity: .42,
     roughness: .28, metalness: .08
   });
   const ceilingFrame = mat(0x243b4c, .38, .68);
   for (const x of [-3.35, 0, 3.35]) {
     addBox(scene, ceilingFrame, x, 5.17, -1.85, 2.45, .075, 1.18, false);
     addBox(scene, ceilingDiffuser, x, 5.125, -1.85, 2.28, .025, 1.02, false);
-    const downlight = new THREE.PointLight(0xd8f2ff, 8, 7, 2);
+    const downlight = new THREE.PointLight(0xd8f2ff, 2.2, 5.5, 2);
     downlight.position.set(x, 4.95, -1.7);
     scene.add(downlight);
   }
@@ -203,7 +203,7 @@ export function mountLockerRoomStage(host: HTMLElement, onStatus?: (message: str
   for (const x of [-4.7, -2.4, 0, 2.4, 4.7]) {
     const strip = new THREE.Mesh(new THREE.BoxGeometry(1.45, .035, .07), new THREE.MeshBasicMaterial({ color: 0xbfeaff }));
     strip.position.set(x, 5.08, -3.1); scene.add(strip);
-    const glow = new THREE.PointLight(0x8ddcff, 3.2, 3.5, 2); glow.position.set(x, 4.95, -2.8); scene.add(glow);
+    const glow = new THREE.PointLight(0x8ddcff, 1.1, 2.8, 2); glow.position.set(x, 4.95, -2.8); scene.add(glow);
   }
 
   // Gear wall: hanging jerseys and a stick rack add depth to the room.
@@ -249,7 +249,7 @@ export function mountLockerRoomStage(host: HTMLElement, onStatus?: (message: str
   addCylinder(scene, lockerMetal, 0, .26, .05, .96, .08, 64);
   const ring = new THREE.Mesh(new THREE.TorusGeometry(1.01, .018, 10, 80), purpleGlow);
   ring.rotation.x = Math.PI / 2; ring.position.set(0, .31, .05); scene.add(ring);
-  const pedestalGlow = new THREE.PointLight(0x8754ff, 7, 4, 2); pedestalGlow.position.set(0, .5, .05); scene.add(pedestalGlow);
+  const pedestalGlow = new THREE.PointLight(0x8754ff, 3.2, 3.2, 2); pedestalGlow.position.set(0, .5, .05); scene.add(pedestalGlow);
 
   // The hero stays in one pose. Only the complete character group rotates on drag.
   const heroPivot = new THREE.Group(); heroPivot.position.set(0, .32, .05); scene.add(heroPivot);
@@ -309,7 +309,7 @@ export function mountLockerRoomStage(host: HTMLElement, onStatus?: (message: str
     const pulse = .5 + .5 * Math.sin(t * .8);
     floorGlow.material.opacity = .19 + pulse * .06;
     ring.scale.setScalar(1 + pulse * .012);
-    pedestalGlow.intensity = 6.2 + pulse * 1.5;
+    pedestalGlow.intensity = 2.8 + pulse * .6;
     renderer.render(scene, camera);
   };
   resize(); animate();

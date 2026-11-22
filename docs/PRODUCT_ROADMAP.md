@@ -71,5 +71,5 @@
 - [ ] Record which bone names map to the visible joints and note any mesh tearing, collapsing, or twisting.
 - [ ] Use the findings to guide the next skin-weight / rig repair iteration.
 - Note: the lab is diagnostic only; it does not modify the source GLB, export a repaired model, or change the game runtime.
-- Preview URL (without touching GitHub Pages or the live game): `https://cdn.jsdelivr.net/gh/QUOOCH/Hockey-Manager-Playtest@experiment/autorig-workbench/public/rig-lab.html`.
+- Preview URL (without touching GitHub Pages or the live game): `https://raw.githack.com/QUOOCH/Hockey-Manager-Playtest/experiment/autorig-workbench/public/rig-lab.html`.
 - The preview URL is a CDN route and still needs a real iPhone Safari smoke test; the live `main` branch and current game deployment remain untouched.

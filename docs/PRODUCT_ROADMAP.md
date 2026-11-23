@@ -2,6 +2,18 @@
 
 > Living project notebook. Add decisions and ideas here so they survive chat resets. Keep the main branch untouched until the project owner explicitly approves integration.
 
+## New direction — interactive hockey town
+
+- [x] Make the hockey town the main hub for returning players on the experimental branch.
+- [x] Add a first interactive winter-town map with working entrances to the arena upgrades, club office/contracts, player collection, equipment/wardrobe, and locker room.
+- [x] Keep direct shortcuts for squad, tournament, standings, club profile, settings, and starting a match.
+- [ ] Replace the first CSS-built town illustration with a polished, consistent isometric 3D environment.
+- [ ] Give every building a persistent visual upgrade level and visibly change its model as the club invests in it.
+- [ ] Build a dedicated academy system for youth development, scouting, and training; do not treat the current player-collection shortcut as the finished academy.
+- [ ] Add staged rink evolution: outdoor practice rink → upgraded rink with stands and lighting → enclosed arena → elite arena.
+- [ ] Add ambient life to the town: subtle snowfall, lit windows, moving visitors, parked vehicles, and fans on match days.
+- [ ] Keep the town map touch-friendly on mobile and avoid decorative controls that do not lead to a real feature.
+
 ## Current focus — 3D player
 
 ### Character model and rigging

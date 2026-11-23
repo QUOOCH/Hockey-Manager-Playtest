@@ -2831,3 +2831,78 @@ label{display:block;font-size:11px;color:#a8c8e2;margin:12px 0}input{display:blo
 .hub-competition-row>button>strong{position:absolute;right:10px;top:11px;color:#9eafc0;font-size:12px}
 @media(min-width:650px){.compact-hub{gap:18px}.hub-match-feature{min-height:126px}.hub-nav-grid>button{min-height:76px;padding:14px 16px}.hub-competition-row>button{padding:15px}}
 @media(max-width:390px){.compact-hub{padding:10px;gap:13px}.hub-topbar{gap:7px}.hub-club-mark{width:36px;height:36px}.hub-identity b{font-size:12px}.hub-currencies{gap:5px;font-size:9px}.hub-currencies span{padding:6px}.hub-currencies button{width:30px;height:30px}.hub-player-status{grid-template-columns:42px minmax(0,1fr) auto;gap:8px;padding:10px}.hub-level{width:40px;height:40px}.hub-team-power b{font-size:14px}.hub-team-power small{font-size:6px}.hub-nav-grid{gap:6px}.hub-nav-grid>button{padding:9px;gap:7px}.hub-nav-grid>button>i{width:29px;height:29px}.hub-nav-grid b{font-size:11px}.hub-nav-grid small{font-size:8px}.hub-competition-row{gap:6px}.hub-competition-row>button{padding:10px 8px}.hub-competition-row>button>b{font-size:10px}}
+
+
+/* Interactive winter hockey town — main game hub */
+.city-hub{width:min(100%,920px);margin:0 auto;padding:clamp(10px,2.5vw,22px);display:grid;gap:14px;color:#eef5ff}
+.city-topbar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:3px 2px 11px;border-bottom:1px solid #ffffff16}
+.city-club{display:flex;align-items:center;gap:10px;min-width:0}
+.city-crest{width:42px;height:42px;display:grid;place-items:center;flex:none;border-radius:12px;background:linear-gradient(145deg,#45306f,#182338);border:1px solid #a88aff66;color:#f0e9ff;font-size:23px}
+.city-club>span:last-child{display:grid;gap:3px;min-width:0}
+.city-club b{font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.city-club small{font-size:9px;color:#92a7bd}
+.city-wallet{display:flex;align-items:center;gap:6px;color:#d6e2ee;font-size:10px;font-weight:800;white-space:nowrap}
+.city-wallet span{padding:7px 8px;border:1px solid #ffffff15;border-radius:8px;background:#ffffff08}
+.city-wallet button{width:32px;height:32px;border:1px solid #ffffff1a;border-radius:9px;background:#ffffff09;color:#e3eaf3;font-size:16px}
+.city-progress{display:grid;grid-template-columns:44px minmax(0,1fr) auto;align-items:center;gap:10px;padding:10px 12px;border:1px solid #ffffff16;border-radius:12px;background:linear-gradient(110deg,#1b293b,#101c2b)}
+.city-level{height:40px;display:grid;place-content:center;text-align:center;border-radius:9px;background:#8d6bf022;border:1px solid #a88aff66}
+.city-level b{font-size:19px;line-height:1;color:#e7dcff}.city-level small{font-size:7px;color:#b5a4e7}
+.city-xp{display:grid;gap:6px;min-width:0}.city-xp>div{display:flex;justify-content:space-between;gap:8px;font-size:8px;color:#91a7bc}.city-xp>div b{font-size:8px;letter-spacing:1px;color:#cad7e5}
+.city-xp>i{height:5px;border-radius:8px;background:#ffffff16;overflow:hidden}.city-xp>i em{display:block;height:100%;border-radius:8px;background:linear-gradient(90deg,#7958cb,#b59aff)}
+.city-power{text-align:right;display:grid;gap:3px}.city-power b{font-size:16px;color:#dfd3ff;font-variant-numeric:tabular-nums}.city-power small{font-size:6px;letter-spacing:.55px;color:#91a7bc;white-space:nowrap}
+.city-map-wrap{display:grid;gap:9px}
+.city-map-heading{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:0 2px}
+.city-map-heading>span{display:grid;gap:3px}.city-map-heading b{font-size:10px;letter-spacing:1.6px;color:#dce8f5}.city-map-heading small{font-size:8px;color:#8298ae}
+.city-map-heading button{display:flex;align-items:center;gap:7px;padding:8px 12px;border:1px solid #a88aff66;border-radius:9px;background:linear-gradient(110deg,#46336f,#292344);color:#f2ecff;font-size:9px;font-weight:900;letter-spacing:.8px}
+.city-map-heading button i{font-size:8px;font-style:normal;color:#c7b5ff}
+.city-map{position:relative;isolation:isolate;width:100%;height:clamp(405px,68vw,570px);overflow:hidden;border:1px solid #a9d8f12b;border-radius:18px;background:radial-gradient(ellipse at 50% 40%,#314b64 0%,#20374d 42%,#15283a 100%);box-shadow:0 18px 45px #0005,inset 0 0 55px #07172566}
+.city-map:before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(135deg,#d9e9f51a 0 1px,transparent 1px 42px),linear-gradient(45deg,#d9e9f50b 0 1px,transparent 1px 42px);background-size:42px 42px;opacity:.5}
+.city-map:after{content:"";position:absolute;inset:0;z-index:10;pointer-events:none;background:linear-gradient(180deg,#07142120,transparent 24%,transparent 75%,#07142138),radial-gradient(ellipse at center,transparent 52%,#07142150 100%)}
+.city-snow-hill{position:absolute;z-index:-1;border-radius:50%;background:linear-gradient(145deg,#d8e9f2,#9cb6c8 70%,#718da2);box-shadow:inset 0 8px 18px #f4fbff66,0 12px 25px #08182744;opacity:.32}
+.hill-a{width:70%;height:28%;left:-20%;top:-10%}.hill-b{width:65%;height:25%;right:-17%;bottom:-8%}
+.city-road{position:absolute;z-index:0;height:22px;border:1px solid #dceaf11c;border-radius:30px;background:linear-gradient(180deg,#667c8d,#344b5e 45%,#293e50);box-shadow:0 5px 9px #07142166}
+.city-road:after{content:"";position:absolute;left:8%;right:8%;top:50%;border-top:1px dashed #d6e5ee66}
+.road-a{width:125%;left:-10%;top:48%;transform:rotate(-25deg)}
+.road-b{width:110%;left:-4%;top:59%;transform:rotate(31deg)}
+.road-c{width:80%;left:13%;top:25%;transform:rotate(82deg);opacity:.55}
+.city-pine{position:absolute;z-index:1;color:#153b43;text-shadow:0 3px 0 #0b2932,0 7px 8px #08182788;font-size:35px;line-height:1;transform:scaleX(.82)}
+.pine-a{left:3%;top:37%}.pine-b{right:3%;top:40%;font-size:29px}.pine-c{left:34%;top:5%;font-size:28px}.pine-d{right:30%;bottom:3%;font-size:32px}.pine-e{left:4%;bottom:5%;font-size:27px}
+.city-lamp{position:absolute;z-index:2;width:3px;height:34px;background:#263a4b;border-radius:3px;box-shadow:0 2px 2px #07142188}
+.city-lamp:before{content:"";position:absolute;left:-4px;top:-3px;width:11px;height:7px;border-radius:8px 8px 2px 2px;background:#d8f4ff;box-shadow:0 0 13px 5px #bdeaff77}
+.city-lamp i{position:absolute;left:-13px;top:3px;width:29px;height:29px;border-radius:50%;background:#c9efff20;filter:blur(7px)}
+.lamp-a{left:28%;top:22%}.lamp-b{right:29%;bottom:22%}.lamp-c{left:51%;bottom:7%;transform:scale(.8)}
+.city-building{position:absolute;z-index:4;width:28%;max-width:175px;min-width:94px;display:grid;justify-items:center;gap:3px;padding:0;border:0;background:transparent;color:#f1f6fc;cursor:pointer;text-align:center;filter:drop-shadow(0 8px 6px #07142188);transition:transform .18s ease,filter .18s ease}
+.city-building:active{transform:translateY(2px) scale(.97)}
+.city-building:focus-visible,.city-rink:focus-visible{outline:2px solid #d6c6ff;outline-offset:4px;border-radius:12px}
+.city-building-art{position:relative;width:88px;height:78px;display:block;filter:drop-shadow(0 5px 3px #07142166)}
+.city-roof{position:absolute;z-index:3;left:3px;top:0;width:82px;height:40px;display:block;clip-path:polygon(50% 0,100% 65%,50% 100%,0 65%);background:linear-gradient(145deg,#a8c4d6,#59758d 58%,#344b63);border-bottom:2px solid #d7e7f2}
+.city-front{position:absolute;z-index:2;left:12px;top:28px;width:64px;height:47px;display:grid;place-items:center;gap:4px;padding-top:7px;clip-path:polygon(0 0,50% 22%,100% 0,100% 82%,50% 100%,0 82%);background:linear-gradient(90deg,#203b52,#38566d 50%,#20394f);border:1px solid #a9c5d555}
+.city-front b{font-size:13px;color:#dff5ff;text-shadow:0 1px 4px #071421}
+.city-front em{width:9px;height:10px;border:1px solid #c9e8f4aa;border-radius:2px;background:linear-gradient(145deg,#8dc4dc,#26465e);box-shadow:0 0 7px #8bdcff55}
+.city-side{position:absolute;z-index:1;right:0;top:35px;width:17px;height:37px;transform:skewY(-29deg);background:linear-gradient(90deg,#233c51,#142b3d);border-right:1px solid #91adc455}
+.office-art .city-roof{background:linear-gradient(145deg,#b6a2d8,#705c9b 58%,#44375f)}.office-art .city-front{background:linear-gradient(90deg,#28354d,#45516a 50%,#25334a)}
+.academy-art .city-roof{background:linear-gradient(145deg,#b5d5e0,#5d91a5 58%,#31566d)}.academy-art .city-front{background:linear-gradient(90deg,#244b5d,#3a6a7c 50%,#1d4054)}
+.shop-art .city-roof{background:linear-gradient(145deg,#d8c49b,#a27a48 58%,#705333)}.shop-art .city-front{background:linear-gradient(90deg,#59452e,#82613b 50%,#4a3928)}
+.locker-art .city-roof{background:linear-gradient(145deg,#c2b3ec,#7d6bb3 58%,#4b3b7c)}.locker-art .city-front{background:linear-gradient(90deg,#2c3554,#4b5278 50%,#252d4a)}
+.city-building-name{display:grid;gap:3px;padding:5px 7px;border:1px solid #c5d8e522;border-radius:7px;background:#0c1d2dcc;backdrop-filter:blur(5px);box-shadow:0 4px 10px #07142144;min-width:100%}
+.city-building-name b{font-size:8px;letter-spacing:1px;white-space:nowrap}.city-building-name small{font-size:7px;color:#9eb4c7;white-space:nowrap}
+.city-office{left:5%;top:9%}.city-academy{right:5%;top:8%}.city-shop{right:5%;bottom:8%}.city-locker{left:5%;bottom:7%}
+.city-rink{position:absolute;z-index:4;left:32%;top:35%;width:36%;height:30%;padding:0;border:5px solid #e1edf4;border-radius:25% / 18%;background:linear-gradient(145deg,#8ba8ba,#e4f4fa 16%,#c2e0ed 52%,#8caec1);box-shadow:0 10px 18px #07142188,inset 0 0 0 3px #6b95ad;transform:rotate(-7deg);cursor:pointer}
+.city-rink:before{content:"";position:absolute;inset:6px;border:1px solid #6d9db8;border-radius:24% / 17%;pointer-events:none}
+.city-ice{position:absolute;inset:8px;border-radius:23% / 16%;overflow:hidden;background:linear-gradient(100deg,#eaf8fc,#b8deed 48%,#e7f6fb);box-shadow:inset 0 0 18px #5288a755}
+.rink-redline{position:absolute;left:50%;top:0;height:100%;border-left:2px solid #dd6475}.rink-blueline{position:absolute;top:0;height:100%;border-left:2px solid #438dce}.rink-blueline.left{left:30%}.rink-blueline.right{right:30%}
+.rink-circle{position:absolute;left:50%;top:50%;width:28%;aspect-ratio:1;border:1px solid #d66b80;border-radius:50%;transform:translate(-50%,-50%)}
+.rink-goal{position:absolute;top:37%;height:26%;width:4px;border:1px solid #d45d72}.rink-goal.left{left:0;border-left:0}.rink-goal.right{right:0;border-right:0}
+.city-rink-lights{position:absolute;inset:-12px;border-radius:28%;background:radial-gradient(ellipse at 50% 10%,#d7f3ff88,transparent 55%);pointer-events:none}
+.city-stands{position:absolute;left:12%;right:12%;top:-12px;height:9px;border-radius:5px;background:repeating-linear-gradient(90deg,#8b9fb0 0 5px,#3f5367 5px 9px);box-shadow:0 2px 3px #1a2e3e}
+.city-rink-name{position:absolute;left:50%;bottom:-34px;transform:translateX(-50%) rotate(7deg);display:grid;gap:2px;width:max-content;max-width:150%;padding:5px 8px;border:1px solid #c7e4f344;border-radius:7px;background:#0b1c2ddd;box-shadow:0 4px 9px #07142166;white-space:nowrap}
+.city-rink-name b{font-size:8px;letter-spacing:.7px;color:#f0f8ff}.city-rink-name small{font-size:7px;color:#a6c8dc}
+.city-snowflake{position:absolute;z-index:2;color:#dff5ff88;text-shadow:0 0 9px #dff5ff77}.snow-a{left:46%;top:16%;font-size:18px}.snow-b{right:23%;top:51%;font-size:13px}.snow-c{left:24%;bottom:23%;font-size:14px}
+.city-town-sign{position:absolute;z-index:3;left:50%;bottom:2%;transform:translateX(-50%);display:grid;gap:2px;text-align:center;color:#e4edf5;font-size:8px;font-weight:900;letter-spacing:2px;text-shadow:0 2px 5px #071421}
+.city-town-sign i{font-size:6px;font-style:normal;letter-spacing:2px;color:#92aabd}
+.city-shortcuts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}
+.city-shortcuts button{min-width:0;display:grid;justify-items:center;gap:4px;padding:10px 4px;border:1px solid #ffffff16;border-radius:11px;background:linear-gradient(145deg,#1a2a3c,#101d2c);color:#eaf2fb}
+.city-shortcuts button>span{font-size:17px;color:#c6b5ff}.city-shortcuts button>b{font-size:9px}.city-shortcuts button>small{font-size:7px;color:#8da4b9}
+.city-shortcuts button:active{border-color:#b49aff88;background:#29213f}
+@media(min-width:700px){.city-map{height:570px}.city-building{max-width:190px}.city-building-art{transform:scale(1.13);margin:4px 0}.city-building-name b{font-size:9px}.city-rink{max-width:320px}}
+@media(max-width:430px){.city-hub{padding:9px;gap:11px}.city-crest{width:36px;height:36px}.city-club b{font-size:11px}.city-wallet{gap:4px;font-size:8px}.city-wallet span{padding:6px}.city-wallet button{width:29px;height:29px}.city-progress{grid-template-columns:40px minmax(0,1fr) auto;padding:9px;gap:8px}.city-power b{font-size:13px}.city-power small{font-size:5px}.city-map{height:440px;border-radius:14px}.city-building{width:30%;min-width:88px}.city-building-art{transform:scale(.88);margin:-4px 0}.city-building-name{padding:4px 4px}.city-building-name b{font-size:7px;letter-spacing:.7px}.city-building-name small{font-size:6px}.city-office{left:2%;top:8%}.city-academy{right:2%;top:7%}.city-shop{right:2%;bottom:7%}.city-locker{left:2%;bottom:6%}.city-rink{left:31%;top:36%;width:38%;height:27%;border-width:4px}.city-rink-name{bottom:-31px;padding:4px 6px}.city-rink-name b{font-size:6px}.city-rink-name small{font-size:6px}.city-pine{font-size:27px}.pine-b{font-size:23px}.city-town-sign{font-size:7px}.city-shortcuts{gap:5px}.city-shortcuts button{padding:9px 2px}.city-shortcuts button>b{font-size:8px}}

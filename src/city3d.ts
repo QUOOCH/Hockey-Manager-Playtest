@@ -1,26 +1,335 @@
 import * as THREE from 'three';
-export type City3DStage={dispose:()=>void};
-export function mountCity3D(host:HTMLElement,onSelect:(screen:string)=>void):City3DStage{
-const scene=new THREE.Scene();scene.background=new THREE.Color(0x172944);scene.fog=new THREE.Fog(0x172944,25,65);
-const camera=new THREE.PerspectiveCamera(40,1,.1,100);camera.position.set(17,21,23);camera.lookAt(0,0,0);
-const renderer=new THREE.WebGLRenderer({antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));renderer.setSize(host.clientWidth,host.clientHeight);renderer.shadowMap.enabled=true;renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;host.appendChild(renderer.domElement);
-scene.add(new THREE.HemisphereLight(0xc9e9ff,0x283449,2));const sun=new THREE.DirectionalLight(0xe9f5ff,3);sun.position.set(-12,22,12);sun.castShadow=true;scene.add(sun);
-const M=(c:number,r=.7)=>new THREE.MeshStandardMaterial({color:c,roughness:r});const snow=M(0xcde2ef),white=M(0xf4f9ff),ice=M(0x9bd8f1,.2),road=M(0x344a60),dark=M(0x182a40),glass=M(0x8bdfff,.2),warm=M(0xffd28a),wood=M(0x82664c);
-function cube(p:THREE.Object3D,w:number,h:number,d:number,m:THREE.Material,x:number,y:number,z:number){const q=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m);q.position.set(x,y+h/2,z);q.castShadow=true;q.receiveShadow=true;p.add(q);}
-const ground=new THREE.Mesh(new THREE.PlaneGeometry(60,60),snow);ground.rotation.x=-Math.PI/2;scene.add(ground);
-function roadAt(x:number,z:number,w:number,d:number){cube(scene,w,.12,d,white,x,.02,z);cube(scene,w*.96,.1,d*.96,road,x,.12,z);}roadAt(0,0,5,42);roadAt(0,0,42,5);roadAt(-14,0,3,28);roadAt(14,0,3,28);roadAt(0,-14,28,3);roadAt(0,14,28,3);
-const targets:THREE.Object3D[]=[];const rink=new THREE.Group();rink.userData.screen='stadium';scene.add(rink);targets.push(rink);cube(rink,15.8,.4,10.8,white,0,.1,0);cube(rink,15.1,.18,10.1,dark,0,.45,0);cube(rink,14.8,.12,9.8,ice,0,.57,0);cube(rink,.07,.02,9.5,M(0xd94c65),0,.65,0);cube(rink,6.5,.02,.07,M(0xd94c65),0,.65,0);
-for(const x of [-4.5,4.5]){const c=new THREE.Mesh(new THREE.TorusGeometry(1.15,.035,8,48),M(0x477bc4));c.rotation.x=Math.PI/2;c.position.set(x,.66,0);rink.add(c);}
-for(const [w,h,d,x,y,z] of [[14.8,.7,.25,0,.8,-4.95],[14.8,.7,.25,0,.8,4.95],[.25,.7,10,-7.4,.8,0],[.25,.7,10,7.4,.8,0]] as number[][])cube(rink,w,h,d,M(0x63468f),x,y,z);
-function building(x:number,z:number,screen:string,color:number,roofColor:number){const g=new THREE.Group();g.position.set(x,0,z);g.userData.screen=screen;scene.add(g);targets.push(g);cube(g,4.3,.2,4,white,0,.1,0);cube(g,3.6,2.5,3.2,M(color),0,.35,0);cube(g,3.9,.3,3.5,M(roofColor),0,2.85,0);for(const side of [-1,1]){const r=new THREE.Mesh(new THREE.BoxGeometry(2,.3,3.6),M(roofColor));r.position.set(side*.8,3.1,0);r.rotation.z=side*.3;g.add(r);}for(const xx of [-1,1]){cube(g,.5,1.1,.12,glass,xx,1,1.65);cube(g,.5,1,.1,warm,xx,1,1.7);}cube(g,.7,1.5,.16,dark,0,1,1.67);cube(g,2.1,.4,.2,M(0x594183),0,2.4,1.68);cube(g,1.2,.12,.5,white,0,.1,2.2);}
-building(-13,-8,'managerOffice',0x354f70,0x6a88a7);building(13,-8,'cards',0x4b7f99,0x66a7c2);building(-13,8,'wardrobe',0x927349,0x7d5d39);building(13,8,'heroRoom',0x5b4780,0x8b75ad);
-function pine(x:number,z:number,h:number){cube(scene,.18,h*.22,.18,wood,x,h*.1,z);for(let j=0;j<3;j++){const c=new THREE.Mesh(new THREE.ConeGeometry(h*(.34-j*.05),h*.4,9),M(j?0x26575f:0x1d4652));c.position.set(x,h*(.3+j*.19),z);scene.add(c);}const cap=new THREE.Mesh(new THREE.ConeGeometry(h*.2,h*.14,9),white);cap.position.set(x,h*.5,z);scene.add(cap);}
-for(let i=0;i<34;i++){const x=(Math.random()-.5)*45,z=(Math.random()-.5)*45;if(Math.abs(x)<10&&Math.abs(z)<10)continue;pine(x,z,2.5+Math.random()*2.5);}
-const pond=new THREE.Mesh(new THREE.CircleGeometry(3.5,40),M(0x8fcbe7,.2));pond.rotation.x=-Math.PI/2;pond.position.set(-19,.06,18);scene.add(pond);
-for(const [x,z] of [[-4,-4],[4,-4],[-4,4],[4,4],[-17,0],[17,0],[0,-17],[0,17]] as number[][]){cube(scene,.12,2.6,.12,dark,x,0,z);cube(scene,.45,.18,.35,warm,x,2.6,z);const l=new THREE.PointLight(0xffd99b,7,5);l.position.set(x,2.8,z);scene.add(l);}
-let dragging=false,moved=false,lx=0,ly=0,theta=Math.atan2(camera.position.x,camera.position.z),phi=Math.acos(camera.position.y/camera.position.length()),radius=camera.position.length();
-const down=(e:PointerEvent)=>{dragging=true;moved=false;lx=e.clientX;ly=e.clientY;renderer.domElement.setPointerCapture(e.pointerId);};const move=(e:PointerEvent)=>{if(!dragging)return;const dx=e.clientX-lx,dy=e.clientY-ly;if(Math.abs(dx)+Math.abs(dy)>2)moved=true;theta-=dx*.006;phi=Math.max(.5,Math.min(1.2,phi+dy*.004));lx=e.clientX;ly=e.clientY;camera.position.set(radius*Math.sin(phi)*Math.sin(theta),radius*Math.cos(phi),radius*Math.sin(phi)*Math.cos(theta));camera.lookAt(0,0,0);};const up=()=>dragging=false;const ray=new THREE.Raycaster(),pt=new THREE.Vector2();const click=(e:MouseEvent)=>{if(moved)return;const r=renderer.domElement.getBoundingClientRect();pt.set((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1);ray.setFromCamera(pt,camera);const hit=ray.intersectObjects(targets,true)[0];if(hit){let o:THREE.Object3D|null=hit.object;while(o&&!o.userData.screen)o=o.parent;if(o?.userData.screen)onSelect(o.userData.screen);}};
-renderer.domElement.addEventListener('pointerdown',down);renderer.domElement.addEventListener('pointermove',move);renderer.domElement.addEventListener('pointerup',up);renderer.domElement.addEventListener('pointercancel',up);renderer.domElement.addEventListener('click',click);
-let raf=0;const animate=()=>{raf=requestAnimationFrame(animate);renderer.render(scene,camera);};animate();const ro=new ResizeObserver(()=>{const w=host.clientWidth,h=host.clientHeight;if(w&&h){camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h);}});ro.observe(host);
-return{dispose(){cancelAnimationFrame(raf);ro.disconnect();renderer.domElement.removeEventListener('pointerdown',down);renderer.domElement.removeEventListener('pointermove',move);renderer.domElement.removeEventListener('pointerup',up);renderer.domElement.removeEventListener('pointercancel',up);renderer.domElement.removeEventListener('click',click);renderer.dispose();host.innerHTML='';}};
+
+export type City3DStage = { dispose: () => void };
+
+export function mountCity3D(host: HTMLElement, onSelect: (screen: string) => void): City3DStage {
+  let renderer: THREE.WebGLRenderer;
+  try {
+    renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'default' });
+  } catch (error) {
+    host.innerHTML = '<div class="city-3d-fallback"><b>3D-город не запустился</b><span>Похоже, браузер не дал доступ к WebGL. Перезагрузи страницу или открой её в Safari.</span></div>';
+    console.error('Puck It! city WebGL init failed', error);
+    return { dispose: () => { host.innerHTML = ''; } };
+  }
+
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(0xb8d8e9);
+  scene.fog = new THREE.Fog(0xb8d8e9, 58, 112);
+  const camera = new THREE.PerspectiveCamera(38, 1, .1, 180);
+  const target = new THREE.Vector3(0, 0, 0);
+  const azimuth = Math.PI / 4;
+  const elevation = .78;
+  let distance = 43;
+  const updateCamera = () => {
+    const horizontal = Math.cos(elevation) * distance;
+    camera.position.set(
+      target.x + Math.sin(azimuth) * horizontal,
+      target.y + Math.sin(elevation) * distance,
+      target.z + Math.cos(azimuth) * horizontal
+    );
+    camera.lookAt(target);
+  };
+  updateCamera();
+
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.6));
+  renderer.setSize(Math.max(1, host.clientWidth), Math.max(1, host.clientHeight));
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.18;
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.domElement.style.cssText = 'display:block;width:100%;height:100%;touch-action:none;outline:none';
+  renderer.domElement.setAttribute('aria-label', 'Объёмный хоккейный город. Перемещайте карту пальцем.');
+  host.appendChild(renderer.domElement);
+
+  scene.add(new THREE.HemisphereLight(0xe9f7ff, 0x637b8c, 2.25));
+  scene.add(new THREE.AmbientLight(0xffffff, .55));
+  const sun = new THREE.DirectionalLight(0xfff3df, 3.2);
+  sun.position.set(-24, 38, 18);
+  sun.castShadow = true;
+  sun.shadow.mapSize.set(2048, 2048);
+  sun.shadow.camera.left = -42; sun.shadow.camera.right = 42;
+  sun.shadow.camera.top = 42; sun.shadow.camera.bottom = -42;
+  sun.shadow.normalBias = .035;
+  scene.add(sun);
+  const fill = new THREE.DirectionalLight(0x8bd7ff, 1.25);
+  fill.position.set(28, 18, -24); scene.add(fill);
+
+  const mat = (color: number, roughness = .78, metalness = 0) =>
+    new THREE.MeshStandardMaterial({ color, roughness, metalness });
+  const snow = mat(0xe9f4f8), snowShade = mat(0xc5dce8), ice = mat(0x9bd9ed, .24),
+    iceBright = mat(0xd8f5ff, .28), road = mat(0x657f91), asphalt = mat(0x526a7c),
+    navy = mat(0x243b58), glass = mat(0x83c9e4, .2, .12), warmGlass = mat(0xffd99b, .3),
+    pineDark = mat(0x174b50), pineMid = mat(0x23666a), wood = mat(0x755b4a),
+    red = mat(0xc84e5d), purple = mat(0x65528e), gold = mat(0xe6b85c, .32, .45),
+    white = mat(0xffffff), shadowMat = mat(0x9cb6c5);
+
+  const box = (parent: THREE.Object3D, w: number, h: number, d: number, material: THREE.Material,
+    x: number, y: number, z: number, bevel = false) => {
+    const geometry = bevel
+      ? new THREE.BoxGeometry(w, h, d, 1, 1, 1)
+      : new THREE.BoxGeometry(w, h, d);
+    const mesh = new THREE.Mesh(geometry, material);
+    mesh.position.set(x, y + h / 2, z);
+    mesh.castShadow = true; mesh.receiveShadow = true; parent.add(mesh);
+    return mesh;
+  };
+  const ground = new THREE.Mesh(new THREE.PlaneGeometry(100, 100), snow);
+  ground.rotation.x = -Math.PI / 2; ground.position.y = -.08; ground.receiveShadow = true; scene.add(ground);
+
+  // Snowy rolling banks give the town a miniature diorama silhouette.
+  for (let i = 0; i < 22; i++) {
+    const x = ((i * 17) % 86) - 43, z = ((i * 29) % 82) - 41;
+    if (Math.abs(x) < 18 && Math.abs(z) < 17) continue;
+    const hill = new THREE.Mesh(new THREE.SphereGeometry(1, 18, 12), i % 3 ? snow : snowShade);
+    hill.scale.set(3 + (i % 4), .5 + (i % 3) * .18, 2.2 + (i % 3));
+    hill.position.set(x, -.05, z); hill.receiveShadow = true; scene.add(hill);
+  }
+
+  // Roads form a walkable town grid around the central rink.
+  const roadStrip = (x: number, z: number, w: number, d: number) => {
+    box(scene, w, .12, d, snowShade, x, -.01, z);
+    box(scene, w * .96, .08, d * .96, road, x, .11, z);
+    box(scene, w * .94, .025, d * .94, asphalt, x, .19, z);
+  };
+  roadStrip(0, 0, 7, 76); roadStrip(0, 0, 76, 7);
+  roadStrip(-25, 0, 4, 62); roadStrip(25, 0, 4, 62);
+  roadStrip(0, -25, 62, 4); roadStrip(0, 25, 62, 4);
+  // Snowy sidewalks and small crossing marks.
+  for (const x of [-4.2, 4.2]) for (let z = -30; z <= 30; z += 8) box(scene, .18, .035, 1.4, white, x, .22, z);
+  for (const z of [-4.2, 4.2]) for (let x = -30; x <= 30; x += 8) box(scene, 1.4, .035, .18, white, x, .22, z);
+
+  const clickable: THREE.Object3D[] = [];
+  const rink = new THREE.Group(); rink.position.set(0, .22, 0); rink.userData.screen = 'stadium'; scene.add(rink); clickable.push(rink);
+  // Arena foundation, ice, boards and a raised spectator hall.
+  box(rink, 22, .8, 16, navy, 0, 0, 0);
+  box(rink, 21.5, .22, 15.5, white, 0, .8, 0);
+  box(rink, 20.8, .12, 14.8, ice, 0, 1.02, 0);
+  for (const z of [-7.35, 7.35]) {
+    box(rink, 20.7, 1.05, .32, white, 0, 1.12, z);
+    box(rink, 20.5, .52, .12, mat(0x7eb6cb), 0, 1.3, z + (z < 0 ? .18 : -.18));
+  }
+  for (const x of [-10.35, 10.35]) box(rink, .32, 1.05, 14.7, white, x, 1.12, 0);
+  // Ice markings.
+  box(rink, .09, .025, 14.3, mat(0xd94f65), 0, 1.15, 0);
+  box(rink, 20.1, .025, .08, mat(0xd94f65), 0, 1.15, 0);
+  for (const x of [-6.8, 6.8]) {
+    const circle = new THREE.Mesh(new THREE.TorusGeometry(1.65, .055, 8, 48), mat(0x4d83c4));
+    circle.rotation.x = Math.PI / 2; circle.position.set(x, 1.17, 0); rink.add(circle);
+    const dot = new THREE.Mesh(new THREE.CircleGeometry(.11, 20), mat(0xd94f65));
+    dot.rotation.x = -Math.PI / 2; dot.position.set(x, 1.17, 0); rink.add(dot);
+  }
+  const centerCircle = new THREE.Mesh(new THREE.TorusGeometry(2.1, .045, 8, 48), mat(0x4d83c4));
+  centerCircle.rotation.x = Math.PI / 2; centerCircle.position.y = 1.17; rink.add(centerCircle);
+  // Goal cages and rink-side lamps.
+  for (const z of [-6.4, 6.4]) {
+    const goal = new THREE.Group(); goal.position.set(0, 1.18, z); rink.add(goal);
+    const goalMat = mat(0xeaf7ff, .3, .35);
+    box(goal, 1.8, .12, .12, goalMat, 0, 0, 0);
+    box(goal, .12, 1.15, .12, goalMat, -.84, 0, 0);
+    box(goal, .12, 1.15, .12, goalMat, .84, 0, 0);
+    box(goal, 1.8, .08, .08, goalMat, 0, 1.05, 0);
+  }
+  // Arena roof trusses and glass end walls.
+  const hall = new THREE.Group(); hall.position.set(0, 0, 0); rink.add(hall);
+  box(hall, 21.5, .35, 15.8, mat(0x385b78), 0, 10.2, 0);
+  const roof = new THREE.Mesh(new THREE.ConeGeometry(12.5, 4.4, 4), mat(0x4e6f91));
+  roof.rotation.y = Math.PI / 4; roof.position.set(0, 12.45, 0); roof.scale.z = .72; roof.castShadow = true; hall.add(roof);
+  box(hall, 21.3, 7.8, .3, glass, 0, 1.8, -7.65);
+  box(hall, 21.3, 7.8, .3, glass, 0, 1.8, 7.65);
+  for (const x of [-10.4, 10.4]) box(hall, .3, 8, 15.2, navy, x, 1.8, 0);
+  // Keep ice visible through an open front: the rink remains the town's visual anchor.
+  hall.visible = false;
+
+  function makeBuilding(x: number, z: number, screen: string, title: string, wallColor: number, roofColor: number, width = 8, depth = 7) {
+    const group = new THREE.Group(); group.position.set(x, .2, z); group.userData.screen = screen; scene.add(group); clickable.push(group);
+    // Raised snowy plot and foundation.
+    box(group, width + .9, .42, depth + .9, shadowMat, 0, 0, 0);
+    box(group, width + .55, .24, depth + .55, white, 0, .4, 0);
+    box(group, width, 3.8, depth, mat(wallColor), 0, .64, 0);
+    // Gabled roof built from two thick sloped planes, with snow caps.
+    const roofA = box(group, width * .59, .34, depth + .8, mat(roofColor), -width * .25, 4.38, 0);
+    roofA.rotation.z = -.42;
+    const roofB = box(group, width * .59, .34, depth + .8, mat(roofColor), width * .25, 4.38, 0);
+    roofB.rotation.z = .42;
+    const snowA = box(group, width * .59, .13, depth + .82, white, -width * .25, 4.59, 0); snowA.rotation.z = -.42;
+    const snowB = box(group, width * .59, .13, depth + .82, white, width * .25, 4.59, 0); snowB.rotation.z = .42;
+    // Timber trim, corner beams and lit facade.
+    for (const xx of [-width / 2 + .18, width / 2 - .18]) {
+      box(group, .22, 3.7, .24, mat(0xf1dfc8), xx, .7, depth / 2 + .08);
+      box(group, 1.15, 1.55, .16, glass, xx * .62, 2.05, depth / 2 + .11);
+      box(group, .94, 1.34, .08, warmGlass, xx * .62, 2.15, depth / 2 + .2);
+      box(group, .1, 1.55, .1, white, xx * .62, 2.05, depth / 2 + .27);
+      box(group, 1.15, .1, .1, white, xx * .62, 2.05, depth / 2 + .27);
+    }
+    box(group, 1.45, 2.45, .22, wood, 0, .72, depth / 2 + .13);
+    box(group, .95, 1.5, .06, mat(0x38516b), 0, 1.2, depth / 2 + .27);
+    box(group, width + .15, .25, .35, mat(0x263d58), 0, 3.7, depth / 2 + .28);
+    // Snowy entrance steps.
+    box(group, 2.4, .2, .8, snowShade, 0, .5, depth / 2 + .65);
+    // Sign plate; lettering is handled by the in-game building label overlay.
+    const sign = new THREE.Mesh(new THREE.BoxGeometry(2.8, .62, .12), mat(0x203d5a));
+    sign.position.set(0, 3.2, depth / 2 + .34); group.add(sign);
+    const badge = new THREE.Mesh(new THREE.BoxGeometry(.42, .42, .14), gold);
+    badge.position.set(-1.02, 3.2, depth / 2 + .43); group.add(badge);
+    const lamp = new THREE.PointLight(0xffd69b, 2.2, 9); lamp.position.set(0, 3, depth / 2 + 1.5); group.add(lamp);
+    return group;
+  }
+
+  makeBuilding(-23, -17, 'managerOffice', 'ОФИС', 0x3c5874, 0x405b79, 8, 7);
+  makeBuilding(23, -17, 'cards', 'АКАДЕМИЯ', 0x557b89, 0x668da0, 9, 7);
+  makeBuilding(-23, 17, 'wardrobe', 'МАГАЗИН', 0x92724e, 0x79583f, 9, 7);
+  makeBuilding(23, 17, 'heroRoom', 'РАЗДЕВАЛКА', 0x625184, 0x7965a1, 9, 7);
+
+  function pine(x: number, z: number, height: number) {
+    const trunk = new THREE.Mesh(new THREE.CylinderGeometry(.18, .26, height * .28, 8), wood);
+    trunk.position.set(x, height * .14, z); trunk.castShadow = true; scene.add(trunk);
+    for (let layer = 0; layer < 3; layer++) {
+      const cone = new THREE.Mesh(new THREE.ConeGeometry(height * (.29 - layer * .035), height * .38, 9), layer === 0 ? pineDark : pineMid);
+      cone.position.set(x, height * (.28 + layer * .2), z); cone.castShadow = true; scene.add(cone);
+      if (layer === 1) {
+        const cap = new THREE.Mesh(new THREE.ConeGeometry(height * .19, height * .23, 9), white);
+        cap.position.set(x, height * .53, z); scene.add(cap);
+      }
+    }
+  }
+  const treePositions: [number, number, number][] = [
+    [-34,-29,5.2],[-30,-22,4.2],[-35,-7,5.4],[-32,12,4.6],[-34,29,5.3],
+    [34,-29,5.3],[31,-21,4.6],[35,-5,5.2],[32,13,4.8],[35,29,5.4],
+    [-15,-32,4.8],[-7,-34,4.2],[8,-34,5.1],[17,-31,4.5],[-16,32,4.8],
+    [-7,34,4.4],[8,34,5.2],[17,31,4.6],[-29,0,4.2],[29,0,4.4]
+  ];
+  treePositions.forEach(([x,z,h]) => pine(x,z,h));
+
+  // Warm street lamps and small snow mounds make the town feel inhabited.
+  for (const [x,z] of [[-7,-8],[7,-8],[-7,8],[7,8],[-25,-8],[25,-8],[-25,8],[25,8],[-8,-25],[8,-25],[-8,25],[8,25]] as [number,number][]) {
+    const pole = new THREE.Mesh(new THREE.CylinderGeometry(.08,.11,3.2,8), navy);
+    pole.position.set(x, 1.6, z); pole.castShadow = true; scene.add(pole);
+    const arm = box(scene, .85, .12, .12, navy, x - .32, 3.05, z);
+    const lamp = new THREE.Mesh(new THREE.SphereGeometry(.26, 12, 10), warmGlass);
+    lamp.position.set(x - .68, 3.08, z); scene.add(lamp);
+    const light = new THREE.PointLight(0xffd99c, 3.5, 10); light.position.copy(lamp.position); scene.add(light);
+    void arm;
+  }
+  for (let i = 0; i < 34; i++) {
+    const x = ((i * 13) % 72) - 36, z = ((i * 23) % 70) - 35;
+    if (Math.abs(x) < 12 && Math.abs(z) < 12) continue;
+    const mound = new THREE.Mesh(new THREE.SphereGeometry(1, 12, 8), white);
+    mound.scale.set(1.2 + (i % 3) * .5, .35, .8 + (i % 2) * .4);
+    mound.position.set(x, .08, z); scene.add(mound);
+  }
+
+  // Camera pan + pinch zoom, like a mobile strategy city. Rotation is deliberately locked.
+  let pointers = new Map<number, { x: number; y: number }>();
+  let lastCenter = { x: 0, y: 0 }, lastPinch = 0, moved = false, downPoint = { x: 0, y: 0 };
+  const raycaster = new THREE.Raycaster(), ndc = new THREE.Vector2();
+  const pick = (clientX: number, clientY: number) => {
+    const rect = renderer.domElement.getBoundingClientRect();
+    ndc.set((clientX - rect.left) / rect.width * 2 - 1, -((clientY - rect.top) / rect.height) * 2 + 1);
+    raycaster.setFromCamera(ndc, camera);
+    const hit = raycaster.intersectObjects(clickable, true)[0];
+    if (!hit) return;
+    let object: THREE.Object3D | null = hit.object;
+    while (object && !object.userData.screen) object = object.parent;
+    if (object?.userData.screen) onSelect(String(object.userData.screen));
+  };
+  const pointerDown = (event: PointerEvent) => {
+    event.preventDefault();
+    pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+    downPoint = { x: event.clientX, y: event.clientY }; moved = false;
+    if (pointers.size === 1) lastCenter = { ...downPoint };
+    if (pointers.size === 2) {
+      const points = [...pointers.values()];
+      lastPinch = Math.hypot(points[0].x - points[1].x, points[0].y - points[1].y);
+      lastCenter = { x: (points[0].x + points[1].x) / 2, y: (points[0].y + points[1].y) / 2 };
+    }
+    try { renderer.domElement.setPointerCapture(event.pointerId); } catch { /* capture may be unavailable */ }
+  };
+  const pointerMove = (event: PointerEvent) => {
+    if (!pointers.has(event.pointerId)) return;
+    event.preventDefault();
+    const previous = pointers.get(event.pointerId)!;
+    pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+    const points = [...pointers.values()];
+    if (points.length === 1) {
+      const dx = event.clientX - previous.x, dy = event.clientY - previous.y;
+      if (Math.abs(event.clientX - downPoint.x) + Math.abs(event.clientY - downPoint.y) > 5) moved = true;
+      const worldPerPixel = distance / Math.max(260, host.clientHeight) * 1.25;
+      const right = new THREE.Vector3(Math.cos(azimuth), 0, -Math.sin(azimuth));
+      const forward = new THREE.Vector3(-Math.sin(azimuth), 0, -Math.cos(azimuth));
+      target.addScaledVector(right, -dx * worldPerPixel);
+      target.addScaledVector(forward, dy * worldPerPixel);
+    } else if (points.length >= 2) {
+      moved = true;
+      const a = points[0], b = points[1];
+      const center = { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 };
+      const pinch = Math.hypot(a.x - b.x, a.y - b.y);
+      if (lastPinch > 0) distance = THREE.MathUtils.clamp(distance * lastPinch / Math.max(1, pinch), 25, 66);
+      const dx = center.x - lastCenter.x, dy = center.y - lastCenter.y;
+      const worldPerPixel = distance / Math.max(260, host.clientHeight) * 1.05;
+      const right = new THREE.Vector3(Math.cos(azimuth), 0, -Math.sin(azimuth));
+      const forward = new THREE.Vector3(-Math.sin(azimuth), 0, -Math.cos(azimuth));
+      target.addScaledVector(right, -dx * worldPerPixel);
+      target.addScaledVector(forward, dy * worldPerPixel);
+      lastPinch = pinch; lastCenter = center;
+    }
+    target.x = THREE.MathUtils.clamp(target.x, -17, 17);
+    target.z = THREE.MathUtils.clamp(target.z, -17, 17);
+    updateCamera();
+  };
+  const pointerUp = (event: PointerEvent) => {
+    const point = pointers.get(event.pointerId);
+    pointers.delete(event.pointerId);
+    if (point && !moved && pointers.size === 0) pick(event.clientX, event.clientY);
+    if (pointers.size === 1) {
+      const remaining = [...pointers.values()][0];
+      lastCenter = { ...remaining }; downPoint = { ...remaining }; moved = true;
+    }
+    try { if (renderer.domElement.hasPointerCapture(event.pointerId)) renderer.domElement.releasePointerCapture(event.pointerId); } catch { /* no-op */ }
+  };
+  const wheel = (event: WheelEvent) => { event.preventDefault(); distance = THREE.MathUtils.clamp(distance + event.deltaY * .025, 25, 66); updateCamera(); };
+  renderer.domElement.addEventListener('pointerdown', pointerDown);
+  renderer.domElement.addEventListener('pointermove', pointerMove);
+  renderer.domElement.addEventListener('pointerup', pointerUp);
+  renderer.domElement.addEventListener('pointercancel', pointerUp);
+  renderer.domElement.addEventListener('wheel', wheel, { passive: false });
+
+  let frame = 0, disposed = false;
+  const resize = () => {
+    if (disposed) return;
+    const width = Math.max(1, host.clientWidth), height = Math.max(1, host.clientHeight);
+    camera.aspect = width / height; camera.updateProjectionMatrix();
+    renderer.setSize(width, height, false);
+  };
+  const observer = new ResizeObserver(resize); observer.observe(host); resize();
+  const clock = new THREE.Clock();
+  const animate = () => {
+    if (disposed) return;
+    frame = requestAnimationFrame(animate);
+    const t = clock.getElapsedTime();
+    // Subtle snow drift: tiny flakes, low-cost point cloud.
+    renderer.render(scene, camera);
+    void t;
+  };
+  animate();
+
+  return {
+    dispose() {
+      if (disposed) return;
+      disposed = true; cancelAnimationFrame(frame); observer.disconnect();
+      renderer.domElement.removeEventListener('pointerdown', pointerDown);
+      renderer.domElement.removeEventListener('pointermove', pointerMove);
+      renderer.domElement.removeEventListener('pointerup', pointerUp);
+      renderer.domElement.removeEventListener('pointercancel', pointerUp);
+      renderer.domElement.removeEventListener('wheel', wheel);
+      scene.traverse(object => {
+        if (object instanceof THREE.Mesh) {
+          object.geometry.dispose();
+          const materials = Array.isArray(object.material) ? object.material : [object.material];
+          materials.forEach(material => material.dispose());
+        }
+      });
+      renderer.dispose(); host.innerHTML = '';
+    }
+  };
 }

@@ -268,7 +268,7 @@ export function mountCity3D(host: HTMLElement, onSelect: (screen: string) => voi
   makeLandmark(31,-17,'cards','POWER LAB',0x4d9db7,'lab',9,7);
   makeLandmark(-31,18,'wardrobe','PRO SHOP',0xb88950,'shop',9,8);
   makeLandmark(31,18,'heroRoom','PLAYER HUB',0x8a73bf,'hall',9,8);
-  makeLandmark(0,-30,'tournament','TOURNAMENT',0xd2a34f,'round',8,7);
+  makeLandmark(0,-30,'playoff','TOURNAMENT',0xd2a34f,'round',8,7);
   makeLandmark(0,31,'standings','LEGENDS',0x9a6a9f,'hall',10,7);
 
   const plaza=new THREE.Group();plaza.position.set(-17,0,0);scene.add(plaza);

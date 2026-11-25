@@ -19,7 +19,7 @@ export function mountCity3D(host: HTMLElement, onSelect: (screen: string) => voi
   const target = new THREE.Vector3(0, 0, 0);
   const azimuth = Math.PI / 4;
   const elevation = .78;
-  let distance = 50;
+  let distance = 61;
   const updateCamera = () => {
     const horizontal = Math.cos(elevation) * distance;
     camera.position.set(
@@ -74,7 +74,7 @@ export function mountCity3D(host: HTMLElement, onSelect: (screen: string) => voi
     mesh.castShadow = true; mesh.receiveShadow = true; parent.add(mesh);
     return mesh;
   };
-  const ground = new THREE.Mesh(new THREE.PlaneGeometry(100, 100), snow);
+  const ground = new THREE.Mesh(new THREE.PlaneGeometry(120, 120), snow);
   ground.rotation.x = -Math.PI / 2; ground.position.y = -.08; ground.receiveShadow = true; scene.add(ground);
 
   // Snowy rolling banks give the town a miniature diorama silhouette.
@@ -199,6 +199,102 @@ export function mountCity3D(host: HTMLElement, onSelect: (screen: string) => voi
   makeBuilding(-23, 17, 'wardrobe', 'МАГАЗИН', 0x92724e, 0x79583f, 9, 7);
   makeBuilding(23, 17, 'heroRoom', 'РАЗДЕВАЛКА', 0x625184, 0x7965a1, 9, 7);
 
+  // --- PowerPlay district: landmark architecture and a complete town composition ---
+  const arena = new THREE.Group(); arena.position.set(0, 0, 0); arena.userData.screen = 'stadium'; scene.add(arena); clickable.push(arena);
+  box(arena, 27.8, .8, 21.8, mat(0x263e58), 0, 0, 0);
+  box(arena, 27.2, .18, 21.2, mat(0xdceaf0), 0, .8, 0);
+  box(arena, 26.2, 5.6, .65, mat(0x31536f), 0, 1, -10.15);
+  box(arena, 26.2, 5.6, .65, mat(0x31536f), 0, 1, 10.15);
+  for (const x of [-13.05, 13.05]) box(arena, .65, 5.6, 20.2, mat(0x294965), x, 1, 0);
+  for (const z of [-10.5, 10.5]) for (let x = -11.4; x <= 11.5; x += 2.25) {
+    box(arena, 1.55, 3.5, .16, glass, x, 1.8, z);
+    box(arena, 1.58, .12, .2, mat(0xe6f6ff), x, 3.45, z);
+    box(arena, 1.58, .12, .2, mat(0xe6f6ff), x, 1.8, z);
+  }
+  const roofMat = mat(0xe7f2f7, .42, .08);
+  box(arena, 27.8, .62, 6.1, roofMat, 0, 6.9, -7.75);
+  box(arena, 27.8, .62, 6.1, roofMat, 0, 6.9, 7.75);
+  box(arena, 8.2, .62, 9.4, roofMat, -9.8, 6.9, 0);
+  box(arena, 8.2, .62, 9.4, roofMat, 9.8, 6.9, 0);
+  box(arena, 10.8, .18, 7.8, glass, 0, 6.92, 0);
+  box(arena, 12, .42, 2.2, mat(0x203a55), 0, 5.9, 11.15);
+  box(arena, 10.8, 3.2, .25, glass, 0, 1.3, 10.95);
+  box(arena, 11.2, .22, .35, gold, 0, 4.45, 11.12);
+  const arenaSignCanvas = document.createElement('canvas'); arenaSignCanvas.width = 768; arenaSignCanvas.height = 180;
+  const arenaCtx = arenaSignCanvas.getContext('2d');
+  if (arenaCtx) { arenaCtx.fillStyle='#102a45'; arenaCtx.fillRect(0,0,768,180); arenaCtx.strokeStyle='#e7c579'; arenaCtx.lineWidth=9; arenaCtx.strokeRect(8,8,752,164); arenaCtx.fillStyle='#f4fbff'; arenaCtx.font='900 92px Arial'; arenaCtx.textAlign='center'; arenaCtx.textBaseline='middle'; arenaCtx.fillText('PUCK IT ARENA',384,92); }
+  const arenaSignTexture = new THREE.CanvasTexture(arenaSignCanvas); arenaSignTexture.colorSpace = THREE.SRGBColorSpace;
+  const arenaSign = new THREE.Mesh(new THREE.PlaneGeometry(10.2,2.35),new THREE.MeshBasicMaterial({map:arenaSignTexture}));
+  arenaSign.position.set(0,4.8,11.18); arena.add(arenaSign);
+  for (const [x,z] of [[-10,-7],[10,-7],[-10,7],[10,7]] as [number,number][]) {
+    box(arena,2.1,.65,1.5,mat(0x8da7b9),x,7.2,z); box(arena,1.4,.18,1.05,mat(0x435f78),x,7.85,z);
+  }
+  for (const x of [-13.7,13.7]) for (const z of [-10.8,10.8]) {
+    const mast=new THREE.Mesh(new THREE.CylinderGeometry(.11,.16,10,8),navy); mast.position.set(x,5,z); mast.castShadow=true; arena.add(mast);
+    for(let n=0;n<4;n++){const bulb=new THREE.Mesh(new THREE.SphereGeometry(.12,8,6),warmGlass);bulb.position.set(x-.48+n*.32,9.75,z+.18);arena.add(bulb);}
+  }
+
+  function makeLandmark(x:number,z:number,screen:string,title:string,accent:number,kind:'tower'|'hall'|'round'|'lab'|'shop',w:number,d:number){
+    const g=new THREE.Group();g.position.set(x,.16,z);g.userData.screen=screen;scene.add(g);clickable.push(g);
+    const accentMat=mat(accent,.38,.22),darkMat=mat(0x203d58,.48,.16),wallMat=mat(kind==='lab'?0x8caebd:kind==='shop'?0x8b725a:0x526d83,.62,.08);
+    box(g,w+2,.48,d+2,shadowMat,0,0,0);box(g,w+1.4,.24,d+1.4,white,0,.48,0);
+    if(kind==='round'){
+      const base=new THREE.Mesh(new THREE.CylinderGeometry(w*.62,w*.7,1.1,12),darkMat);base.position.y=1.15;base.castShadow=true;g.add(base);
+      const body=new THREE.Mesh(new THREE.CylinderGeometry(w*.53,w*.62,4.2,12),wallMat);body.position.y=3.65;body.castShadow=true;g.add(body);
+      const band=new THREE.Mesh(new THREE.CylinderGeometry(w*.55,w*.55,.34,12),accentMat);band.position.y=5.55;g.add(band);
+      const cap=new THREE.Mesh(new THREE.CylinderGeometry(w*.42,w*.54,1.15,12),mat(0xdcebf2,.3,.2));cap.position.y=6.25;g.add(cap);
+      const crown=new THREE.Mesh(new THREE.CylinderGeometry(w*.24,w*.24,.35,12),gold);crown.position.y=7;g.add(crown);
+      for(let a=0;a<12;a++){const ang=a*Math.PI/6;const win=new THREE.Mesh(new THREE.BoxGeometry(.2,2.3,.08),warmGlass);win.position.set(Math.cos(ang)*w*.54,3.7,Math.sin(ang)*w*.54);win.rotation.y=-ang;g.add(win);}
+    }else{
+      const levels=kind==='tower'?3:kind==='lab'?2:1;
+      for(let level=0;level<levels;level++){
+        const ww=w*(1-level*.13),dd=d*(1-level*.12),yy=.72+level*(kind==='tower'?2.55:2.2);
+        box(g,ww,kind==='tower'?2.45:2.05,dd,wallMat,0,yy,0);box(g,ww+.18,.18,dd+.18,accentMat,0,yy+2.05,0);
+        for(let xx=-ww/2+1;xx<ww/2;xx+=1.35){box(g,1.02,1.12,.09,glass,xx,yy+.48,dd/2+.055);box(g,.09,1.12,.09,mat(0xdcebf2),xx+.53,yy+.48,dd/2+.08);box(g,1.02,1.12,.09,glass,xx,yy+.48,-dd/2-.055);}
+        for(let zz=-dd/2+1;zz<dd/2;zz+=1.35){box(g,.09,1.12,1.02,glass,ww/2+.055,yy+.48,zz);box(g,.09,1.12,1.02,glass,-ww/2-.055,yy+.48,zz);}
+      }
+      const roofY=.85+levels*(kind==='tower'?2.55:2.2);box(g,w*.78,.28,d*.72,darkMat,0,roofY,0);
+      for(const [rx,rz] of [[-w*.25,-d*.2],[w*.25,-d*.2],[-w*.25,d*.2],[w*.25,d*.2]] as [number,number][]){box(g,1.35,.72,1.1,mat(0x9eb4c1),rx,roofY+.28,rz);box(g,1.05,.12,.82,darkMat,rx,roofY+1,rz);}
+      box(g,w*.62,2.7,.2,glass,0,.82,d/2+.12);box(g,w*.7,.2,1.25,accentMat,0,.58,d/2+.7);
+      for(let step=0;step<3;step++)box(g,w*.55,.12,.45,snowShade,0,.28+step*.12,d/2+1.15+step*.38);
+    }
+    const c=document.createElement('canvas');c.width=512;c.height=128;const cx=c.getContext('2d');
+    if(cx){cx.fillStyle='#142e49';cx.fillRect(0,0,512,128);cx.strokeStyle='#e5c47b';cx.lineWidth=7;cx.strokeRect(5,5,502,118);cx.fillStyle='#f5fbff';cx.font='900 52px Arial';cx.textAlign='center';cx.textBaseline='middle';cx.fillText(title,256,66);}
+    const tex=new THREE.CanvasTexture(c);tex.colorSpace=THREE.SRGBColorSpace;
+    const face=new THREE.Mesh(new THREE.PlaneGeometry(Math.min(w*.9,8),1.35),new THREE.MeshBasicMaterial({map:tex}));
+    face.position.set(0,kind==='tower'?7.1:4.2,d/2+.18);g.add(face);return g;
+  }
+  makeLandmark(-31,-17,'managerOffice','CLUB HQ',0x7c65b4,'tower',8,7);
+  makeLandmark(31,-17,'cards','POWER LAB',0x4d9db7,'lab',9,7);
+  makeLandmark(-31,18,'wardrobe','PRO SHOP',0xb88950,'shop',9,8);
+  makeLandmark(31,18,'heroRoom','PLAYER HUB',0x8a73bf,'hall',9,8);
+  makeLandmark(0,-30,'tournament','TOURNAMENT',0xd2a34f,'round',8,7);
+  makeLandmark(0,31,'standings','LEGENDS',0x9a6a9f,'hall',10,7);
+
+  const plaza=new THREE.Group();plaza.position.set(-17,0,0);scene.add(plaza);
+  const plinth=new THREE.Mesh(new THREE.CylinderGeometry(4.1,4.5,.8,12),mat(0x20364d,.48,.2));plinth.position.y=.4;plinth.castShadow=true;plaza.add(plinth);
+  const ring=new THREE.Mesh(new THREE.TorusGeometry(3.7,.12,8,48),gold);ring.rotation.x=Math.PI/2;ring.position.y=.85;plaza.add(ring);
+  const puck=new THREE.Mesh(new THREE.CylinderGeometry(1.25,1.25,.58,32),mat(0x18283a,.28,.32));puck.position.set(0,3.05,0);puck.castShadow=true;plaza.add(puck);
+  const puckTop=new THREE.Mesh(new THREE.CylinderGeometry(1.1,1.1,.08,32),gold);puckTop.position.set(0,3.38,0);plaza.add(puckTop);
+  const star=new THREE.Mesh(new THREE.IcosahedronGeometry(1.15,1),mat(0xe7c36e,.25,.45));star.position.set(0,4.35,0);star.castShadow=true;plaza.add(star);
+  for(let i=0;i<3;i++){box(plaza,.08,3.5,.08,navy,-4+i*4,1.1,-3);const cloth=box(plaza,1.4,.72,.08,i%2?purple:red,-3.3+i*4,3.25,-3);cloth.rotation.z=.12;}
+
+  const boulevardPts=[new THREE.Vector3(-42,.2,8),new THREE.Vector3(-30,.2,8),new THREE.Vector3(-22,.2,5),new THREE.Vector3(-14,.2,-1),new THREE.Vector3(0,.2,-5),new THREE.Vector3(15,.2,-7),new THREE.Vector3(27,.2,-12),new THREE.Vector3(42,.2,-12)];
+  const boulevard=new THREE.CatmullRomCurve3(boulevardPts);
+  const roadMesh=new THREE.Mesh(new THREE.TubeGeometry(boulevard,100,2.15,8,false),road);roadMesh.position.y=.02;roadMesh.receiveShadow=true;scene.add(roadMesh);
+  const roadLine=new THREE.Mesh(new THREE.TubeGeometry(boulevard,100,.045,6,false),mat(0xeaf6fa));roadLine.position.y=.1;scene.add(roadLine);
+  for(const x of [-34,-27]){
+    const tunnel=new THREE.Mesh(new THREE.CylinderGeometry(2.05,2.05,7,20,1,true,0,Math.PI),mat(0x465a6c));tunnel.rotation.z=Math.PI/2;tunnel.position.set(x,2.2,-34);tunnel.castShadow=true;scene.add(tunnel);
+    box(scene,7,.22,4.1,mat(0x607b8e),x,0,-34);box(scene,7,.08,.14,mat(0x273b50),x,.3,-32.1);
+  }
+  const slope=new THREE.Mesh(new THREE.PlaneGeometry(24,15),snowShade);slope.rotation.x=-Math.PI/2;slope.rotation.z=-.25;slope.position.set(28,0,-34);scene.add(slope);
+  for(let i=0;i<6;i++){
+    const pole=new THREE.Mesh(new THREE.CylinderGeometry(.09,.14,7,8),navy);pole.position.set(20+i*3,3.5,-39+i*.9);pole.castShadow=true;scene.add(pole);
+    const cable=new THREE.Mesh(new THREE.CylinderGeometry(.035,.035,3.25,6),mat(0x20364d,.48,.2));cable.rotation.z=Math.PI/2;cable.position.set(21.5+i*3,6.8,-38.5+i*.9);scene.add(cable);
+    box(scene,.9,.12,.55,red,21.5+i*3,5.4,-38.5+i*.9);
+  }
+  for(let i=0;i<38;i++){const side=i%4,t=Math.floor(i/4),x=side<2?(side===0?-39-t%3:39+t%3):-34+t*4.2,z=side<2?-31+t*3.4:(side===2?-39:39);if(Math.abs(x)<16&&Math.abs(z)<16)continue;pine(x,z,3.8+(i%4)*.55);}
+
   function pine(x: number, z: number, height: number) {
     const trunk = new THREE.Mesh(new THREE.CylinderGeometry(.18, .26, height * .28, 8), wood);
     trunk.position.set(x, height * .14, z); trunk.castShadow = true; scene.add(trunk);
@@ -299,7 +395,7 @@ export function mountCity3D(host: HTMLElement, onSelect: (screen: string) => voi
       const a = points[0], b = points[1];
       const center = { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 };
       const pinch = Math.hypot(a.x - b.x, a.y - b.y);
-      if (lastPinch > 0) distance = THREE.MathUtils.clamp(distance * lastPinch / Math.max(1, pinch), 25, 66);
+      if (lastPinch > 0) distance = THREE.MathUtils.clamp(distance * lastPinch / Math.max(1, pinch), 28, 104);
       const dx = center.x - lastCenter.x, dy = center.y - lastCenter.y;
       const worldPerPixel = distance / Math.max(260, host.clientHeight) * 1.05;
       const right = new THREE.Vector3(Math.cos(azimuth), 0, -Math.sin(azimuth));

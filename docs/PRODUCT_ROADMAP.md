@@ -2,6 +2,60 @@
 
 > Living project notebook. Add decisions and ideas here so they survive chat resets. Keep the main branch untouched until the project owner explicitly approves integration.
 
+## Product direction — arcade hockey manager (2026-11-25)
+
+> **This is the current top-level product decision and supersedes earlier plans for a playable / visually simulated on-ice match.** Hockey: Puck it! is an arcade-first club and roster manager. The player builds a team, collects hockey cards, upgrades athletes, manages resources, enters competitions, and grows the club. There will be **no rendered hockey match, live rink gameplay, or on-ice player control**. Match outcomes are resolved by the game simulation and presented through a compact, exciting result / stats screen.
+
+### Reference: Hockey Battle 2 — what we are taking as a design reference
+- Use the broad management loop as inspiration: build a club → collect players from packs → assemble a roster → train and improve players → enter seasons / cups / tournaments → earn rewards → reinvest in the roster and club.
+- Include several parallel progression tracks: player development, team strength, club facilities / arena, daily tasks and longer events.
+- Keep the interface direct and mobile-first, with the squad and player collection as primary destinations.
+- Add competitive layers over time: regular tournaments, playoffs, leagues / clubs, friend-party modes, seasonal competitions and leaderboards.
+- These are product inspirations, not a request to copy Hockey Battle 2's artwork, exact screens, economy values, names, or proprietary content. PUCK IT! keeps its own identity and visual language.
+- Source basis: Hockey Battle 2's current store descriptions and listed modes/features (Google Play and Apple App Store, checked 2026-11-25).
+
+### Core game loop
+1. Earn currencies, experience and rewards from matches, competitions, tasks and events.
+2. Open player packs / recruit athletes and expand the collection.
+3. Build a lineup with positions and roles; manage substitutes and goalkeeper.
+4. Train players, spend upgrade points, improve attributes and unlock role-specific development.
+5. Improve equipment and club facilities to support progression and unlock useful bonuses.
+6. Enter a season, cup, tournament or challenge; resolve the match automatically.
+7. Review score, team/player stats, rewards and progression; use the rewards to strengthen the club.
+
+### Product pillars and systems
+- **Player cards and collection:** clear rarity tiers, strong card art, player identity, position, overall rating, attributes, level, progression and collection filters.
+- **Roster management:** lineup by hockey positions (LW, C, RW, LD, RD, G), formation / line combinations, bench, captain and role assignment.
+- **Player progression:** training, XP / levels, upgrade points, attribute growth (endurance, strength, agility, speed), role specialisation and longer-term talent development.
+- **Packs and recruitment:** earnable packs, pack-opening reveal, duplicate handling / conversion, recruitment goals and a transparent reward economy.
+- **Equipment:** skates, stick, jersey, helmet, shorts / pants; goalie-specific pads, trapper and stick. Equipment rarity and visual customisation must remain distinct from player rarity. Team jersey colour follows the club, not card rarity.
+- **Club economy:** green Bucks and gold Pucks; clear sources and sinks; upgrades for arena, training base, academy / scouting, equipment shop and hall of fame. Facilities should provide understandable progression benefits.
+- **Competitions:** season, regular tournament, cup, playoff / bracket, daily challenge and longer events. Add leagues / social modes after the solo loop is satisfying.
+- **Tasks and retention:** daily and weekly objectives, quest chains, achievements, milestones and reward tracks.
+- **Match resolution — no match visuals:** calculate results from roster strength, player attributes, positions, chemistry / line fit, tactics, condition and bounded randomness. Show pre-match comparison, simulated score, key stats, standout players and rewards. No 3D/2D rink match scene, skating animation, puck control or live match camera.
+- **Presentation:** premium colourful stylised 3D / 2.5D sports-management UI, punchy card reveals and satisfying upgrade feedback. Visual polish supports management screens; it is not a reason to build a rendered match.
+
+### Priority order
+1. **P0 — Lock the foundation:** product navigation, player data model, currencies, save / persistence, roster and card collection.
+2. **P1 — Make the core loop playable:** packs, card details, lineup editing, training, attribute upgrades and a first automatic match-result simulator.
+3. **P2 — Add meaningful progression:** equipment, facility upgrades, season / tournament bracket, daily tasks and rewards.
+4. **P3 — Add depth and live-service structure:** scouting / academy, player talents, duplicates, events, leagues, social / party modes and leaderboards.
+5. **P4 — Polish and balance:** card presentation, pack-opening feel, onboarding, economy tuning, accessibility, performance and mobile QA.
+
+### Explicitly out of scope
+- No rendered on-ice match or real-time hockey controls.
+- No need to finish player skating / shooting / goalie animations for match gameplay.
+- No building a full 3D town as a prerequisite for the manager loop. The winter town can remain a navigable visual hub / presentation layer, but every building must lead to a real management feature; it must not delay cards, roster, progression or competitions.
+- Do not copy Hockey Battle 2's exact UI, art, text, assets or balancing.
+
+### Next implementation milestone
+- [ ] Audit the existing screens and data structures against this direction; identify what is already real, what is a prototype and what is missing.
+- [ ] Reshape the primary navigation around Squad, Players / Collection, Training, Competitions and Club.
+- [ ] Define a single player-card data model covering rarity, position, overall, four core attributes, level, XP, upgrade points, equipment slots and progression state.
+- [ ] Make collection → card details → training / upgrade → lineup assignment a complete working loop.
+- [ ] Implement a deterministic, inspectable first match simulation with a result screen; do not build match visuals.
+- [ ] Update the roadmap after each verified milestone and keep experimental work isolated from main.
+
 ## New direction — interactive hockey town
 
 - [x] Make the hockey town the main hub for returning players on the experimental branch.
@@ -50,12 +104,11 @@
 - [ ] Build equipment customization with swappable helmet, visor, jersey, gloves, pants, skates, and stick assets; do not fake swaps by only changing UI labels.
 - [ ] Preserve the selected premium stylized visual direction for cards and surrounding UI; keep match gameplay visuals distinct where appropriate.
 
-## Match presentation and gameplay
-- [ ] Keep improving hockey-specific player motion and animation quality.
-- [ ] Re-test goalie-save restart / faceoff flow.
-- [ ] Re-test puck possession and AI puck recovery so opponents do not hold the puck indefinitely.
-- [ ] Keep puck appearance consistent; investigate any unexpected colour changes.
-- [ ] Remove unintended rink markings or debug lines.
+## Match resolution — management simulation only
+- [ ] Implement and balance automatic match resolution from roster, attributes, positions, line fit, tactics and condition.
+- [ ] Present a clear pre-match comparison and a punchy post-match score / statistics / rewards screen.
+- [ ] Ensure the result simulation is testable and reproducible; expose the key factors that influenced the result.
+- [ ] Do not build or restore a rendered rink match, live player controls, skating / shooting / goalie animations, puck physics or match camera.
 - [ ] Continue cinematic intro/audio polish while respecting browser audio-start requirements.
 
 ## Technical / release workflow

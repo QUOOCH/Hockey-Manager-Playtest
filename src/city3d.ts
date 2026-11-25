@@ -13,13 +13,13 @@ export function mountCity3D(host: HTMLElement, onSelect: (screen: string) => voi
   }
 
   const scene = new THREE.Scene();
-  scene.background = new THREE.Color(0xb8d8e9);
-  scene.fog = new THREE.Fog(0xb8d8e9, 58, 112);
+  scene.background = new THREE.Color(0xc7e3ef);
+  scene.fog = new THREE.Fog(0xc7e3ef, 72, 138);
   const camera = new THREE.PerspectiveCamera(38, 1, .1, 180);
   const target = new THREE.Vector3(0, 0, 0);
   const azimuth = Math.PI / 4;
   const elevation = .78;
-  let distance = 43;
+  let distance = 50;
   const updateCamera = () => {
     const horizontal = Math.cos(elevation) * distance;
     camera.position.set(
@@ -35,7 +35,7 @@ export function mountCity3D(host: HTMLElement, onSelect: (screen: string) => voi
   renderer.setSize(Math.max(1, host.clientWidth), Math.max(1, host.clientHeight));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.18;
+  renderer.toneMappingExposure = 1.28;
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   renderer.domElement.style.cssText = 'display:block;width:100%;height:100%;touch-action:none;outline:none';
@@ -172,6 +172,24 @@ export function mountCity3D(host: HTMLElement, onSelect: (screen: string) => voi
     sign.position.set(0, 3.2, depth / 2 + .34); group.add(sign);
     const badge = new THREE.Mesh(new THREE.BoxGeometry(.42, .42, .14), gold);
     badge.position.set(-1.02, 3.2, depth / 2 + .43); group.add(badge);
+    const signCanvas = document.createElement('canvas'); signCanvas.width = 512; signCanvas.height = 128;
+    const ctx = signCanvas.getContext('2d');
+    if (ctx) {
+      ctx.fillStyle = '#203d5a'; ctx.fillRect(0, 0, 512, 128);
+      ctx.strokeStyle = '#e8c477'; ctx.lineWidth = 8; ctx.strokeRect(7, 7, 498, 114);
+      ctx.fillStyle = '#f8fbff'; ctx.font = 'bold 58px Arial'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText(title, 276, 66);
+    }
+    const signTexture = new THREE.CanvasTexture(signCanvas); signTexture.colorSpace = THREE.SRGBColorSpace;
+    const signFace = new THREE.Mesh(new THREE.PlaneGeometry(2.55, .58), new THREE.MeshBasicMaterial({ map: signTexture }));
+    signFace.position.set(.12, 3.2, depth / 2 + .415); group.add(signFace);
+    const chimney = new THREE.Mesh(new THREE.BoxGeometry(.75, 1.35, .72), mat(0x9a6e61));
+    chimney.position.set(width * .29, 5.12, -depth * .18); chimney.castShadow = true; group.add(chimney);
+    box(group, .95, .18, .9, white, width * .29, 5.78, -depth * .18);
+    for (let puff = 0; puff < 3; puff++) {
+      const smoke = new THREE.Mesh(new THREE.SphereGeometry(.22 + puff * .045, 10, 8), mat(0xe7f1f5));
+      smoke.position.set(width * .29 + puff * .16, 6.12 + puff * .35, -depth * .18); group.add(smoke);
+    }
     const lamp = new THREE.PointLight(0xffd69b, 2.2, 9); lamp.position.set(0, 3, depth / 2 + 1.5); group.add(lamp);
     return group;
   }
@@ -200,6 +218,22 @@ export function mountCity3D(host: HTMLElement, onSelect: (screen: string) => voi
     [-7,34,4.4],[8,34,5.2],[17,31,4.6],[-29,0,4.2],[29,0,4.4]
   ];
   treePositions.forEach(([x,z,h]) => pine(x,z,h));
+
+  function skater(x: number, z: number, jersey: number, angle: number) {
+    const player = new THREE.Group(); player.position.set(x, 1.18, z); player.rotation.y = angle; rink.add(player);
+    const torso = new THREE.Mesh(new THREE.CapsuleGeometry(.22, .42, 4, 8), mat(jersey, .58));
+    torso.position.y = .48; torso.castShadow = true; player.add(torso);
+    const helmet = new THREE.Mesh(new THREE.SphereGeometry(.19, 12, 10), navy);
+    helmet.position.set(0, .9, .02); player.add(helmet);
+    const pants = new THREE.Mesh(new THREE.BoxGeometry(.34, .18, .28), mat(0x202d3e));
+    pants.position.y = .18; player.add(pants);
+    const stick = new THREE.Mesh(new THREE.CylinderGeometry(.025, .035, 1.05, 6), mat(0xeee8dc));
+    stick.position.set(.34, .38, .18); stick.rotation.z = -.28; player.add(stick);
+    const blade = new THREE.Mesh(new THREE.BoxGeometry(.34, .055, .08), mat(0x252e39));
+    blade.position.set(.44, .02, .28); player.add(blade);
+  }
+  skater(-3.4, -2.1, 0xc74f65, .55); skater(3.2, 2.2, 0x365f9b, -2.2);
+  skater(-1.4, 4.1, 0xf0f3f5, 1.2); skater(5.2, -3.6, 0x5c4b88, -1.0);
 
   // Warm street lamps and small snow mounds make the town feel inhabited.
   for (const [x,z] of [[-7,-8],[7,-8],[-7,8],[7,8],[-25,-8],[25,-8],[-25,8],[25,8],[-8,-25],[8,-25],[-8,25],[8,25]] as [number,number][]) {
@@ -234,6 +268,7 @@ export function mountCity3D(host: HTMLElement, onSelect: (screen: string) => voi
     if (object?.userData.screen) onSelect(String(object.userData.screen));
   };
   const pointerDown = (event: PointerEvent) => {
+    if (event.pointerType === 'touch') return;
     event.preventDefault();
     pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
     downPoint = { x: event.clientX, y: event.clientY }; moved = false;
@@ -246,7 +281,7 @@ export function mountCity3D(host: HTMLElement, onSelect: (screen: string) => voi
     try { renderer.domElement.setPointerCapture(event.pointerId); } catch { /* capture may be unavailable */ }
   };
   const pointerMove = (event: PointerEvent) => {
-    if (!pointers.has(event.pointerId)) return;
+    if (event.pointerType === 'touch' || !pointers.has(event.pointerId)) return;
     event.preventDefault();
     const previous = pointers.get(event.pointerId)!;
     pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
@@ -278,6 +313,7 @@ export function mountCity3D(host: HTMLElement, onSelect: (screen: string) => voi
     updateCamera();
   };
   const pointerUp = (event: PointerEvent) => {
+    if (event.pointerType === 'touch') return;
     const point = pointers.get(event.pointerId);
     pointers.delete(event.pointerId);
     if (point && !moved && pointers.size === 0) pick(event.clientX, event.clientY);
@@ -287,12 +323,61 @@ export function mountCity3D(host: HTMLElement, onSelect: (screen: string) => voi
     }
     try { if (renderer.domElement.hasPointerCapture(event.pointerId)) renderer.domElement.releasePointerCapture(event.pointerId); } catch { /* no-op */ }
   };
-  const wheel = (event: WheelEvent) => { event.preventDefault(); distance = THREE.MathUtils.clamp(distance + event.deltaY * .025, 25, 66); updateCamera(); };
+  const wheel = (event: WheelEvent) => { event.preventDefault(); distance = THREE.MathUtils.clamp(distance + event.deltaY * .035, 22, 92); updateCamera(); };
+  let touchStart = 0, touchMoved = false, lastTouchCenter = { x: 0, y: 0 }, lastTouchPinch = 0;
+  const touchStartHandler = (event: TouchEvent) => {
+    event.preventDefault(); touchMoved = false; touchStart = Date.now();
+    if (event.touches.length === 1) {
+      const t = event.touches[0]; lastTouchCenter = { x: t.clientX, y: t.clientY };
+    } else if (event.touches.length >= 2) {
+      const a = event.touches[0], b = event.touches[1];
+      lastTouchPinch = Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY);
+      lastTouchCenter = { x: (a.clientX + b.clientX) / 2, y: (a.clientY + b.clientY) / 2 };
+    }
+  };
+  const touchMoveHandler = (event: TouchEvent) => {
+    event.preventDefault();
+    if (event.touches.length === 1) {
+      const t = event.touches[0], dx = t.clientX - lastTouchCenter.x, dy = t.clientY - lastTouchCenter.y;
+      if (Math.abs(dx) + Math.abs(dy) > 2) touchMoved = true;
+      const scale = distance / Math.max(260, host.clientHeight) * 1.25;
+      target.addScaledVector(new THREE.Vector3(Math.cos(azimuth), 0, -Math.sin(azimuth)), -dx * scale);
+      target.addScaledVector(new THREE.Vector3(-Math.sin(azimuth), 0, -Math.cos(azimuth)), dy * scale);
+      lastTouchCenter = { x: t.clientX, y: t.clientY };
+    } else if (event.touches.length >= 2) {
+      touchMoved = true;
+      const a = event.touches[0], b = event.touches[1];
+      const center = { x: (a.clientX + b.clientX) / 2, y: (a.clientY + b.clientY) / 2 };
+      const pinch = Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY);
+      if (lastTouchPinch > 0 && pinch > 0) distance = THREE.MathUtils.clamp(distance * lastTouchPinch / pinch, 22, 92);
+      const dx = center.x - lastTouchCenter.x, dy = center.y - lastTouchCenter.y;
+      const scale = distance / Math.max(260, host.clientHeight) * 1.05;
+      target.addScaledVector(new THREE.Vector3(Math.cos(azimuth), 0, -Math.sin(azimuth)), -dx * scale);
+      target.addScaledVector(new THREE.Vector3(-Math.sin(azimuth), 0, -Math.cos(azimuth)), dy * scale);
+      lastTouchPinch = pinch; lastTouchCenter = center;
+    }
+    target.x = THREE.MathUtils.clamp(target.x, -23, 23);
+    target.z = THREE.MathUtils.clamp(target.z, -23, 23);
+    updateCamera();
+  };
+  const touchEndHandler = (event: TouchEvent) => {
+    event.preventDefault();
+    if (event.touches.length === 1) {
+      const t = event.touches[0]; lastTouchCenter = { x: t.clientX, y: t.clientY };
+      lastTouchPinch = 0; touchMoved = true;
+    } else if (event.touches.length === 0 && !touchMoved && Date.now() - touchStart < 350) {
+      const t = event.changedTouches[0]; if (t) pick(t.clientX, t.clientY);
+    } else if (event.touches.length === 0) lastTouchPinch = 0;
+  };
   renderer.domElement.addEventListener('pointerdown', pointerDown);
   renderer.domElement.addEventListener('pointermove', pointerMove);
   renderer.domElement.addEventListener('pointerup', pointerUp);
   renderer.domElement.addEventListener('pointercancel', pointerUp);
   renderer.domElement.addEventListener('wheel', wheel, { passive: false });
+  renderer.domElement.addEventListener('touchstart', touchStartHandler, { passive: false });
+  renderer.domElement.addEventListener('touchmove', touchMoveHandler, { passive: false });
+  renderer.domElement.addEventListener('touchend', touchEndHandler, { passive: false });
+  renderer.domElement.addEventListener('touchcancel', touchEndHandler, { passive: false });
 
   let frame = 0, disposed = false;
   const resize = () => {
@@ -322,6 +407,10 @@ export function mountCity3D(host: HTMLElement, onSelect: (screen: string) => voi
       renderer.domElement.removeEventListener('pointerup', pointerUp);
       renderer.domElement.removeEventListener('pointercancel', pointerUp);
       renderer.domElement.removeEventListener('wheel', wheel);
+      renderer.domElement.removeEventListener('touchstart', touchStartHandler);
+      renderer.domElement.removeEventListener('touchmove', touchMoveHandler);
+      renderer.domElement.removeEventListener('touchend', touchEndHandler);
+      renderer.domElement.removeEventListener('touchcancel', touchEndHandler);
       scene.traverse(object => {
         if (object instanceof THREE.Mesh) {
           object.geometry.dispose();

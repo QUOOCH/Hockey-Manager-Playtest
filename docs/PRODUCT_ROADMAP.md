@@ -56,6 +56,37 @@
 - [ ] Implement a deterministic, inspectable first match simulation with a result screen; do not build match visuals.
 - [ ] Update the roadmap after each verified milestone and keep experimental work isolated from main.
 
+## Main menu design — Hybrid Club Hub (2026-11-25)
+
+### Design direction
+- Hybrid sports-management home screen: a premium stylised 3D / 2.5D club presentation as the visual hero, with crisp functional management panels and card-like navigation.
+- The home screen is a club dashboard, not a full-screen town map and not a spreadsheet-like list.
+- Keep the approved PUCK IT! brand language: deep navy / ice-blue foundations, vivid red primary match CTA, gold accents for premium currency / trophies, rounded panels and strong readable typography.
+- On mobile, show the most important information without requiring a scroll to understand the next action.
+
+### Main screen hierarchy
+1. **Top profile strip:** club crest / name, manager level and XP progress, settings / inbox entry.
+2. **Resource strip:** Bucks and gold Pucks with clear balances and optional plus affordance.
+3. **Hero club scene:** stylised 3D / 2.5D team / locker-room / arena presentation, club identity and current team power. Tapping it opens Squad.
+4. **Next competition card:** next opponent / event, countdown or round status, reward preview and primary red CTA. The CTA starts the automatic match-resolution flow, not a rendered match.
+5. **Management shortcuts:** Squad, Collection, Training, Competitions, Club and Shop. Use clear icon + title + short descriptor; no dead / decorative buttons.
+6. **Bottom navigation:** Home, Squad, Collection, Competitions, Profile (or equivalent after UX validation). Avoid duplicating every shortcut in the bottom bar and main grid.
+
+### Interaction and responsive rules
+- Home should surface one recommended next action (e.g. finish lineup, train a player, claim reward, play next match).
+- The main hero scene is presentation only; management actions remain reachable through explicit controls.
+- No camera rotation on the home hub. If a 3D scene is used, allow only intentional pan / zoom where useful, with a stable default framing.
+- The next-match CTA leads to pre-match info, then automatic simulation, then result / rewards.
+- Keep touch targets comfortable and avoid overloading the first viewport.
+- Every tile must route to a real screen; unfinished systems should be clearly marked as locked / coming later rather than pretending to work.
+
+### Implementation order
+- [ ] Audit existing city / home / menu routes and identify reusable screens and state.
+- [ ] Build the home screen hierarchy and responsive layout first, using current real club, currency, roster and season data where available.
+- [ ] Wire each shortcut to the existing screen or a clearly defined placeholder state.
+- [ ] Replace match-scene CTA with pre-match → automatic result flow once the simulator is ready.
+- [ ] Test at iPhone portrait width and Android viewport; ensure no horizontal overflow and no hidden primary actions.
+
 ## New direction — interactive hockey town
 
 - [x] Make the hockey town the main hub for returning players on the experimental branch.

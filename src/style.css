@@ -2906,3 +2906,48 @@ label{display:block;font-size:11px;color:#a8c8e2;margin:12px 0}input{display:blo
 .city-shortcuts button:active{border-color:#b49aff88;background:#29213f}
 @media(min-width:700px){.city-map{height:570px}.city-building{max-width:190px}.city-building-art{transform:scale(1.13);margin:4px 0}.city-building-name b{font-size:9px}.city-rink{max-width:320px}}
 @media(max-width:430px){.city-hub{padding:9px;gap:11px}.city-crest{width:36px;height:36px}.city-club b{font-size:11px}.city-wallet{gap:4px;font-size:8px}.city-wallet span{padding:6px}.city-wallet button{width:29px;height:29px}.city-progress{grid-template-columns:40px minmax(0,1fr) auto;padding:9px;gap:8px}.city-power b{font-size:13px}.city-power small{font-size:5px}.city-map{height:440px;border-radius:14px}.city-building{width:30%;min-width:88px}.city-building-art{transform:scale(.88);margin:-4px 0}.city-building-name{padding:4px 4px}.city-building-name b{font-size:7px;letter-spacing:.7px}.city-building-name small{font-size:6px}.city-office{left:2%;top:8%}.city-academy{right:2%;top:7%}.city-shop{right:2%;bottom:7%}.city-locker{left:2%;bottom:6%}.city-rink{left:31%;top:36%;width:38%;height:27%;border-width:4px}.city-rink-name{bottom:-31px;padding:4px 6px}.city-rink-name b{font-size:6px}.city-rink-name small{font-size:6px}.city-pine{font-size:27px}.pine-b{font-size:23px}.city-town-sign{font-size:7px}.city-shortcuts{gap:5px}.city-shortcuts button{padding:9px 2px}.city-shortcuts button>b{font-size:8px}}
+
+/* Winter town visual pass: atmospheric depth, glowing ice, animated snowfall */
+.city-map{isolation:isolate;overflow:hidden;background:
+ radial-gradient(ellipse at 50% 43%,#a8d5f055 0,transparent 42%),
+ radial-gradient(ellipse at 15% 12%,#7d83d155 0,transparent 40%),
+ linear-gradient(160deg,#172e54 0%,#29466b 37%,#53748a 67%,#243c5b 100%);border:1px solid #9cc9e344;box-shadow:inset 0 0 70px #071326aa,0 18px 40px #050d1b66}
+.city-map:before{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;background:
+ linear-gradient(180deg,#101c3b44,transparent 40%,#0a1a2a55),
+ repeating-linear-gradient(125deg,transparent 0 19px,#eaf8ff04 20px 21px);
+}
+.city-map:after{content:"";position:absolute;inset:-30px;z-index:8;pointer-events:none;opacity:.58;background-image:radial-gradient(circle,#eafaff 0 1px,transparent 1.8px),radial-gradient(circle,#d8f1ff 0 1.5px,transparent 2.5px),radial-gradient(circle,#fff 0 1px,transparent 2px);background-size:110px 120px,170px 180px,230px 220px;background-position:0 0,60px 30px,20px 90px;animation:city-snow-drift 18s linear infinite}
+@keyframes city-snow-drift{to{background-position:0 180px,60px 250px,20px 300px}}
+.city-snow-hill{filter:blur(1px);opacity:.88}
+.city-snow-hill.hill-a{background:linear-gradient(145deg,#b5d7e8,#6289a7 70%,#284867);box-shadow:inset 0 9px 20px #e8f8ff66}
+.city-snow-hill.hill-b{background:linear-gradient(35deg,#c7e2ef,#789ab6 74%,#355574);box-shadow:inset 0 8px 16px #effaff55}
+.city-road{background:linear-gradient(90deg,#132942,#354d66 45%,#152b43);border:1px solid #a9d4ef22;box-shadow:0 5px 0 #d7e9f255,0 -3px 0 #07172c55}
+.city-road:after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0 24px,#d9e8f266 24px 30px,transparent 30px 54px);opacity:.28}
+.city-pine{color:#173a53;text-shadow:0 3px 0 #0b2336,0 7px 12px #020b17aa;font-size:43px;filter:drop-shadow(0 2px 0 #c4e4f1)}
+.city-building{filter:drop-shadow(0 12px 10px #030b1caa);transition:transform .22s ease,filter .22s ease}
+.city-building:hover{transform:translateY(-5px) scale(1.04);filter:drop-shadow(0 16px 13px #030b1caa) brightness(1.12)}
+.city-building-art{width:106px;height:92px;filter:drop-shadow(0 7px 5px #061324aa)}
+.city-roof{left:0;top:0;width:100px;height:47px;background:linear-gradient(145deg,#edf7ff 0 13%,#8eaecb 16%,#496b8c 62%,#2a4968);border-bottom:3px solid #dff5ff;filter:drop-shadow(0 3px 0 #203c59)}
+.city-front{left:15px;top:33px;width:76px;height:56px;background:linear-gradient(90deg,#183953,#426982 50%,#1c3c57);border:1px solid #c8e7f233}
+.city-front b{font-size:15px;text-shadow:0 0 10px #c3f3ff}
+.city-front em{width:12px;height:15px;background:linear-gradient(180deg,#b7eaff,#4d92b8);box-shadow:0 0 10px #89dcff88;border-color:#e5f9ff}
+.city-side{width:21px;height:45px;top:42px;background:linear-gradient(90deg,#203d58,#112a42)}
+.office-art .city-roof{background:linear-gradient(145deg,#f1e6ff,#a48bd5 35%,#57427d 75%)}
+.academy-art .city-roof{background:linear-gradient(145deg,#e2faff,#8ec9dc 35%,#3e7189 75%)}
+.shop-art .city-roof{background:linear-gradient(145deg,#fff1d2,#c7a16a 35%,#755333 75%)}
+.locker-art .city-roof{background:linear-gradient(145deg,#eee5ff,#b0a0e0 35%,#65538f 75%)}
+.city-building-name{border:1px solid #c7eaff44;background:linear-gradient(180deg,#112742ee,#08182ddd);box-shadow:0 5px 14px #020b17aa}
+.city-building-name b{font-size:9px;letter-spacing:1.2px}
+.city-building-name small{font-size:8px;color:#b7d4e8}
+.city-rink{background:#dff7ff;border:7px solid #eaf9ff;box-shadow:0 0 0 2px #6a9fbe,0 0 30px 8px #91dcff55,0 14px 24px #041325aa,inset 0 0 0 3px #6c9fbd;transform:rotate(-7deg)}
+.city-ice{background:linear-gradient(125deg,#effcff,#b5e2f2 42%,#dff7ff 68%,#a6d2e5);box-shadow:inset 0 0 28px #4589ad55}
+.city-rink-lights{background:radial-gradient(ellipse at 50% 8%,#f0fcffbb,transparent 60%);filter:blur(3px)}
+.city-stands{height:12px;background:repeating-linear-gradient(90deg,#d5e8f2 0 4px,#506b85 4px 9px);box-shadow:0 3px 6px #071421aa}
+.city-rink-name{border:1px solid #b9e9ff55;background:linear-gradient(180deg,#1a3b5aeF,#0b1d32f2);box-shadow:0 0 18px #a9e7ff22,0 5px 12px #07142177}
+.city-rink-name b{font-size:9px;letter-spacing:1px}
+.city-rink-name small{font-size:8px;color:#c3e7f9}
+.city-lamp:before{background:#effbff;box-shadow:0 0 18px 8px #b9eaffaa}
+.city-lamp i{background:#b9eaff30;filter:blur(9px)}
+.city-town-sign{font-size:9px;color:#f6fbff;text-shadow:0 0 8px #bcecff,0 3px 7px #041325}
+.city-town-sign i{color:#b6d8ee}
+@media(max-width:430px){.city-building-art{transform:scale(.94);margin:-1px 0}.city-rink{box-shadow:0 0 0 1px #6a9fbe,0 0 22px 5px #91dcff55,0 10px 20px #041325aa,inset 0 0 0 2px #6c9fbd}}

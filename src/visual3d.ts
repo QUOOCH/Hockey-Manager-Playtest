@@ -3,7 +3,7 @@ import * as THREE from 'three';
 import { GLTFLoader, type GLTF } from 'three/addons/loaders/GLTFLoader.js';
 
 export type HeroGearSlot = 'helmet' | 'chest' | 'gloves' | 'stick' | 'skates' | 'jersey' | 'pants';
-export type Hero3DOptions = { modelRoot?: string; onLoad?: () => void; onError?: (message: string) => void; onAnimationInfo?: (message: string) => void };
+export type Hero3DOptions = { modelRoot?: string; allowRotation?: boolean; idleMotion?: boolean; onLoad?: () => void; onError?: (message: string) => void; onAnimationInfo?: (message: string) => void };
 export type Hero3DStage = { loadBaseModel: (file?: string) => Promise<void>; setEquipment: (slot: HeroGearSlot, file: string | null) => Promise<void>; setRotation: (radians: number) => void; setSkeletonVisible: (visible: boolean) => void; setSkeletonEditable: (enabled: boolean) => void; dispose: () => void };
 const DEFAULT_ROOT = import.meta.env.BASE_URL + 'assets/models/hero/center/';
 const ANCHORS: Record<HeroGearSlot, string> = { helmet:'slot_helmet', chest:'slot_chest', gloves:'slot_gloves', stick:'slot_stick', skates:'slot_skates', jersey:'slot_jersey', pants:'slot_pants' };
@@ -73,6 +73,7 @@ export function mountHero3DStage(host:HTMLElement,options:Hero3DOptions={}):Hero
   const loader=new GLTFLoader(),root=options.modelRoot||DEFAULT_ROOT,equipment=new Map<HeroGearSlot,THREE.Object3D>();
   let baseModel:THREE.Object3D|null=null,mixer:THREE.AnimationMixer|null=null,skeletonGuide:THREE.Group|null=null,skeletonEditable=false,selectedJoint:THREE.Mesh|null=null,frame=0,disposed=false,dragging=false,lastPointerX=0,rotation=-.28;
   const clock=new THREE.Clock();
+  const allowRotation=options.allowRotation!==false;
   modelRoot.rotation.y=rotation;
   const resize=()=>{if(disposed)return;const w=Math.max(1,host.clientWidth),h=Math.max(1,host.clientHeight);camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h,false);};
   const observer=new ResizeObserver(resize);observer.observe(host);resize();
@@ -83,7 +84,7 @@ export function mountHero3DStage(host:HTMLElement,options:Hero3DOptions={}):Hero
   const endDrag=()=>{dragging=false;activePointerId=null;};
   // Mouse/pen uses Pointer Events. iOS Safari gets an explicit Touch Events path.
   const down=(e:PointerEvent)=>{
-    if(e.pointerType==='touch'||(e.pointerType==='mouse'&&e.button!==0))return;
+    if(!allowRotation||e.pointerType==='touch'||(e.pointerType==='mouse'&&e.button!==0))return;
     e.preventDefault();beginDrag(e.clientX);activePointerId=e.pointerId;
     try{host.setPointerCapture(e.pointerId);}catch{/* capture is optional */}
   };
@@ -97,7 +98,7 @@ export function mountHero3DStage(host:HTMLElement,options:Hero3DOptions={}):Hero
     try{if(host.hasPointerCapture(e.pointerId))host.releasePointerCapture(e.pointerId);}catch{/* no-op */}
   };
   const touchStart=(e:TouchEvent)=>{
-    if(e.touches.length!==1)return;
+    if(!allowRotation||e.touches.length!==1)return;
     e.preventDefault();beginDrag(e.touches[0].clientX);
   };
   const touchMove=(e:TouchEvent)=>{
@@ -209,6 +210,6 @@ export function mountHero3DStage(host:HTMLElement,options:Hero3DOptions={}):Hero
     modelRoot.add(guide);skeletonGuide=guide;
   };
   const setEquipment=async(slot:HeroGearSlot,file:string|null)=>{const anchor=modelRoot.getObjectByName(ANCHORS[slot]);if(!anchor){if(file)options.onError?.('Для этой экипировки GLB-модель ещё не подключена.');return;}const previous=equipment.get(slot);if(previous){anchor.remove(previous);equipment.delete(slot);}if(!file)return;try{const gltf=await load(root+'equipment/'+file);if(disposed)return;const part:THREE.Group=gltf.scene;anchor.add(part);equipment.set(slot,part);}catch(e){options.onError?.(e instanceof Error?e.message:'Не удалось загрузить предмет.');}};
-  const animate=()=>{if(disposed)return;frame=requestAnimationFrame(animate);const delta=Math.min(clock.getDelta(),.05);mixer?.update(delta);/* Model animation plays when the GLB contains clips; rotation remains user-controlled. */renderer.render(scene,camera);};animate();
+  const animate=()=>{if(disposed)return;frame=requestAnimationFrame(animate);const delta=Math.min(clock.getDelta(),.05),elapsed=clock.elapsedTime;if(options.idleMotion){modelRoot.position.y=.012+Math.sin(elapsed*1.35)*.018;modelRoot.rotation.y=rotation;modelRoot.rotation.x=Math.sin(elapsed*.72)*.004;}else mixer?.update(delta);renderer.render(scene,camera);};animate();
   return{loadBaseModel,setEquipment,setSkeletonEditable,setRotation:r=>{rotation=r;modelRoot.rotation.y=r;},setSkeletonVisible,dispose:()=>{if(disposed)return;disposed=true;canvas.removeEventListener('pointerdown',jointDown as EventListener,true);canvas.removeEventListener('pointermove',jointMove as EventListener,true);canvas.removeEventListener('pointerup',jointUp,true);canvas.removeEventListener('pointercancel',jointUp,true);canvas.removeEventListener('touchstart',jointDown as EventListener,true);canvas.removeEventListener('touchmove',jointMove as EventListener,true);canvas.removeEventListener('touchend',jointUp,true);canvas.removeEventListener('touchcancel',jointUp,true);cancelAnimationFrame(frame);observer.disconnect();host.removeEventListener('pointerdown',down);host.removeEventListener('pointermove',move);host.removeEventListener('pointerup',up);host.removeEventListener('pointercancel',up);host.removeEventListener('lostpointercapture',up);host.removeEventListener('touchstart',touchStart);host.removeEventListener('touchmove',touchMove);host.removeEventListener('touchend',touchEnd);host.removeEventListener('touchcancel',touchEnd);mixer?.stopAllAction();scene.traverse(o=>{if(o instanceof THREE.Mesh){o.geometry.dispose();const ms=Array.isArray(o.material)?o.material:[o.material];ms.forEach(m=>m.dispose());}});renderer.dispose();renderer.domElement.remove();}};
 }

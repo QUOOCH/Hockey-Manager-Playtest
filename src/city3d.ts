@@ -92,12 +92,7 @@ export function mountCity3D(host: HTMLElement, onSelect: (screen: string) => voi
     box(scene, w * .96, .08, d * .96, road, x, .11, z);
     box(scene, w * .94, .025, d * .94, asphalt, x, .19, z);
   };
-  roadStrip(0, 0, 7, 76); roadStrip(0, 0, 76, 7);
-  roadStrip(-25, 0, 4, 62); roadStrip(25, 0, 4, 62);
-  roadStrip(0, -25, 62, 4); roadStrip(0, 25, 62, 4);
   // Snowy sidewalks and small crossing marks.
-  for (const x of [-4.2, 4.2]) for (let z = -30; z <= 30; z += 8) box(scene, .18, .035, 1.4, white, x, .22, z);
-  for (const z of [-4.2, 4.2]) for (let x = -30; x <= 30; x += 8) box(scene, 1.4, .035, .18, white, x, .22, z);
 
   const clickable: THREE.Object3D[] = [];
   const rink = new THREE.Group(); rink.position.set(0, .22, 0); rink.userData.screen = 'stadium'; scene.add(rink); clickable.push(rink);
@@ -194,10 +189,6 @@ export function mountCity3D(host: HTMLElement, onSelect: (screen: string) => voi
     return group;
   }
 
-  makeBuilding(-23, -17, 'managerOffice', 'ОФИС', 0x3c5874, 0x405b79, 8, 7);
-  makeBuilding(23, -17, 'cards', 'АКАДЕМИЯ', 0x557b89, 0x668da0, 9, 7);
-  makeBuilding(-23, 17, 'wardrobe', 'МАГАЗИН', 0x92724e, 0x79583f, 9, 7);
-  makeBuilding(23, 17, 'heroRoom', 'РАЗДЕВАЛКА', 0x625184, 0x7965a1, 9, 7);
 
   // --- PowerPlay district: landmark architecture and a complete town composition ---
   const arena = new THREE.Group(); arena.position.set(0, 0, 0); arena.userData.screen = 'stadium'; scene.add(arena); clickable.push(arena);
@@ -279,7 +270,7 @@ export function mountCity3D(host: HTMLElement, onSelect: (screen: string) => voi
   const star=new THREE.Mesh(new THREE.IcosahedronGeometry(1.15,1),mat(0xe7c36e,.25,.45));star.position.set(0,4.35,0);star.castShadow=true;plaza.add(star);
   for(let i=0;i<3;i++){box(plaza,.08,3.5,.08,navy,-4+i*4,1.1,-3);const cloth=box(plaza,1.4,.72,.08,i%2?purple:red,-3.3+i*4,3.25,-3);cloth.rotation.z=.12;}
 
-  const boulevardPts=[new THREE.Vector3(-42,.2,8),new THREE.Vector3(-30,.2,8),new THREE.Vector3(-22,.2,5),new THREE.Vector3(-14,.2,-1),new THREE.Vector3(0,.2,-5),new THREE.Vector3(15,.2,-7),new THREE.Vector3(27,.2,-12),new THREE.Vector3(42,.2,-12)];
+  const boulevardPts=[new THREE.Vector3(-44,.2,8),new THREE.Vector3(-32,.2,8),new THREE.Vector3(-24,.2,14),new THREE.Vector3(-12,.2,19),new THREE.Vector3(2,.2,20),new THREE.Vector3(17,.2,17),new THREE.Vector3(29,.2,10),new THREE.Vector3(44,.2,10)];
   const boulevard=new THREE.CatmullRomCurve3(boulevardPts);
   const roadMesh=new THREE.Mesh(new THREE.TubeGeometry(boulevard,100,2.15,8,false),road);roadMesh.position.y=.02;roadMesh.receiveShadow=true;scene.add(roadMesh);
   const roadLine=new THREE.Mesh(new THREE.TubeGeometry(boulevard,100,.045,6,false),mat(0xeaf6fa));roadLine.position.y=.1;scene.add(roadLine);
